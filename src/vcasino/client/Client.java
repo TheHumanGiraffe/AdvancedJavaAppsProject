@@ -1,11 +1,10 @@
-
-package vcasion.client;
-
-import javafx.scene.Scene;
+package vcasino.client;
 
 public class Client {
 
 	public static void main(String [] args) {
 
+		
+		
 	}
 }
