@@ -1,70 +1,75 @@
 package vcasino.core.games;
 
-import vcasino.core.Card;
-import vcasino.core.Player;
-import vcasino.core.Ruleset;
+import vcasino.core.*;
+import vcasino.core.events.BasicGameEvent;
+import vcasino.core.events.GameEvent;
 import vcasino.core.exceptions.RulesException;
 
 public class UnoRuleset implements Ruleset {
-
+	
 	@Override
-	public String getRules() {
-		// TODO Auto-generated method stub
-		return null;
+	public String getDescription() {
+		//Copied from http://wonkavator.com/uno/unorules.html
+		return "Each player is dealt 7 cards with the remaining ones placed face down to form a DRAW pile. The top card of the DRAW pile is turned over to begin a DISCARD pile.\r\n" + 
+				"The first player has to match the card in the DISCARD pile either by number, color or word. For example, if the card is a red 7, player must throw down a red card or any color 7. Or the player can throw down a Wild Card. If the player doesn't have anything to match, he must pick a card from the DRAW pile. If he can play what is drawn, great. Otherwise play moves to the next person.\r\n" + 
+				"When you have one card left, you must yell \"UNO\" (meaning one). Failure to do this results in you having to pick two cards from the DRAW pile. That is, of course if you get caught by the other players.\r\n" + 
+				"Once a player has no cards left, the hand is over. Points are scored (see scoring section) and you start over again. That's UNO in a nutshell.";
 	}
 
 	@Override
-	public void newDeck() {
-		// TODO Auto-generated method stub
+	public String getName() {
+		return "Uno";
+	}
+	
+	@Override
+	public Deck newDeck() {
+		Deck deck = new Deck(); //either UnoDeck or we need to be able to set lots of properties like values, suits/colors, where to find the images
+		deck.discardTop();
+		return deck;
+	}
+
+	public void setCurrentPlayer(Player player) {
 		
 	}
-
+	
 	@Override
 	public int getInitialHandCount() {
-		// TODO Auto-generated method stub
-		return 0;
+		return 7;
 	}
 
 	@Override
-	public void passCard(Player from, Player to) throws RulesException {
-		// TODO Auto-generated method stub
-		
+	public GameEvent passCard(Player from, Player to) throws RulesException {
+		return new BasicGameEvent(from);
 	}
 
 	@Override
-	public Card drawCard(Player forPlayer) throws RulesException {
-		// TODO Auto-generated method stub
-		return null;
+	public GameEvent drawCard(Player forPlayer) throws RulesException {
+		return new BasicGameEvent(forPlayer);
 	}
 
 	@Override
-	public Card dealCard(Player toPlayer) {
-		// TODO Auto-generated method stub
-		return null;
+	public GameEvent dealCard(Player toPlayer) {
+		return new BasicGameEvent(toPlayer);
 	}
 
 	@Override
-	public void placeCard(Player player) {
-		// TODO Auto-generated method stub
-		
+	public GameEvent placeCard(Player player) {
+		return new BasicGameEvent(player);
 	}
 
 	@Override
-	public void fold(Player player) {
-		// TODO Auto-generated method stub
-		
+	public GameEvent fold(Player player) {
+		return new BasicGameEvent(player);
 	}
 
 	@Override
-	public void beginMatch() {
-		// TODO Auto-generated method stub
-		
+	public GameEvent beginMatch() {
+		return new BasicGameEvent(null);
 	}
 
 	@Override
-	public void advanceTurn() {
-		// TODO Auto-generated method stub
-		
+	public GameEvent advanceTurn() {
+		return new BasicGameEvent(null);
 	}
 
 	@Override
@@ -80,21 +85,20 @@ public class UnoRuleset implements Ruleset {
 	}
 
 	@Override
-	public void placeBet(Player player) {
-		// TODO Auto-generated method stub
-		
+	public GameEvent placeBet(Player player) {
+		return new BasicGameEvent(player);
 	}
 
 	@Override
-	public void showHand(Player player) {
-		// TODO Auto-generated method stub
-		
+	public GameEvent showHand(Player player) {
+		return new BasicGameEvent(player);
 	}
 
 	@Override
-	public void reshuffleDeck() {
-		// TODO Auto-generated method stub
-		
+	public GameEvent shuffleDeck() {
+		return new BasicGameEvent(null);
 	}
+
+	
 
 }

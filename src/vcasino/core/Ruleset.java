@@ -1,28 +1,31 @@
 
 package vcasino.core;
 
+import vcasino.core.events.GameEvent;
 import vcasino.core.exceptions.RulesException;
 
 public interface Ruleset {
 
 	//general actions
-	String getRules();
-	void newDeck();
+	String getDescription();
+	String getName();
+	Deck newDeck();
+	void setCurrentPlayer(Player player);
 	int getInitialHandCount();
 	
 	//Player-level actions
-	void passCard(Player from, Player to) throws RulesException;
-	Card drawCard(Player forPlayer) throws RulesException;
-	Card dealCard(Player toPlayer);
-	void placeCard(Player player);
-	void fold(Player player);
+	GameEvent passCard(Player from, Player to) throws RulesException;
+	GameEvent drawCard(Player forPlayer) throws RulesException;
+	GameEvent dealCard(Player toPlayer);
+	GameEvent placeCard(Player player);
+	GameEvent fold(Player player);
 	
 	//Table-level actions
-	void beginMatch();
-	void advanceTurn();
+	GameEvent beginMatch();
+	GameEvent advanceTurn();
 	boolean gameOver();
 	Player declareWinner();
-	void placeBet(Player player);
-	void showHand(Player player);
-	void reshuffleDeck();
+	GameEvent placeBet(Player player);
+	GameEvent showHand(Player player);
+	GameEvent shuffleDeck();
 }
