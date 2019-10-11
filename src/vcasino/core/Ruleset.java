@@ -22,7 +22,7 @@ public interface Ruleset {
 	
 	//Table-level actions
 	GameEvent beginMatch();
-	GameEvent advanceTurn();
+	Player advanceTurn(Player[] players);
 	boolean gameOver();
 	Player declareWinner();
 	GameEvent placeBet(Player player);
