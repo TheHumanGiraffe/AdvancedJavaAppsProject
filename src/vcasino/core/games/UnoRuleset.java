@@ -68,11 +68,6 @@ public class UnoRuleset implements Ruleset {
 	}
 
 	@Override
-	public GameEvent advanceTurn() {
-		return new BasicGameEvent(null);
-	}
-
-	@Override
 	public boolean gameOver() {
 		// TODO Auto-generated method stub
 		return false;
@@ -97,6 +92,12 @@ public class UnoRuleset implements Ruleset {
 	@Override
 	public GameEvent shuffleDeck() {
 		return new BasicGameEvent(null);
+	}
+
+	@Override
+	public Player advanceTurn(Player[] players) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	
