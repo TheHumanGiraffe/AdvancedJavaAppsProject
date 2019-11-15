@@ -1,6 +1,7 @@
 package vcasino.core;
 
 import vcasino.core.events.GameEvent;
+import vcasino.core.events.GameState;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,7 +21,11 @@ public class Match {
 	private String matchId;
 	private Deque<GameEvent> messageQueue;
 	private MatchState state = MatchState.MSTATE_INIT;
+	private GameState gameState;
 	
+	public Match() {
+		
+	}
 	public Match(String id, Ruleset rules, Player [] players, Deque<GameEvent> q) {
 		matchId = id;
 		gameRules = rules;
@@ -48,6 +53,12 @@ public class Match {
 		
 	}
 	
+	public GameState getGameState() {
+		return gameState;
+	}
+	public void setGameState(GameState gameState) {
+		this.gameState = gameState;
+	}
 	public String toJSONString() {
 		String ret = "{\"Match\": {id:\""+matchId+"\", rules: \""+gameRules.getName()+"\", ";
 		if(players.size()>0) {
