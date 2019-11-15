@@ -1,0 +1,160 @@
+{
+    "topDiscard":{
+            "CardID": 1,
+            "Name": "Ace of spades" 
+    },
+    "table":[
+        {
+        "CardID": 1,
+        "Name": "Ace of spades" 
+        },
+        {
+            "CardID": 2,
+            "Name": "Ace of spades" 
+        },
+        {
+            "CardID": 3,
+            "Name": "Ace of spades" 
+        }
+    ],
+    "player 1":{
+        "Name":"Billy bob",
+        "Chips":34,
+        "turn": true,
+        "hand":
+        [   
+            {
+            "CardID": 1,
+            "Name": "Ace of spades" 
+            },
+            {
+            "CardID": 2,
+            "Name": "queen of spades"
+            },
+            {
+            "CardID": 3,
+            "Name": "heart of spades"
+            },
+            {
+            "CardID": 4,
+            "Name": "3 of spades"
+            },
+            {
+            "CardID": 25,
+            "Name": "4 of spades"
+            }
+        ]
+    },
+    "player 5":{
+        "Name":"Billy bob",
+        "Chips":34,
+        "turn": true,
+        "hand":
+        [   
+            {
+            "CardID": 1,
+            "Name": "Ace of spades" 
+            },
+            {
+            "CardID": 2,
+            "Name": "queen of spades"
+            },
+            {
+            "CardID": 3,
+            "Name": "heart of spades"
+            },
+            {
+            "CardID": 4,
+            "Name": "3 of spades"
+            },
+            {
+            "CardID": 25,
+            "Name": "4 of spades"
+            }
+        ]
+    },
+    "player 4":{
+        "Name":"Billy bob",
+        "Chips":34,
+        "turn": true,
+        "hand":
+        [   
+            {
+            "CardID": 1,
+            "Name": "Ace of spades" 
+            },
+            {
+            "CardID": 2,
+            "Name": "queen of spades"
+            },
+            {
+            "CardID": 3,
+            "Name": "heart of spades"
+            },
+            {
+            "CardID": 4,
+            "Name": "3 of spades"
+            },
+            {
+            "CardID": 25,
+            "Name": "4 of spades"
+            }
+        ]
+    },
+    "player 2":{
+        "Name":"Billy bob",
+        "Chips":34,
+        "turn": true,
+        "hand":
+        [   
+            {
+            "CardID": 1,
+            "Name": "Ace of spades" 
+            },
+            {
+            "CardID": 2,
+            "Name": "queen of spades"
+            },
+            {
+            "CardID": 3,
+            "Name": "heart of spades"
+            },
+            {
+            "CardID": 4,
+            "Name": "3 of spades"
+            },
+            {
+            "CardID": 25,
+            "Name": "4 of spades"
+            }
+        ]
+    },
+    "player 3":{
+        "Name":"Billy bob",
+        "Chips":34,
+        "turn": true,
+        "hand":
+        [   
+            {
+            "CardID": 1,
+            "Name": "Ace of spades" 
+            },
+            {
+            "CardID": 2,
+            "Name": "queen of spades"
+            },
+            {
+            "CardID": 3,
+            "Name": "heart of spades"
+            },
+            {
+            "CardID": 4,
+            "Name": "3 of spades"
+            },
+            {
+            "CardID": 25,
+            "Name": "4 of spades"
+            }
+        ]
+    }
+}
