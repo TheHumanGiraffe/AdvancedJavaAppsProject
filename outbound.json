@@ -1,0 +1,5 @@
+{
+    "action": "draw/play/chat/select/leave/fold/bet",
+    "CardId":"123 if it's play, this should be an int",
+    "message": "messagemessagemessage"
+}
