@@ -17,7 +17,7 @@
             "Name": "Ace of spades" 
         }
     ],
-    "player 1":{
+    "player1":{
         "Name":"Billy bob",
         "Chips":34,
         "turn": true,
@@ -45,7 +45,7 @@
             }
         ]
     },
-    "player 5":{
+    "player5":{
         "Name":"Billy bob",
         "Chips":34,
         "turn": true,
@@ -73,7 +73,7 @@
             }
         ]
     },
-    "player 4":{
+    "player4":{
         "Name":"Billy bob",
         "Chips":34,
         "turn": true,
@@ -101,7 +101,7 @@
             }
         ]
     },
-    "player 2":{
+    "player2":{
         "Name":"Billy bob",
         "Chips":34,
         "turn": true,
@@ -129,7 +129,7 @@
             }
         ]
     },
-    "player 3":{
+    "player3":{
         "Name":"Billy bob",
         "Chips":34,
         "turn": true,

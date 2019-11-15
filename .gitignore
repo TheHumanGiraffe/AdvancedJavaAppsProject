@@ -226,3 +226,6 @@ typings/
 
 .vscode
 .vscode/*
+/.classpath
+/.project
+/bin/

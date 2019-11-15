@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>My WebSocket</title>
+	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script type="text/javascript" src="gameBoard.js"></script>
+	
+	<link rel="stylesheet" href="gameBoard.css">
+</head>
+<body>
+	<div class="board">
+		<div id="topDiscard">Discard pile:</div>
+		<div id="table">Dealer:</div>
+		<div class="row">		
+			<span id="player1">Player 1:</span>
+			<span id="player2">Player 2:</span>
+		</div>
+		<div class="row">		
+			<span id="player3">Player 3:</span>
+			<span id="player4">Player 4:</span>
+		</div>
+		<div id="player5">Player 5:</div>
+	</div>
+
+<!-- 	<form>
+		<input id="message" type="text">
+		<input onclick="wsSendMessage();" value ="Echo" type="button"/>
+		<input onclick="wsCloseConnection();" value="Disconnect" type="button"/>
+	</form>
+	
+	<textarea id="echoText" rows="5" cols="30"></textarea> -->
+
+</body>
+</html>
