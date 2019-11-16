@@ -53,11 +53,11 @@ public class VCasinoServerEndpoint {
 				continue;
 			}
 			//Checks if the connection is open, if the game and roomNumbers match
-			if(VCasinoServerEndpoint.openSessions.get(this.myUniqueId).userSession.isOpen()  &&
-					VCasinoServerEndpoint.openSessions.get(currentClient.myUniqueId).userSession.getUserProperties().get("game").equals(this.userSession.getUserProperties().get("game")) &&
-					VCasinoServerEndpoint.openSessions.get(currentClient.myUniqueId).userSession.getUserProperties().get("roomNumber").equals(this.userSession.getUserProperties().get("roomNumber"))) {
-					currentClient.sendMessage(String.format("User %s is now connected!", this.myUniqueId));
-			}		
+			for(VCasinoServerEndpoint connectedUser : VCasinoServerEndpoint.openSessions.values()) {
+	        	if(checkGameAndRoom(connectedUser)) {
+	        		sendGameState(connectedUser, setupMatch.getGameState());
+	        	}
+	        }
 		}
 		System.out.println("Open Connection...\n Session ID: "+ userSession.getId() );
 		this.sendMessage("Connected!");
