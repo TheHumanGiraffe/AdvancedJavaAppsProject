@@ -1,5 +1,6 @@
 package vcasino.servlet;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.HashMap;
 
@@ -11,26 +12,23 @@ import vcasino.core.Match;
 import vcasino.core.Player;
 import vcasino.core.events.GameEvent;
 import vcasino.core.events.GameState;
+import vcasino.core.exceptions.RulesException;
 import vcasino.decoder.GameEventDecoder;
 
 
 @ServerEndpoint(
-		value ="/vcasion/{game}/{roomNumber}",
+		value ="/vcasino/{game}/{roomNumber}",
 		encoders = {GameStateEncoder.class},
 		decoders = {GameEventDecoder.class}
 )
 public class VCasinoServerEndpoint {
 
-	URI uri;
 	Session userSession = null;
 	private final static HashMap<String, VCasinoServerEndpoint> openSessions = new HashMap<>();
 	private final static HashMap<String, Match> match = new HashMap<>();
 	private String myUniqueId;
     
-    public VCasinoServerEndpoint(URI endpointURI) {
-        uri = endpointURI;
-	}
-
+  
     @OnOpen
     public void onOpen(Session userSession,@PathParam("game") final String game, @PathParam("roomNumber") final String roomNumber) {
         System.out.println("opening websocket");
@@ -39,12 +37,16 @@ public class VCasinoServerEndpoint {
 		
 		userSession.getUserProperties().put("roomNumber", roomNumber);
 		userSession.getUserProperties().put("game", game);
-		userSession.getUserProperties().put("player", new Player());
+		userSession.getUserProperties().put("player", new Player(this.myUniqueId,100, this.myUniqueId));
 		
 		VCasinoServerEndpoint.openSessions.put(myUniqueId, this);
 		
 		//Add a new match to the server if one does not exist
 		VCasinoServerEndpoint.match.putIfAbsent(game+roomNumber, new Match());
+		Match setupMatch = VCasinoServerEndpoint.match.get(game+roomNumber);
+		Player newPlayer = (Player)userSession.getUserProperties().get("player");
+		setupMatch.addPlayer(newPlayer);
+		
 		
 		for(VCasinoServerEndpoint currentClient  : VCasinoServerEndpoint.openSessions.values()) {
 			if(currentClient == this) {
@@ -87,22 +89,28 @@ public class VCasinoServerEndpoint {
     	
         System.out.println("Message from ClientID:" + userSession.getId() + "GameEvent" + gameEvent);
         Match usersMatch = VCasinoServerEndpoint.match.get(game+roomNumber);
+        Player currentPlayer =(Player) userSession.getUserProperties().get("player");
       //Add the action for the event
-        switch(gameEvent.getAction()) {
-	        case "draw":
-	        	break;
-	        case "play":
-	        	break;
-	        case "chat":
-	        	break;
-	        case "fold":
-	        	break;
-	        case "bet":
-	        	break;
-	        default:
-	        	System.out.println("No event Found");
-        }
-        
+        try {
+	        switch(gameEvent.getAction()) {
+		        case "draw":			
+					usersMatch.doAction("drawCard", currentPlayer);	
+		        	break;
+		        case "play":
+		        	break;
+		        case "chat":
+		        	break;
+		        case "fold":
+		        	break;
+		        case "bet":
+		        	break;
+		        default:
+		        	System.out.println("No event Found");
+	        }
+        } catch (RulesException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         for(VCasinoServerEndpoint connectedUser : VCasinoServerEndpoint.openSessions.values()) {
         	if(checkGameAndRoom(connectedUser)) {
         		sendGameState(connectedUser, usersMatch.getGameState());
@@ -113,12 +121,23 @@ public class VCasinoServerEndpoint {
 
     public void sendMessage(String message) {
     	if(this.userSession != null)
-    		this.userSession.getAsyncRemote().sendText(message);
+			try {
+				this.userSession.getBasicRemote().sendText(message);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
     }
     
     //Sends state of game as JSON object 
     public void sendGameState(VCasinoServerEndpoint client, GameState state) {
-    	client.userSession.getAsyncRemote().sendObject(state);
+    	try {
+    		client.userSession.getBasicRemote().sendObject(state);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
     }
     public void sendRequest(String command, String payload) {
     	sendMessage("{\"request\": {\"command\": \""+command+"\",\n\"payload\": \""+payload+"\"\n}}");

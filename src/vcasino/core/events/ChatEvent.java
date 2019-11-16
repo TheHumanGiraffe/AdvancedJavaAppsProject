@@ -12,9 +12,6 @@ public class ChatEvent extends GameEvent {
 		this.text = text;
 	}
 
-	@Override
-	public String toJSONString() {
-		return "{\n \"ChatEvent\": {\n  owner: "+eventOwner.getId()+",\n  text: \""+text+"\"\n }\n}";
-	}
+	
 
 }

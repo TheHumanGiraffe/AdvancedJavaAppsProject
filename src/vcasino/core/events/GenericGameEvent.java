@@ -9,11 +9,6 @@ public class GenericGameEvent extends GameEvent {
 		// TODO Auto-generated constructor stub
 	}
 
-	@Override
-	public String toJSONString() {
-		return "{\n \"BasicGameEvent\": {\n  owner: "+eventOwner.getId()+"\n }\n}";
-	}
 
-	
 
 }
