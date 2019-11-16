@@ -1,3 +1,4 @@
+package vcasino.servlet;
 /**
  * Core Servlet
  * 

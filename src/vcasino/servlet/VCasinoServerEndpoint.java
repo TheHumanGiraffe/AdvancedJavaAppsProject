@@ -1,4 +1,4 @@
-package vcasino.client;
+package vcasino.servlet;
 
 import java.net.URI;
 import java.util.HashMap;
