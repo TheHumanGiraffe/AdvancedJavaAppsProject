@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>My WebSocket</title>
+	<title>Game 123456789</title>
 	
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 	<script type="text/javascript" src="gameBoard.js"></script>
@@ -11,7 +11,44 @@
 </head>
 <body>
 	<div class="board">
-		<div id="topDiscard">Discard pile:</div>
+		<table class="board" border="0"> <!-- border just for debug -->
+		<tr><td><span class="corner">&nbsp;</span></td>
+		
+		<!-- player 3 -->
+		<td>
+		<table>
+		<tr>
+		<td><img class="p3" src="cards/0.jpg"/></td><td><img class="p3" src="cards/0.jpg"/></td><td><img class="p3" src="cards/0.jpg"/></td><td><img class="p3" src="cards/0.jpg"/></td><td><img class="p3" src="cards/0.jpg"/></td>
+		</tr>
+		</table>
+		</td>
+		
+		<td><span class="corner">&nbsp;</span></td></tr>
+		
+		<tr>
+		<td><table><!-- player 2 --><tr><td><img class="p2" src="cards/0.jpg"/></td></tr><tr><td><img class="p2" src="cards/0.jpg"/></td></tr><tr><td><img class="p2" src="cards/0.jpg"/></td></tr><tr><td><img class="p2" src="cards/0.jpg"/></td></tr><tr><td><img class="p2" src="cards/0.jpg"/></td></tr></table></td>
+		<td>
+		<!-- decks -->
+		<table><tr><td><img class="discard" src="cards/42.jpg"/></td></td></tr></table>
+		</td>
+		<td><table><!-- player 4 --><tr><td><img class="p4" src="cards/0.jpg"/></td></tr><tr><td><img class="p4" src="cards/0.jpg"/></td></tr><tr><td><img class="p4" src="cards/0.jpg"/></td></tr><tr><td><img class="p4" src="cards/0.jpg"/></td></tr><tr><td><img class="p4" src="cards/0.jpg"/></td></tr></table></td>
+		</tr>
+		
+		<tr><td><span class="corner">&nbsp;</span></td>
+		
+		<td>
+		<table><!-- player 1 --><tr><td><img class="p1" src="cards/52.jpg"/></td><td><img class="p1" src="cards/52.jpg"/></td><td><img class="p1" src="cards/52.jpg"/></td><td><img class="p1" src="cards/52.jpg"/></td><td><img class="p1" src="cards/52.jpg"/></td></tr></table>
+		</td>
+		
+		<td><span class="corner">&nbsp;</span></td></tr>
+		
+		</table>
+</div>
+		<div id="chat">
+		<textarea id="echoText" rows="5" cols="300"></textarea>
+		</div>
+		
+<!--		<div id="topDiscard">Discard pile:</div>
 		<div id="table">Dealer:</div>
 		<div class="row">		
 			<span id="player1">Player 1:</span>
@@ -23,7 +60,7 @@
 		</div>
 		<div id="player5">Player 5:</div>
 	</div>
-
+-->
 <!-- 	<form>
 		<input id="message" type="text">
 		<input onclick="wsSendMessage();" value ="Echo" type="button"/>

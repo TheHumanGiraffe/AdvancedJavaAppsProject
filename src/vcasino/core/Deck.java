@@ -5,7 +5,6 @@ import java.util.ArrayList;
 /**
  * Deck handles both the draw deck and the discard deck, in case the discard is required.
  * 
- * @author admin
  *
  */
 public class Deck {
@@ -13,7 +12,7 @@ public class Deck {
 	
 	
 	public Card drawCard() {
-		return cards.get(0);
+		return cards.remove(0);
 	}
 	
 	

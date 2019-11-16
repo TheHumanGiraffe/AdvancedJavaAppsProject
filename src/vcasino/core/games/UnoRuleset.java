@@ -1,7 +1,7 @@
 package vcasino.core.games;
 
 import vcasino.core.*;
-import vcasino.core.events.BasicGameEvent;
+import vcasino.core.events.GenericGameEvent;
 import vcasino.core.events.GameEvent;
 import vcasino.core.exceptions.RulesException;
 
@@ -39,32 +39,32 @@ public class UnoRuleset implements Ruleset {
 
 	@Override
 	public GameEvent passCard(Player from, Player to) throws RulesException {
-		return new BasicGameEvent(from);
+		return new GenericGameEvent(from);
 	}
 
 	@Override
 	public GameEvent drawCard(Player forPlayer) throws RulesException {
-		return new BasicGameEvent(forPlayer);
+		return new GenericGameEvent(forPlayer);
 	}
 
 	@Override
 	public GameEvent dealCard(Player toPlayer) {
-		return new BasicGameEvent(toPlayer);
+		return new GenericGameEvent(toPlayer);
 	}
 
 	@Override
 	public GameEvent placeCard(Player player) {
-		return new BasicGameEvent(player);
+		return new GenericGameEvent(player);
 	}
 
 	@Override
 	public GameEvent fold(Player player) {
-		return new BasicGameEvent(player);
+		return new GenericGameEvent(player);
 	}
 
 	@Override
 	public GameEvent beginMatch() {
-		return new BasicGameEvent(null);
+		return new GenericGameEvent(null);
 	}
 
 	@Override
@@ -81,17 +81,17 @@ public class UnoRuleset implements Ruleset {
 
 	@Override
 	public GameEvent placeBet(Player player) {
-		return new BasicGameEvent(player);
+		return new GenericGameEvent(player);
 	}
 
 	@Override
 	public GameEvent showHand(Player player) {
-		return new BasicGameEvent(player);
+		return new GenericGameEvent(player);
 	}
 
 	@Override
 	public GameEvent shuffleDeck() {
-		return new BasicGameEvent(null);
+		return new GenericGameEvent(null);
 	}
 
 	@Override

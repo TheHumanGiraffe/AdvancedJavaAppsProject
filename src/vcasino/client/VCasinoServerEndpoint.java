@@ -1,11 +1,9 @@
 package vcasino.client;
 
-import java.io.IOException;
 import java.net.URI;
 import java.util.HashMap;
 
 import javax.websocket.*;
-import javax.websocket.WebSocketContainer;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import vcasino.encoder.GameStateEncoder;
@@ -21,15 +19,15 @@ import vcasino.decoder.GameEventDecoder;
 		encoders = {GameStateEncoder.class},
 		decoders = {GameEventDecoder.class}
 )
-public class VCasinoClientEndpoint {
+public class VCasinoServerEndpoint {
 
 	URI uri;
 	Session userSession = null;
-	private final static HashMap<String, VCasinoClientEndpoint> openSessions = new HashMap<>();
+	private final static HashMap<String, VCasinoServerEndpoint> openSessions = new HashMap<>();
 	private final static HashMap<String, Match> match = new HashMap<>();
 	private String myUniqueId;
     
-    public VCasinoClientEndpoint(URI endpointURI) {
+    public VCasinoServerEndpoint(URI endpointURI) {
         uri = endpointURI;
 	}
 
@@ -43,19 +41,19 @@ public class VCasinoClientEndpoint {
 		userSession.getUserProperties().put("game", game);
 		userSession.getUserProperties().put("player", new Player());
 		
-		VCasinoClientEndpoint.openSessions.put(myUniqueId, this);
+		VCasinoServerEndpoint.openSessions.put(myUniqueId, this);
 		
 		//Add a new match to the server if one does not exist
-		VCasinoClientEndpoint.match.putIfAbsent(game+roomNumber, new Match());
+		VCasinoServerEndpoint.match.putIfAbsent(game+roomNumber, new Match());
 		
-		for(VCasinoClientEndpoint currentClient  : VCasinoClientEndpoint.openSessions.values()) {
+		for(VCasinoServerEndpoint currentClient  : VCasinoServerEndpoint.openSessions.values()) {
 			if(currentClient == this) {
 				continue;
 			}
 			//Checks if the connection is open, if the game and roomNumbers match
-			if(VCasinoClientEndpoint.openSessions.get(this.myUniqueId).userSession.isOpen()  &&
-					VCasinoClientEndpoint.openSessions.get(currentClient.myUniqueId).userSession.getUserProperties().get("game").equals(this.userSession.getUserProperties().get("game")) &&
-					VCasinoClientEndpoint.openSessions.get(currentClient.myUniqueId).userSession.getUserProperties().get("roomNumber").equals(this.userSession.getUserProperties().get("roomNumber"))) {
+			if(VCasinoServerEndpoint.openSessions.get(this.myUniqueId).userSession.isOpen()  &&
+					VCasinoServerEndpoint.openSessions.get(currentClient.myUniqueId).userSession.getUserProperties().get("game").equals(this.userSession.getUserProperties().get("game")) &&
+					VCasinoServerEndpoint.openSessions.get(currentClient.myUniqueId).userSession.getUserProperties().get("roomNumber").equals(this.userSession.getUserProperties().get("roomNumber"))) {
 					currentClient.sendMessage(String.format("User %s is now connected!", this.myUniqueId));
 			}		
 		}
@@ -66,12 +64,12 @@ public class VCasinoClientEndpoint {
     
     @OnClose
     public void onClose(Session userSession, CloseReason reason) {
-    	if (VCasinoClientEndpoint.openSessions.containsKey(this.myUniqueId)) {
+    	if (VCasinoServerEndpoint.openSessions.containsKey(this.myUniqueId)) {
             // remove connection
-			VCasinoClientEndpoint.openSessions.remove(this.myUniqueId);
+			VCasinoServerEndpoint.openSessions.remove(this.myUniqueId);
 
             // broadcast this lost connection to all other connected clients
-            for (VCasinoClientEndpoint dstSocket : VCasinoClientEndpoint.openSessions.values()) {
+            for (VCasinoServerEndpoint dstSocket : VCasinoServerEndpoint.openSessions.values()) {
                 if (dstSocket == this) {
                     // skip me
                     continue;
@@ -88,7 +86,7 @@ public class VCasinoClientEndpoint {
     	String game = (String) userSession.getUserProperties().get("game");
     	
         System.out.println("Message from ClientID:" + userSession.getId() + "GameEvent" + gameEvent);
-        Match usersMatch = VCasinoClientEndpoint.match.get(game+roomNumber);
+        Match usersMatch = VCasinoServerEndpoint.match.get(game+roomNumber);
       //Add the action for the event
         switch(gameEvent.getAction()) {
 	        case "draw":
@@ -105,7 +103,7 @@ public class VCasinoClientEndpoint {
 	        	System.out.println("No event Found");
         }
         
-        for(VCasinoClientEndpoint connectedUser : VCasinoClientEndpoint.openSessions.values()) {
+        for(VCasinoServerEndpoint connectedUser : VCasinoServerEndpoint.openSessions.values()) {
         	if(checkGameAndRoom(connectedUser)) {
         		sendGameState(connectedUser, usersMatch.getGameState());
         	}
@@ -119,7 +117,7 @@ public class VCasinoClientEndpoint {
     }
     
     //Sends state of game as JSON object 
-    public void sendGameState(VCasinoClientEndpoint client, GameState state) {
+    public void sendGameState(VCasinoServerEndpoint client, GameState state) {
     	client.userSession.getAsyncRemote().sendObject(state);
     }
     public void sendRequest(String command, String payload) {
@@ -130,11 +128,11 @@ public class VCasinoClientEndpoint {
 		return Integer.toHexString(this.hashCode());
 	}
     
-    private boolean checkGameAndRoom(VCasinoClientEndpoint client) {
-    	if(VCasinoClientEndpoint.openSessions.get(this.myUniqueId).userSession.isOpen() &&
-    	VCasinoClientEndpoint.openSessions.get(client.myUniqueId).userSession.getUserProperties().get("game")
+    private boolean checkGameAndRoom(VCasinoServerEndpoint client) {
+    	if(VCasinoServerEndpoint.openSessions.get(this.myUniqueId).userSession.isOpen() &&
+    	VCasinoServerEndpoint.openSessions.get(client.myUniqueId).userSession.getUserProperties().get("game")
     	.equals(this.userSession.getUserProperties().get("game")) 
-    	&& VCasinoClientEndpoint.openSessions.get(client.myUniqueId).userSession.getUserProperties().get("roomNumber")
+    	&& VCasinoServerEndpoint.openSessions.get(client.myUniqueId).userSession.getUserProperties().get("roomNumber")
     	.equals(this.userSession.getUserProperties().get("roomNumber"))) {
     		return true;
     	}

@@ -2,3 +2,52 @@ img{
 	height: 150px;
 	width: 100px;
 }
+
+div.board{
+	width: 100%;
+	height: 1200px;
+	background-image: url("felt.jpg");
+}
+
+tr, td {
+	padding: 0px; 
+}
+
+span.corner {
+	display: block;
+	width: 200px;
+}
+
+img.p4 {
+	-webkit-transform:rotate(270deg);
+	-moz-transform: rotate(270deg);
+	-ms-transform: rotate(270deg);
+	-o-transform: rotate(270deg);
+	transform: rotate(270deg);
+}
+
+img.p3 {
+	-webkit-transform:rotate(180deg);
+	-moz-transform: rotate(180deg);
+	-ms-transform: rotate(180deg);
+	-o-transform: rotate(180deg);
+	transform: rotate(180deg);
+}
+
+img.p2 {
+	-webkit-transform:rotate(90deg);
+	-moz-transform: rotate(90deg);
+	-ms-transform: rotate(90deg);
+	-o-transform: rotate(90deg);
+	transform: rotate(90deg);
+}
+
+img.p1 {
+	
+}
+
+#footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}

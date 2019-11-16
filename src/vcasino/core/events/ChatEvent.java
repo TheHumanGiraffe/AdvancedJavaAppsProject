@@ -8,6 +8,7 @@ public class ChatEvent extends GameEvent {
 	
 	public ChatEvent(Player by, String text) {
 		super(by);
+		this.setAction("chat");
 		this.text = text;
 	}
 

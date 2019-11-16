@@ -16,7 +16,7 @@ import javafx.stage.Stage;
 public class Client extends Application {
 	Socket sock;
 	String server = "ec2-3-89-73-209.compute-1.amazonaws.com:8080"; //change me as necessary
-	VCasinoClientEndpoint endpoint;
+	VCasinoServerEndpoint endpoint;
 	
 	class ClientThread implements Runnable {
 		
@@ -34,7 +34,7 @@ public class Client extends Application {
 				});
 			
 			
-				endpoint = new VCasinoClientEndpoint(new URI("ws://"+server+"/"));
+				endpoint = new VCasinoServerEndpoint(new URI("ws://"+server+"/"));
 				endpoint.connect();
 				
 				if(endpoint.isConnected()) {

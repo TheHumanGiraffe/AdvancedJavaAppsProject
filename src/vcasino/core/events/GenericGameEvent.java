@@ -2,9 +2,9 @@ package vcasino.core.events;
 
 import vcasino.core.Player;
 
-public class BasicGameEvent extends GameEvent {
+public class GenericGameEvent extends GameEvent {
 
-	public BasicGameEvent(Player by) {
+	public GenericGameEvent(Player by) {
 		super(by);
 		// TODO Auto-generated constructor stub
 	}
