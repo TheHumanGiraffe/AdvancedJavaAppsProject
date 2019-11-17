@@ -8,6 +8,7 @@ public class GameEvent {
 	
 	private String action;
 	private int cardID;
+	private int betAmount;
 	
 	public String getAction() {
 		return action;
@@ -27,6 +28,22 @@ public class GameEvent {
 
 	public GameEvent(Player by) {
 		eventOwner = by;
+	}
+
+	public Player getEventOwner() {
+		return eventOwner;
+	}
+	public void setEventOwner(Player eventOwner) {
+		this.eventOwner = eventOwner;
+	}
+	
+	
+	public int getBetAmount() {
+		return betAmount;
+	}
+
+	public void setBetAmount(int betAmount) {
+		this.betAmount = betAmount;
 	}
 
 	@Override

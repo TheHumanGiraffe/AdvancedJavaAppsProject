@@ -10,11 +10,13 @@ public class GameState {
 	protected ArrayList<Card> table;
 	protected ArrayList<Player> players;
 	protected Player currentPlayer, winner;
+	protected int potSize;
 	
 	public GameState() {
 		topDiscard = new Card();
 		table = new ArrayList<>();
 		players = new ArrayList<>();
+		potSize = 0;
 	}
 	
 	public Card getTopDiscard() {
@@ -72,4 +74,13 @@ public class GameState {
 		this.currentPlayer = currentPlayer;
 	}
 
+	public int getPotSize() {
+		return potSize;
+	}
+
+	public void setPotSize(int potSize) {
+		this.potSize = potSize;
+	}
+
+	
 }

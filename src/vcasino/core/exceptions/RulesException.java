@@ -20,6 +20,6 @@ public class RulesException extends Exception {
 	
 	@Override
 	public String toString() {
-		return "Broken rule \""+rule+"\": "+description;
+		return "Broken rule \""+rule+"\": "+description +":"+ byPlayer;
 	}
 }

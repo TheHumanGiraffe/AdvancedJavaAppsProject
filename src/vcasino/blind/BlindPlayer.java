@@ -12,18 +12,14 @@ import vcasino.core.Player;
  * @author Mathias Ham
  *
  */
-public class BlindPlayer extends Player {
-	
+public class BlindPlayer {
+	private int chips;
+	private int numberOfCards;
+	private String name;
+
 	public BlindPlayer(Player p){
-		super(p.getName(), p.getChips(), p.getId());
-		
-		ArrayList<Card> hand = new ArrayList<>();
-		
-		for(@SuppressWarnings("unused") Card c : p.getHand()) {
-			hand.add(new Card());
-		}
-		
-		this.setHand(hand);
+		this.chips = p.getChips();
+		this.numberOfCards = p.getHand().size();
+		this.name = p.getName();
 	}
-	
 }

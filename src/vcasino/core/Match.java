@@ -47,9 +47,9 @@ public class Match {
 		
 	}
 	
-	public void doAction(String action, Player player) throws RulesException {
+	public void doAction(GameEvent event, Player player) throws RulesException {
 		if(player.isTurn()) {
-			switch(action) {
+			switch(event.getAction()) {
 				case "draw":
 					gameRules.drawCard(player);
 					//gameState.setPlayer(player);
@@ -61,10 +61,13 @@ public class Match {
 		        case "fold":
 		        	break;
 		        case "bet":
+		        	gameRules.placeBet(gameState, player, event.getBetAmount());
 		        	break;
 				case "winner":
 					Player winner = gameRules.declareWinner(gameState);
 					gameState.setWinner(winner);
+					winner.setChips(winner.getChips() + gameState.getPotSize());
+					gameState.setPotSize(0);
 					break;
 				default:
 					System.out.println("NO ACTION");
@@ -72,7 +75,7 @@ public class Match {
 			gameState.setCurrentPlayer(gameRules.advanceTurn(player, gameState.getPlayers()));
 			
 		}else {
-			throw new RulesException("Turn", "Unauthorized turn attemped by Player", player);
+			throw new RulesException("Turn", "Unauthorized turn attemped by Player: " ,player);
 		}
 	}
 	public Ruleset getRuleset() {

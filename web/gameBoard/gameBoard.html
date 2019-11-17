@@ -10,6 +10,7 @@
 	<link rel="stylesheet" href="gameBoard.css">
 </head>
 <body>
+	<h2>POT:</h2><h2 id="pot"></h2>
 	<div class="board">
 		<table id="board" class="board" border="0"> <!-- border just for debug -->
 			<tr><td><span class="corner">&nbsp;</span></td>
@@ -68,6 +69,7 @@
 	<textarea id="echoText" rows="5" cols="30"></textarea> -->
 	<input onclick="drawCard();" value ="Draw" type="button"/>
 	<input onclick="getWinner();" value ="Get Winner" type="button"/>
-	
+			Bet: <input type="number" id="betValue">
+		<input onclick="placeBet();" type="button" value="Place Bet">
 </body>
 </html>

@@ -16,6 +16,8 @@ public class PokerRuleset implements Ruleset {
 
 	private Deck deck;
 	private static int handSize= 5;
+	
+	
 	@Override
 	public String getDescription() {
 		return "Simple 5 card stud ruleset";
@@ -123,8 +125,13 @@ public class PokerRuleset implements Ruleset {
 	}
 
 	@Override
-	public GameEvent placeBet(Player player) {
-		// TODO Auto-generated method stub
+	public GameEvent placeBet(GameState gameState, Player player, int betSize) throws RulesException {
+		if(player.getChips() - betSize < 0) {
+			throw new RulesException("Over Bet", "Not enough Chips", player);
+		}else {
+			player.setChips(player.getChips() - betSize);
+			gameState.setPotSize(gameState.getPotSize() + betSize);
+		}
 		return null;
 	}
 

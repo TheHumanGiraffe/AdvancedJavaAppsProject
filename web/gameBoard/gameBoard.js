@@ -71,6 +71,14 @@
     webSocket.onclose = function(message){ wsClose(message);};
     webSocket.onerror = function(message){ wsError(message);};
     
+    function placeBet(){
+    	 var betInput = document.getElementById("betValue").value
+    	 if(!isNaN(betInput)){
+    		 var jsonText ='{ "action":"bet", "betAmount":' + betInput + '}'
+    	 }
+    	
+    	 wsSendMessage(jsonText);
+    }
     
     function drawCard(){
       var jsonText ='{ "action":"draw"}'
@@ -157,7 +165,8 @@
             x.innerHTML ="<img class=\"p4\" src=\"cards/0.jpg\"/>";
     	}
     	player4Cards.insertRow(numberOfCardsInBlindHands[0]);
-
+    	
+    	document.getElementById("pot").innerHTML=json.potSize;	
        // echoText.value += "Message received from the server : " + message.data + "\n";
     }
     function wsClose(message){

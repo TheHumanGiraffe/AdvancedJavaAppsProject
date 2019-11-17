@@ -77,7 +77,7 @@ public class UnoRuleset implements Ruleset {
 	}
 
 	@Override
-	public GameEvent placeBet(Player player) {
+	public GameEvent placeBet(GameState state, Player player, int betSize)throws RulesException {
 		return new GenericGameEvent(player);
 	}
 

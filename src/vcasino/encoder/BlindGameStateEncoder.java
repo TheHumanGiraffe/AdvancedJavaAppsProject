@@ -11,7 +11,7 @@ import vcasino.core.Player;
 import vcasino.core.events.GameState;
 
 
-public class BlindGameStateEncoder implements Encoder.Text<GameState>{
+public class BlindGameStateEncoder implements Encoder.Text<BlindGameState>{
 
 	private EndpointConfig config;
 	
@@ -28,13 +28,15 @@ public class BlindGameStateEncoder implements Encoder.Text<GameState>{
 	}
 
 	@Override
-	public String encode(GameState gameState) throws EncodeException {
+	public String encode(BlindGameState blindGameState) throws EncodeException {
 		Gson gson = new Gson();
-		Player ourPlayer = (Player)config.getUserProperties().get("player");
-		
-		BlindGameState blind = new BlindGameState(gameState, ourPlayer);
+		/*
+		 * Player ourPlayer = (Player)config.getUserProperties().get("player");
+		 * 
+		 * BlindGameState blind = new BlindGameState(gameState, ourPlayer);
+		 */
 				
-		return gson.toJson(blind);
+		return gson.toJson(blindGameState);
 	}
 
 }

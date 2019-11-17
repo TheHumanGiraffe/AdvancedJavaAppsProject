@@ -49,8 +49,8 @@ public class VCasinoServerEndpoint {
 		//Pass the Match Constructor game to set the correct ruleset
 		setupMatch = VCasinoServerEndpoint.match.get(game+roomNumber);
 		if(setupMatch == null) {
-			VCasinoServerEndpoint.match.putIfAbsent(game+roomNumber, new Match());
-			
+			VCasinoServerEndpoint.match.putIfAbsent(game+roomNumber, new Match());	
+			setupMatch = VCasinoServerEndpoint.match.get(game+roomNumber);
 		}
 		
 		Player newPlayer = (Player)userSession.getUserProperties().get("player");
@@ -101,7 +101,7 @@ public class VCasinoServerEndpoint {
         Player currentPlayer =(Player) userSession.getUserProperties().get("player");
       //Add the action for the event
         try {
-        	usersMatch.doAction(gameEvent.getAction(), currentPlayer);
+        	usersMatch.doAction(gameEvent, currentPlayer);
         } catch (RulesException e) {
         	//TODO: we need to alert the user that they did something wrong!
 			e.printStackTrace();
@@ -126,11 +126,12 @@ public class VCasinoServerEndpoint {
     //Sends state of game as JSON object 
     public void sendGameState(VCasinoServerEndpoint client, GameState state) {
     	try {
-    		client.userSession.getBasicRemote().sendObject(state);
-    		/*Player currentPlayer = (Player) client.userSession.getUserProperties().get("player");
-    		BlindGameState blindState = new BlindGameState(state);
-    		blindState = blindState.getBlindGameState(currentPlayer);
-    		client.userSession.getBasicRemote().sendObject(blindState);*/
+    		//Need to add GameStateEncoder if you want this.
+    			//client.userSession.getBasicRemote().sendObject(state);
+    		
+    		Player currentPlayer = (Player) client.userSession.getUserProperties().get("player");
+    		BlindGameState blindState = new BlindGameState(state, currentPlayer);
+    		client.userSession.getBasicRemote().sendObject(blindState);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
