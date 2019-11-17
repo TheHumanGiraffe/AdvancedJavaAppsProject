@@ -100,6 +100,12 @@ public class UnoRuleset implements Ruleset {
 		return null;
 	}
 
+	@Override
+	public GameEvent dealHand(Player forPlayer) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	
 
 }

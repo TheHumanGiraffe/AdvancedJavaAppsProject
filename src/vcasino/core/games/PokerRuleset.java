@@ -34,8 +34,7 @@ public class PokerRuleset implements Ruleset {
 
 	@Override
 	public int getInitialHandCount() {
-		// TODO Auto-generated method stub
-		return 0;
+		return handSize;
 	}
 
 	@Override

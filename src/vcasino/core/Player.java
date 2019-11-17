@@ -76,8 +76,5 @@ public class Player {
         //Check if player ID matches 
         return id.equals(p.id);
 	}
-	
-	public String toJSONString() {
-		return "{ player:{}}";
-	}
+
 }
