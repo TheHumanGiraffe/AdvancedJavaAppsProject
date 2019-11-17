@@ -2,9 +2,9 @@
 import javax.xml.transform.Result;
 import java.sql.*;
 
-public class DatabaseConnection {
-    static final String JDBC_DRIVER = "org.postgresql.Driver"; //dont know if we need this exactly or not
-    static final String DB_URL = "jdbc:postgresql://127.0.0.1:5432/casino?user=casinomanager&password=password";
+public class databaseConnection {
+    static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver"; //dont know if we need this exactly or not
+    static final String DB_URL = "jdbc:mysql://localhost/casino?user=casinomanager&password=password";
     static final String USER = "casinomanager";
     static final String PASS = "password";
 
@@ -28,7 +28,7 @@ public class DatabaseConnection {
                 rs = stmt.executeQuery(statement);
             }
             else{
-                stmt.executeQuery(statement);
+                stmt.executeUpdate(statement);
             }
         }
         catch(Exception e){
