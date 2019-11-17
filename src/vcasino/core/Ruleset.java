@@ -2,6 +2,7 @@
 package vcasino.core;
 
 import vcasino.core.events.GameEvent;
+import vcasino.core.events.GameState;
 import vcasino.core.exceptions.RulesException;
 
 public interface Ruleset {
@@ -25,7 +26,7 @@ public interface Ruleset {
 	GameEvent beginMatch();
 	Player advanceTurn(Player[] players);
 	boolean gameOver();
-	Player declareWinner();
+	Player declareWinner(GameState gameState);
 	GameEvent placeBet(Player player);
 	GameEvent showHand(Player player);
 	GameEvent shuffleDeck();

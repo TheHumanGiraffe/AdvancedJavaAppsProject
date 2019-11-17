@@ -9,6 +9,7 @@ public class GameState {
 	private Card topDiscard;
 	private ArrayList<Card> table;
 	private ArrayList<Player> players;
+	private Player winner;
 	
 	public GameState() {
 		topDiscard = new Card();
@@ -38,12 +39,38 @@ public class GameState {
 		players.add(newPlayer);
 	}
 	
+	public Player getWinner() {
+		return winner;
+	}
+
+	public void setWinner(Player winner) {
+		this.winner = winner;
+	}
+
 	public void setPlayer(Player player) {
 		for(int i =0; i < players.size(); i++) {
 			if(players.get(i).equals(player)) {
 				players.set(i, player);
 			}
 		}
+	}
+	
+	public Player getPlayer(Player player) {
+		for(int i =0; i < players.size(); i++) {
+			if(players.get(i).equals(player)) {
+				return players.get(i);
+			}
+		}	
+		return null;
+	}
+	public Player getNextPlayer(Player previousPlayer) {
+		for(int i =0; i < players.size(); i++) {
+			if(players.get(i).equals(previousPlayer)) {
+				int playerId = (i+1)%players.size();
+				return players.get(playerId);
+			}
+		}
+		return null;
 	}
 
 }

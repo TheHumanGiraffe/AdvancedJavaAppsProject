@@ -7,7 +7,10 @@ import java.util.HashMap;
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
+
+import vcasino.encoder.BlindGameStateEncoder;
 import vcasino.encoder.GameStateEncoder;
+import vcasino.blind.BlindGameState;
 import vcasino.core.Match;
 import vcasino.core.Player;
 import vcasino.core.events.GameEvent;
@@ -18,7 +21,7 @@ import vcasino.decoder.GameEventDecoder;
 
 @ServerEndpoint(
 		value ="/vcasino/{game}/{roomNumber}",
-		encoders = {GameStateEncoder.class},
+		encoders = {BlindGameStateEncoder.class},
 		decoders = {GameEventDecoder.class}
 )
 public class VCasinoServerEndpoint {
@@ -42,6 +45,7 @@ public class VCasinoServerEndpoint {
 		VCasinoServerEndpoint.openSessions.put(myUniqueId, this);
 		
 		//Add a new match to the server if one does not exist
+		//Pass the Match Constructor game to set the correct ruleset
 		VCasinoServerEndpoint.match.putIfAbsent(game+roomNumber, new Match());
 		Match setupMatch = VCasinoServerEndpoint.match.get(game+roomNumber);
 		Player newPlayer = (Player)userSession.getUserProperties().get("player");
@@ -104,6 +108,8 @@ public class VCasinoServerEndpoint {
 		        	break;
 		        case "bet":
 		        	break;
+		        case "winner":
+		        	usersMatch.doAction("getWinner", currentPlayer);
 		        default:
 		        	System.out.println("No event Found");
 	        }
@@ -132,7 +138,10 @@ public class VCasinoServerEndpoint {
     //Sends state of game as JSON object 
     public void sendGameState(VCasinoServerEndpoint client, GameState state) {
     	try {
-    		client.userSession.getBasicRemote().sendObject(state);
+    		Player currentPlayer = (Player) client.userSession.getUserProperties().get("player");
+    		BlindGameState blindState = new BlindGameState(state);
+    		blindState = blindState.getBlindGameState(currentPlayer);
+    		client.userSession.getBasicRemote().sendObject(blindState);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

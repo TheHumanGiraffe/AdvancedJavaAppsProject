@@ -5,11 +5,12 @@ import javax.websocket.Encoder;
 import javax.websocket.EndpointConfig;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 
 import vcasino.blind.BlindGameState;
-import vcasino.core.events.GameState;
 
-public class GameStateEncoder implements Encoder.Text<GameState>{
+
+public class BlindGameStateEncoder implements Encoder.Text<BlindGameState>{
 
 	@Override
 	public void destroy() {
@@ -24,11 +25,12 @@ public class GameStateEncoder implements Encoder.Text<GameState>{
 	}
 
 	@Override
-	public String encode(GameState gameState) throws EncodeException {
-		
-		Gson gson = new Gson();
-		
-		return gson.toJson(gameState);
+	public String encode(BlindGameState blindGameState) throws EncodeException {
+		Gson gson = new Gson();	
+		//Null out other players
+		blindGameState.setOtherPlayers();
+				
+		return gson.toJson(blindGameState);
 	}
 
 }

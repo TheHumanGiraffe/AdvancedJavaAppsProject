@@ -40,19 +40,34 @@ public class Match {
 	}
 	
 	public void addPlayer(Player newPlayer) {
+		if(gameState.getPlayers().size() == 0) {
+			newPlayer.setTurn(true);
+		}
 		gameState.addPlayer(newPlayer);
 		gameRules.dealHand(newPlayer);
 		
 	}
 	
 	public void doAction(String action, Player player) throws RulesException {
-		switch(action) {
-			case "drawCard":
-				gameRules.drawCard(player);
-				//gameState.setPlayer(player);
-				break;
-			default:
-				System.out.println("NO ACTION");
+		if(player.isTurn()) {
+			switch(action) {
+				case "drawCard":
+					gameRules.drawCard(player);
+					//gameState.setPlayer(player);
+					break;
+				case "getWinner":
+					Player winner = gameRules.declareWinner(gameState);
+					gameState.setWinner(winner);
+					break;
+				default:
+					System.out.println("NO ACTION");
+			}
+			player.setTurn(false);
+			Player nextPlayer = gameState.getNextPlayer(player);
+			nextPlayer.setTurn(true);
+			gameRules.setCurrentPlayer(nextPlayer);
+		}else {
+			System.out.println("Unauthoried turn attemped by Player: " + player);
 		}
 	}
 	public Ruleset getRuleset() {

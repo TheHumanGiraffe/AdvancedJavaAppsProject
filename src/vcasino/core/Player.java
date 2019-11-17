@@ -77,6 +77,12 @@ public class Player {
         return id.equals(p.id);
 	}
 	
+	@Override
+	public String toString() {
+		return "Player [name=" + name + ", chips=" + chips + ", isTurn=" + isTurn + ", hand=" + hand + ", id=" + id
+				+ "]";
+	}
+
 	public String toJSONString() {
 		return "{ player:{}}";
 	}

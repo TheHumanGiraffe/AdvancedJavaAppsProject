@@ -1,15 +1,22 @@
 package vcasino.core.games;
 
+import java.util.ArrayList;
+
+import vcasino.core.Card;
 import vcasino.core.Deck;
+import vcasino.core.Hand;
 import vcasino.core.Player;
 import vcasino.core.Ruleset;
 import vcasino.core.events.GameEvent;
+import vcasino.core.events.GameState;
 import vcasino.core.exceptions.RulesException;
 
 public class PokerRuleset implements Ruleset {
 
 	private Deck deck;
 	private static int handSize= 5;
+	private Player currentplayer = null;
+	private Player winner = null;
 	@Override
 	public String getDescription() {
 		return "Simple 5 card stud ruleset";
@@ -28,7 +35,7 @@ public class PokerRuleset implements Ruleset {
 
 	@Override
 	public void setCurrentPlayer(Player player) {
-		// TODO Auto-generated method stub
+		this.currentplayer = player;
 
 	}
 
@@ -94,9 +101,27 @@ public class PokerRuleset implements Ruleset {
 	}
 
 	@Override
-	public Player declareWinner() {
-		// TODO Auto-generated method stub
-		return null;
+	public Player declareWinner(GameState gameState) {
+		ArrayList<Player> players = gameState.getPlayers();
+		Player winner = null;
+		int currentHigh = -1;
+		for(Player player : players) {
+			if(makeBestHand(player.getHand()) == currentHigh) {
+				Hand h1 = new Hand(player.getHand());
+				Hand h2 = new Hand(winner.getHand());
+				if(Hand.compare(h1, h2) == 0) {
+					winner = player;
+				}
+				
+			}
+			if(makeBestHand(player.getHand()) > currentHigh) {
+				winner = player;
+				currentHigh = makeBestHand(player.getHand());
+			}
+			
+		}
+		this.winner = winner;
+		return winner;
 	}
 
 	@Override
@@ -117,4 +142,34 @@ public class PokerRuleset implements Ruleset {
 		return null;
 	}
 
+	private int makeBestHand(ArrayList<Card> handAsList) {
+		Hand hand = new Hand(handAsList);
+		hand.makeBestHand();
+		return hand.getHandRank();
+	}
+	
+	
+
+	public enum HandNameAndRank {
+	    HIGH_CARD("High Card", 0), PAIR("Pair", 1), TWO_PAIR("Two Pair", 2),
+	    THREE_OF_A_KIND("Three of a kind", 3), STRIGHT("Stright", 4), FLUSH("Flush", 5),
+	    FULL_HOUSE("Full House", 6), FOUR_OF_A_KIND("Four of a kind", 7),
+	    STRIGHT_FLUSH("Stright Flush", 8), ROYAL_FLUSH("Royal Flush", 9);
+	
+	    private String handName;
+	    private int handRank;
+	
+	
+	    HandNameAndRank(String name, int rank){
+	        this.handName = name;
+	        this.handRank = rank;
+	    }
+	    public String handName(){
+	        return handName;
+	    }
+	
+	    public  int handRank(){
+	        return handRank;
+	    }
+	}
 }
