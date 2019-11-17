@@ -8,14 +8,17 @@ public class Player {
 	private int chips;
 	private boolean isTurn;
 	private ArrayList<Card> hand;
+	private String id;
 	
-	public Player() {
-		name = "TestName";
-		chips = 100;
+	public Player(String name, int chips, String id) {
+		this.name = name;
+		this.chips = chips;
 		isTurn = false;
+		this.id = id;
+		hand = new ArrayList<>();
 		
 	}
-	
+
 	public String getName() {
 		return name;
 	}
@@ -48,8 +51,30 @@ public class Player {
 		this.hand = hand;
 	}
 
-	public int getId() {
-		return 0;
+	public String getId() {
+		return this.id;
+	}
+	
+	
+	public void addCard(Card cardToAdd) {
+		this.hand.add(cardToAdd);
+	}
+	
+	@Override
+	public boolean equals(Object o) { 
+		   // If the object is compared with itself then return true   
+        if (o == this) { 
+            return true; 
+        } 
+  
+        /* Check if o is an instance of Complex or not 
+          "null instanceof [Player]" also returns false */
+        if (!(o instanceof Player)) { 
+            return false; 
+        }
+        Player p = (Player) o;
+        //Check if player ID matches 
+        return id.equals(p.id);
 	}
 	
 	public String toJSONString() {

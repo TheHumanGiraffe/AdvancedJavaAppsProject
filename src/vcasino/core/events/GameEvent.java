@@ -2,7 +2,7 @@ package vcasino.core.events;
 
 import vcasino.core.Player;
 
-public abstract class GameEvent {
+public class GameEvent {
 
 	protected Player eventOwner;
 	
@@ -28,6 +28,10 @@ public abstract class GameEvent {
 	public GameEvent(Player by) {
 		eventOwner = by;
 	}
+
+	@Override
+	public String toString() {
+		return "GameEvent [eventOwner=" + eventOwner + ", action=" + action + ", cardID=" + cardID + "]";
+	}
 	
-	public abstract String toJSONString();
 }

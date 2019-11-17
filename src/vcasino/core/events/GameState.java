@@ -10,6 +10,12 @@ public class GameState {
 	private ArrayList<Card> table;
 	private ArrayList<Player> players;
 	
+	public GameState() {
+		topDiscard = new Card();
+		table = new ArrayList<>();
+		players = new ArrayList<>();
+	}
+	
 	public Card getTopDiscard() {
 		return topDiscard;
 	}
@@ -27,6 +33,17 @@ public class GameState {
 	}
 	public void setPlayers(ArrayList<Player> players) {
 		this.players = players;
+	}
+	public void addPlayer(Player newPlayer) {
+		players.add(newPlayer);
+	}
+	
+	public void setPlayer(Player player) {
+		for(int i =0; i < players.size(); i++) {
+			if(players.get(i).equals(player)) {
+				players.set(i, player);
+			}
+		}
 	}
 
 }

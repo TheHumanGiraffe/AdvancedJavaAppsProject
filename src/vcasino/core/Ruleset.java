@@ -16,6 +16,7 @@ public interface Ruleset {
 	//Player-level actions
 	GameEvent passCard(Player from, Player to) throws RulesException;
 	GameEvent drawCard(Player forPlayer) throws RulesException;
+	GameEvent dealHand(Player forPlayer);
 	GameEvent dealCard(Player toPlayer);
 	GameEvent placeCard(Player player);
 	GameEvent fold(Player player);
