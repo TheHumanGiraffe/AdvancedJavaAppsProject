@@ -1,7 +1,10 @@
 
 package vcasino.core;
 
+import java.util.List;
+
 import vcasino.core.events.GameEvent;
+import vcasino.core.events.GameState;
 import vcasino.core.exceptions.RulesException;
 
 public interface Ruleset {
@@ -10,7 +13,6 @@ public interface Ruleset {
 	String getDescription();
 	String getName();
 	Deck newDeck();
-	void setCurrentPlayer(Player player);
 	int getInitialHandCount();
 	
 	//Player-level actions
@@ -23,9 +25,9 @@ public interface Ruleset {
 	
 	//Table-level actions
 	GameEvent beginMatch();
-	Player advanceTurn(Player[] players);
+	Player advanceTurn(Player current, List<Player> players);
 	boolean gameOver();
-	Player declareWinner();
+	Player declareWinner(GameState gameState);
 	GameEvent placeBet(Player player);
 	GameEvent showHand(Player player);
 	GameEvent shuffleDeck();

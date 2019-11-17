@@ -7,7 +7,9 @@ import java.util.HashMap;
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
-import vcasino.encoder.GameStateEncoder;
+
+import vcasino.encoder.BlindGameStateEncoder;
+import vcasino.blind.BlindGameState;
 import vcasino.core.Match;
 import vcasino.core.Player;
 import vcasino.core.events.GameEvent;
@@ -18,7 +20,7 @@ import vcasino.decoder.GameEventDecoder;
 
 @ServerEndpoint(
 		value ="/vcasino/{game}/{roomNumber}",
-		encoders = {GameStateEncoder.class},
+		encoders = {BlindGameStateEncoder.class},
 		decoders = {GameEventDecoder.class}
 )
 public class VCasinoServerEndpoint {
@@ -31,6 +33,8 @@ public class VCasinoServerEndpoint {
   
     @OnOpen
     public void onOpen(Session userSession,@PathParam("game") final String game, @PathParam("roomNumber") final String roomNumber) {
+    	Match setupMatch;
+    	
         System.out.println("opening websocket");
         this.userSession = userSession;
 		this.myUniqueId = this.getMyUniqueId();
@@ -42,8 +46,13 @@ public class VCasinoServerEndpoint {
 		VCasinoServerEndpoint.openSessions.put(myUniqueId, this);
 		
 		//Add a new match to the server if one does not exist
-		VCasinoServerEndpoint.match.putIfAbsent(game+roomNumber, new Match());
-		Match setupMatch = VCasinoServerEndpoint.match.get(game+roomNumber);
+		//Pass the Match Constructor game to set the correct ruleset
+		setupMatch = VCasinoServerEndpoint.match.get(game+roomNumber);
+		if(setupMatch == null) {
+			VCasinoServerEndpoint.match.putIfAbsent(game+roomNumber, new Match());
+			
+		}
+		
 		Player newPlayer = (Player)userSession.getUserProperties().get("player");
 		setupMatch.addPlayer(newPlayer);
 		
@@ -92,23 +101,9 @@ public class VCasinoServerEndpoint {
         Player currentPlayer =(Player) userSession.getUserProperties().get("player");
       //Add the action for the event
         try {
-	        switch(gameEvent.getAction()) {
-		        case "draw":			
-					usersMatch.doAction("drawCard", currentPlayer);	
-		        	break;
-		        case "play":
-		        	break;
-		        case "chat":
-		        	break;
-		        case "fold":
-		        	break;
-		        case "bet":
-		        	break;
-		        default:
-		        	System.out.println("No event Found");
-	        }
+        	usersMatch.doAction(gameEvent.getAction(), currentPlayer);
         } catch (RulesException e) {
-			// TODO Auto-generated catch block
+        	//TODO: we need to alert the user that they did something wrong!
 			e.printStackTrace();
 		}
         for(VCasinoServerEndpoint connectedUser : VCasinoServerEndpoint.openSessions.values()) {
@@ -124,7 +119,6 @@ public class VCasinoServerEndpoint {
 			try {
 				this.userSession.getBasicRemote().sendText(message);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
     }
@@ -133,6 +127,10 @@ public class VCasinoServerEndpoint {
     public void sendGameState(VCasinoServerEndpoint client, GameState state) {
     	try {
     		client.userSession.getBasicRemote().sendObject(state);
+    		/*Player currentPlayer = (Player) client.userSession.getUserProperties().get("player");
+    		BlindGameState blindState = new BlindGameState(state);
+    		blindState = blindState.getBlindGameState(currentPlayer);
+    		client.userSession.getBasicRemote().sendObject(blindState);*/
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

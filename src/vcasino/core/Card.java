@@ -2,7 +2,7 @@ package vcasino.core;
 
 public class Card {
 
-	private int cardID;
+	private int cardID=0; //Java always does, but it's just the C coder in me...
 	private String name;
 	private int rank;
 	private String suit;
@@ -33,4 +33,23 @@ public class Card {
 		this.suit = suit;
 	}
 	
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Card card = (Card) o;
+        return this.getRank() == card.getRank();
+    }
+
+    public int compare(Card c1){
+        if(this.getRank() == c1.getRank()){
+            return 0;
+        }
+        else if(this.getRank() < c1.getRank()){
+            return -1;
+        }
+        else{
+            return 1;
+        }
+    }
 }

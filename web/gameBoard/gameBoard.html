@@ -11,37 +11,35 @@
 </head>
 <body>
 	<div class="board">
-		<table class="board" border="0"> <!-- border just for debug -->
-		<tr><td><span class="corner">&nbsp;</span></td>
-		
-		<!-- player 3 -->
-		<td>
-		<table>
-		<tr>
-		<td><img class="p3" src="cards/0.jpg"/></td><td><img class="p3" src="cards/0.jpg"/></td><td><img class="p3" src="cards/0.jpg"/></td><td><img class="p3" src="cards/0.jpg"/></td><td><img class="p3" src="cards/0.jpg"/></td>
-		</tr>
-		</table>
-		</td>
-		
-		<td><span class="corner">&nbsp;</span></td></tr>
-		
-		<tr>
-		<td><table><!-- player 2 --><tr><td><img class="p2" src="cards/0.jpg"/></td></tr><tr><td><img class="p2" src="cards/0.jpg"/></td></tr><tr><td><img class="p2" src="cards/0.jpg"/></td></tr><tr><td><img class="p2" src="cards/0.jpg"/></td></tr><tr><td><img class="p2" src="cards/0.jpg"/></td></tr></table></td>
-		<td>
-		<!-- decks -->
-		<table><tr><td><img class="discard" src="cards/42.jpg"/></td></td></tr></table>
-		</td>
-		<td><table><!-- player 4 --><tr><td><img class="p4" src="cards/0.jpg"/></td></tr><tr><td><img class="p4" src="cards/0.jpg"/></td></tr><tr><td><img class="p4" src="cards/0.jpg"/></td></tr><tr><td><img class="p4" src="cards/0.jpg"/></td></tr><tr><td><img class="p4" src="cards/0.jpg"/></td></tr></table></td>
-		</tr>
-		
-		<tr><td><span class="corner">&nbsp;</span></td>
-		
-		<td>
-		<table><!-- player 1 --><tr><td><img class="p1" src="cards/52.jpg"/></td><td><img class="p1" src="cards/52.jpg"/></td><td><img class="p1" src="cards/52.jpg"/></td><td><img class="p1" src="cards/52.jpg"/></td><td><img class="p1" src="cards/52.jpg"/></td></tr></table>
-		</td>
-		
-		<td><span class="corner">&nbsp;</span></td></tr>
-		
+		<table id="board" class="board" border="0"> <!-- border just for debug -->
+			<tr><td><span class="corner">&nbsp;</span></td>
+			
+			<!-- player 3 -->
+			<td>
+				<table id="player3Table" >
+				<tr></tr>
+				</table>
+			</td>
+			
+			<td><span class="corner">&nbsp;</span></td></tr>
+			
+			<tr>
+			<td><table id="player2Table"><!-- player 2 --><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr></table></td>
+			<td>
+			<!-- decks -->
+			<table><tr><td><img class="discard" src="cards/42.jpg"/></td></td></tr></table>
+			</td>
+			<td><table id="player4Table"><!-- player 4 --><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr></table></td>
+			</tr>
+			
+			<tr><td><span class="corner">&nbsp;</span></td>
+			
+			<td>
+			<table id="player1Table"><!-- player 1 --><tr></tr></table>
+			</td>
+			
+			<td><span class="corner">&nbsp;</span></td></tr>
+			
 		</table>
 </div>
 		<!-- <div id="chat"> -->
@@ -68,6 +66,8 @@
 	</form>
 	
 	<textarea id="echoText" rows="5" cols="30"></textarea> -->
-	<input onclick="wsSendMessage();" value ="Draw" type="button"/>
+	<input onclick="drawCard();" value ="Draw" type="button"/>
+	<input onclick="getWinner();" value ="Get Winner" type="button"/>
+	
 </body>
 </html>

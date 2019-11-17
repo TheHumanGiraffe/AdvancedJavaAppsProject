@@ -6,10 +6,15 @@ import javax.websocket.EndpointConfig;
 
 import com.google.gson.Gson;
 
+import vcasino.blind.BlindGameState;
+import vcasino.core.Player;
 import vcasino.core.events.GameState;
 
-public class GameStateEncoder implements Encoder.Text<GameState>{
 
+public class BlindGameStateEncoder implements Encoder.Text<GameState>{
+
+	private EndpointConfig config;
+	
 	@Override
 	public void destroy() {
 		// TODO Auto-generated method stub
@@ -18,16 +23,18 @@ public class GameStateEncoder implements Encoder.Text<GameState>{
 
 	@Override
 	public void init(EndpointConfig arg0) {
-		// TODO Auto-generated method stub
+		config = arg0;
 		
 	}
 
 	@Override
 	public String encode(GameState gameState) throws EncodeException {
-		
 		Gson gson = new Gson();
+		Player ourPlayer = (Player)config.getUserProperties().get("player");
 		
-		return gson.toJson(gameState);
+		BlindGameState blind = new BlindGameState(gameState, ourPlayer);
+				
+		return gson.toJson(blind);
 	}
 
 }

@@ -5,8 +5,6 @@ import vcasino.core.events.GameState;
 import vcasino.core.exceptions.RulesException;
 import vcasino.core.games.PokerRuleset;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Deque;
 
 public class Match {
@@ -24,13 +22,14 @@ public class Match {
 	private Deque<GameEvent> messageQueue;
 	private MatchState state = MatchState.MSTATE_INIT;
 	private GameState gameState;
-	private Deck deck;
 	
 	public Match() {
 		gameRules = new PokerRuleset();
 		gameRules.newDeck();
 		gameRules.shuffleDeck();
 		gameState = new GameState();
+		
+		matchId = generateMatchId();
 	}
 	public Match(String id, Ruleset rules, Player [] players, Deque<GameEvent> q) {
 		matchId = id;
@@ -40,19 +39,40 @@ public class Match {
 	}
 	
 	public void addPlayer(Player newPlayer) {
+		if(gameState.getPlayers().size() == 0) {
+			newPlayer.setTurn(true);
+		}
 		gameState.addPlayer(newPlayer);
 		gameRules.dealHand(newPlayer);
 		
 	}
 	
 	public void doAction(String action, Player player) throws RulesException {
-		switch(action) {
-			case "drawCard":
-				gameRules.drawCard(player);
-				//gameState.setPlayer(player);
-				break;
-			default:
-				System.out.println("NO ACTION");
+		if(player.isTurn()) {
+			switch(action) {
+				case "draw":
+					gameRules.drawCard(player);
+					//gameState.setPlayer(player);
+					break;
+				case "play":
+		        	break;
+		        case "chat":
+		        	break;
+		        case "fold":
+		        	break;
+		        case "bet":
+		        	break;
+				case "winner":
+					Player winner = gameRules.declareWinner(gameState);
+					gameState.setWinner(winner);
+					break;
+				default:
+					System.out.println("NO ACTION");
+			}
+			gameState.setCurrentPlayer(gameRules.advanceTurn(player, gameState.getPlayers()));
+			
+		}else {
+			throw new RulesException("Turn", "Unauthorized turn attemped by Player", player);
 		}
 	}
 	public Ruleset getRuleset() {
@@ -78,15 +98,16 @@ public class Match {
 	public GameState getGameState() {
 		return gameState;
 	}
+	
 	public void setGameState(GameState gameState) {
 		this.gameState = gameState;
 	}
-	/*
-	 * public String toJSONString() { String ret =
-	 * "{\"Match\": {id:\""+matchId+"\", rules: \""+gameRules.getName()+"\", ";
-	 * if(players.size()>0) { ret += "players: ["; for(int
-	 * i=0;i<players.size()-1;i++) ret += players.get(i).toJSONString(); ret +=
-	 * players.get(players.size()-1).toJSONString()+"],"; } return
-	 * ret+"state: \"init\"}}"; }
-	 */
+	
+	private String generateMatchId() {
+		String ret="";
+		for(int i=0;i<16;i++) {
+			ret += (Math.random() * 64 + 'a');
+		}
+		return ret;
+	}
 }

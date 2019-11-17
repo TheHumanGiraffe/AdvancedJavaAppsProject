@@ -53,6 +53,10 @@ public class Deck {
 		
 	}
 	
+	public int size() {
+		return 52;
+	}
+	
 	public Card drawCard() {
 		return cards.remove(0);
 	}

@@ -45,7 +45,6 @@
 	});
 	
 	
-	var jsonText ='{ "action":"draw"}'
 	//var json = JSON.parse(jsonText); 
 	
 	//
@@ -72,10 +71,22 @@
     webSocket.onclose = function(message){ wsClose(message);};
     webSocket.onerror = function(message){ wsError(message);};
     
+    
+    function drawCard(){
+      var jsonText ='{ "action":"draw"}'
+ 	   wsSendMessage(jsonText);
+    }
+    
+    function getWinner(){
+ 	   var jsonText ='{ "action":"winner"}'
+ 	   wsSendMessage(jsonText);
+    }
+   
+   
     function wsOpen(message){
        // echoText.value += "Connecting ... \n";
     }
-    function wsSendMessage(){
+    function wsSendMessage(jsonText){
        // webSocket.send(message.value);
        // webSocket.send(json);
         webSocket.send(jsonText);
@@ -89,6 +100,64 @@
     	console.log(message);
     	console.log(message.data);
     	console.log(JSON.parse(message.data));
+    	var json = JSON.parse(message.data);
+    	
+    	console.log(json.currentPlayer);
+    	console.log(json.currentPlayer.hand);
+    	console.log(json.currentPlayer.hand[0]);
+    	console.log(json.currentPlayer.hand[0].cardID);
+
+    	var numberOfBlindPlayers = json.blindPlayers.length;
+    	var blindPlayers = json.blindPlayers;
+    	var numberOfCardsInBlindHands =[];
+    	for(i = 0; i < numberOfBlindPlayers; i++){
+    		numberOfCardsInBlindHands[i] = blindPlayers[i].numberOfCards;
+    	}
+		for(i = numberOfBlindPlayers; i < 3; i++ ){
+			numberOfCardsInBlindHands[i] = 0;
+		}
+    	
+    	var player1Cards = document.getElementById("player1Table");
+    	player1Cards.deleteRow(0);
+    	var cardRow = player1Cards.insertRow(0);
+    	
+    	json.currentPlayer.hand.forEach(function(card){
+    		var x=cardRow.insertCell(-1);
+            x.innerHTML ="<img class=\"p1\" src='cards/" + card.cardID + ".jpg'"+"/>";
+    	});
+    	
+    	var player2Cards = document.getElementById("player2Table");
+    	
+    	
+    	for(i = numberOfCardsInBlindHands[0]; i > 0; i --){
+    		player2Cards.deleteRow(i-1);
+        	var cardRow = player2Cards.insertRow(i-1);
+    		var x=cardRow.insertCell(-1);
+            x.innerHTML ="<img class=\"p2\" src=\"cards/0.jpg\"/>";
+            
+    	}
+    	player2Cards.insertRow(numberOfCardsInBlindHands[0]);
+    	
+    	var player3Cards = document.getElementById("player3Table");
+    	player3Cards.deleteRow(0);
+    	var cardRow = player3Cards.insertRow(0);
+    	
+    	for(i = numberOfCardsInBlindHands[1]; i > 0; i --){
+    		var x=cardRow.insertCell(-1);
+            x.innerHTML ="<img class=\"p3\" src=\"cards/0.jpg\"/>";
+    	}
+    	
+    	var player4Cards = document.getElementById("player4Table");
+    	
+    	
+    	for(i = numberOfCardsInBlindHands[2]; i > 0; i --){
+    		player4Cards.deleteRow(i-1);
+        	var cardRow = player4Cards.insertRow(i-1);
+    		var x=cardRow.insertCell(-1);
+            x.innerHTML ="<img class=\"p4\" src=\"cards/0.jpg\"/>";
+    	}
+    	player4Cards.insertRow(numberOfCardsInBlindHands[0]);
+
        // echoText.value += "Message received from the server : " + message.data + "\n";
     }
     function wsClose(message){

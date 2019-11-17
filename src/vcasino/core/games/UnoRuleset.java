@@ -1,8 +1,11 @@
 package vcasino.core.games;
 
+import java.util.List;
+
 import vcasino.core.*;
 import vcasino.core.events.GenericGameEvent;
 import vcasino.core.events.GameEvent;
+import vcasino.core.events.GameState;
 import vcasino.core.exceptions.RulesException;
 
 public class UnoRuleset implements Ruleset {
@@ -23,7 +26,7 @@ public class UnoRuleset implements Ruleset {
 	
 	@Override
 	public Deck newDeck() {
-		Deck deck = new Deck(); //either UnoDeck or we need to be able to set lots of properties like values, suits/colors, where to find the images
+		Deck deck = new UnoDeck();
 		deck.discardTop();
 		return deck;
 	}
@@ -74,12 +77,6 @@ public class UnoRuleset implements Ruleset {
 	}
 
 	@Override
-	public Player declareWinner() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public GameEvent placeBet(Player player) {
 		return new GenericGameEvent(player);
 	}
@@ -95,13 +92,19 @@ public class UnoRuleset implements Ruleset {
 	}
 
 	@Override
-	public Player advanceTurn(Player[] players) {
+	public Player advanceTurn(Player current, List<Player> players) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public GameEvent dealHand(Player forPlayer) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Player declareWinner(GameState gameState) {
 		// TODO Auto-generated method stub
 		return null;
 	}
