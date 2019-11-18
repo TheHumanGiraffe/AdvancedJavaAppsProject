@@ -1,0 +1,13 @@
+{
+  "plugins": {
+    "guess-types": {
+      
+    },
+    "angular": {
+      
+    }
+  },
+  "libs": [
+    "browser"
+  ]
+}
