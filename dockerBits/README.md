@@ -8,6 +8,7 @@ Well, you do it like this
 4. wait for awhile because there's a lot to do on the first build. be patient. get a coffee.
 4. `docker run -p 8080:8080 casino:latest`
 5. go look at the beauty that you have created in a browser.
+`http://localhost:8080/casino/gameBoard/gameBoard.html?game=poker&roomNumber=1`
 
 ## Wait, I got this thing running, make it stop please
  ```
