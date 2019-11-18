@@ -67,7 +67,7 @@ public class Match {
 					Player winner = gameRules.declareWinner(gameState);
 					gameState.setWinner(winner);
 					winner.setChips(winner.getChips() + gameState.getPotSize());
-					gameState.setPotSize(0);
+					gameRules.postHandReset(gameState);			
 					break;
 				default:
 					System.out.println("NO ACTION");

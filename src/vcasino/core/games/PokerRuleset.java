@@ -126,11 +126,24 @@ public class PokerRuleset implements Ruleset {
 
 	@Override
 	public GameEvent placeBet(GameState gameState, Player player, int betSize) throws RulesException {
+		//Check if player has enough chips to bet
 		if(player.getChips() - betSize < 0) {
 			throw new RulesException("Over Bet", "Not enough Chips", player);
 		}else {
-			player.setChips(player.getChips() - betSize);
-			gameState.setPotSize(gameState.getPotSize() + betSize);
+			for(Player opponent : gameState.getPlayers()) {
+				//Skip current player
+				if(opponent.equals(player)) {
+					continue;
+				}
+				//Check if players bet is greater than or = to oppents current bet 
+				if(player.getActiveBet() + betSize < opponent.getActiveBet()) {
+					throw new RulesException("Under Bet", "Player Did not meet oppenent Call", player);
+				}else {
+					player.setActiveBet(player.getActiveBet() + betSize);
+					player.setChips(player.getChips() - betSize);
+					gameState.setPotSize(gameState.getPotSize() + betSize);
+				}
+			}		
 		}
 		return null;
 	}
@@ -153,6 +166,23 @@ public class PokerRuleset implements Ruleset {
 		return hand.getHandRank();
 	}
 	
+	@Override
+	public void postHandReset(GameState gameState) {
+		//Get new Deck and shuffle it
+		this.newDeck();
+		this.shuffleDeck();	
+		gameState.setPotSize(0);
+		
+		for(Player p : gameState.getPlayers()) {
+			//Reset player betting and give new hand
+			p.setActiveBet(0);
+			p.emptyHand();
+			this.dealHand(p);
+		}
+	
+		
+		
+	}
 	
 
 	public enum HandNameAndRank {

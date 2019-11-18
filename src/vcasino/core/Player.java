@@ -9,6 +9,7 @@ public class Player {
 	private boolean isTurn;
 	private ArrayList<Card> hand;
 	private String id;
+	private int activeBet;
 	
 	public Player(String name, int chips, String id) {
 		this.name = name;
@@ -16,6 +17,7 @@ public class Player {
 		isTurn = false;
 		this.id = id;
 		hand = new ArrayList<>();
+		this.activeBet = 0;
 		
 	}
 
@@ -51,6 +53,9 @@ public class Player {
 		this.hand = hand;
 	}
 
+	public void emptyHand() {
+		this.hand = new ArrayList<>();
+	}
 	public String getId() {
 		return this.id;
 	}
@@ -60,6 +65,14 @@ public class Player {
 		this.hand.add(cardToAdd);
 	}
 	
+	public int getActiveBet() {
+		return activeBet;
+	}
+
+	public void setActiveBet(int activeBet) {
+		this.activeBet = activeBet;
+	}
+
 	@Override
 	public boolean equals(Object o) { 
 		   // If the object is compared with itself then return true   

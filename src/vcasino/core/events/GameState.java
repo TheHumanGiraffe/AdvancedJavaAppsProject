@@ -81,6 +81,8 @@ public class GameState {
 	public void setPotSize(int potSize) {
 		this.potSize = potSize;
 	}
+	
+	
 
 	
 }
