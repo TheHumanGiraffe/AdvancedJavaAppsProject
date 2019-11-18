@@ -27,9 +27,9 @@ public interface Ruleset {
 	GameEvent beginMatch();
 	Player advanceTurn(Player current, List<Player> players);
 	boolean gameOver();
-	Player declareWinner(GameState gameState);
-	GameEvent placeBet(GameState gameState, Player player, int betSize) throws RulesException;
-	void postHandReset(GameState gameState);
+	Player declareWinner();
+	GameEvent placeBet( Player player, int betSize) throws RulesException;
+	void postHandReset();
 	GameEvent showHand(Player player);
 	GameEvent shuffleDeck();
 }

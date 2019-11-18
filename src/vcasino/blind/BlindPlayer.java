@@ -16,10 +16,16 @@ public class BlindPlayer {
 	private int chips;
 	private int numberOfCards;
 	private String name;
+	private boolean isTurn;
+	private boolean isActive;
+	private int activeBet;
 
 	public BlindPlayer(Player p){
 		this.chips = p.getChips();
 		this.numberOfCards = p.getHand().size();
 		this.name = p.getName();
+		this.activeBet = p.getActiveBet();
+		this.isActive = p.isActive();
+		this.isTurn = p.isTurn();
 	}
 }

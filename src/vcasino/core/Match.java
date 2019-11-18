@@ -24,10 +24,12 @@ public class Match {
 	private GameState gameState;
 	
 	public Match() {
-		gameRules = new PokerRuleset();
+		gameState = new GameState();
+		
+		gameRules = new PokerRuleset(gameState);
 		gameRules.newDeck();
 		gameRules.shuffleDeck();
-		gameState = new GameState();
+		
 		
 		matchId = generateMatchId();
 	}
@@ -48,7 +50,7 @@ public class Match {
 	}
 	
 	public void doAction(GameEvent event, Player player) throws RulesException {
-		if(player.isTurn()) {
+		if(player.isTurn() && player.isActive()) {
 			switch(event.getAction()) {
 				case "draw":
 					gameRules.drawCard(player);
@@ -56,18 +58,15 @@ public class Match {
 					break;
 				case "play":
 		        	break;
-		        case "chat":
-		        	break;
 		        case "fold":
+		        	gameRules.fold(player);
 		        	break;
 		        case "bet":
-		        	gameRules.placeBet(gameState, player, event.getBetAmount());
+		        	gameRules.placeBet(player, event.getBetAmount());
 		        	break;
 				case "winner":
-					Player winner = gameRules.declareWinner(gameState);
-					gameState.setWinner(winner);
-					winner.setChips(winner.getChips() + gameState.getPotSize());
-					gameRules.postHandReset(gameState);			
+					gameRules.declareWinner();
+							
 					break;
 				default:
 					System.out.println("NO ACTION");

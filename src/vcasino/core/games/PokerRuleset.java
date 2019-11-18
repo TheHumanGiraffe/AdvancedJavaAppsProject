@@ -16,7 +16,11 @@ public class PokerRuleset implements Ruleset {
 
 	private Deck deck;
 	private static int handSize= 5;
+	private GameState gameState;
 	
+	public PokerRuleset(GameState state) {
+		this.gameState = state;
+	}
 	
 	@Override
 	public String getDescription() {
@@ -60,7 +64,7 @@ public class PokerRuleset implements Ruleset {
 	}
 	@Override
 	public GameEvent dealCard(Player toPlayer) {
-		
+		toPlayer.addCard(deck.drawCard());
 		return null;
 	}
 
@@ -72,7 +76,18 @@ public class PokerRuleset implements Ruleset {
 
 	@Override
 	public GameEvent fold(Player player) {
-		// TODO Auto-generated method stub
+		int numberOfFold = 0;
+		player.setActive(false);
+		for(Player p : gameState.getPlayers()) {
+			if(!p.isActive()) {
+				numberOfFold++;
+			}
+			//If all but one fold. hand is over. declare winner
+			if(numberOfFold == gameState.getPlayers().size()-1) {
+				this.declareWinner();
+			}		
+		}
+		
 		return null;
 	}
 
@@ -88,9 +103,10 @@ public class PokerRuleset implements Ruleset {
 		int i = players.indexOf(current)+1;
 		
 		current.setTurn(false);
-		
+		while(!players.get(i >= players.size() ? 0 : i).isActive()) {
+			i = (i>= players.size() ? 0 : i+1);
+		}
 		nextPlayer = players.get(i >= players.size() ? 0 : i);
-		
 		nextPlayer.setTurn(true);
 		return nextPlayer;
 	}
@@ -102,30 +118,40 @@ public class PokerRuleset implements Ruleset {
 	}
 
 	@Override
-	public Player declareWinner(GameState gameState) {
+	public Player declareWinner() {
 		ArrayList<Player> players = gameState.getPlayers();
 		Player winner = null;
 		int currentHigh = -1;
 		for(Player player : players) {
-			if(makeBestHand(player.getHand()) == currentHigh) {
-				Hand h1 = new Hand(player.getHand());
-				Hand h2 = new Hand(winner.getHand());
-				if(Hand.compare(h1, h2) == 0) {
-					winner = player;
+			//Check if player has folded
+			if(player.isActive()) {
+				if(makeBestHand(player.getHand()) == currentHigh) {
+					Hand h1 = new Hand(player.getHand());
+					Hand h2 = new Hand(winner.getHand());
+					if(Hand.compare(h1, h2) == 0) {
+						winner = player;
+					}
+					
 				}
-				
-			}
-			if(makeBestHand(player.getHand()) > currentHigh) {
-				winner = player;
-				currentHigh = makeBestHand(player.getHand());
+				if(makeBestHand(player.getHand()) > currentHigh) {
+					winner = player;
+					currentHigh = makeBestHand(player.getHand());
+				}
 			}
 			
+			
 		}
+		
+		
+		gameState.setWinner(winner);
+		winner.setChips(winner.getChips() + gameState.getPotSize());
+		this.postHandReset();	
+		
 		return winner;
 	}
 
 	@Override
-	public GameEvent placeBet(GameState gameState, Player player, int betSize) throws RulesException {
+	public GameEvent placeBet(Player player, int betSize) throws RulesException {
 		//Check if player has enough chips to bet
 		if(player.getChips() - betSize < 0) {
 			throw new RulesException("Over Bet", "Not enough Chips", player);
@@ -138,12 +164,14 @@ public class PokerRuleset implements Ruleset {
 				//Check if players bet is greater than or = to oppents current bet 
 				if(player.getActiveBet() + betSize < opponent.getActiveBet()) {
 					throw new RulesException("Under Bet", "Player Did not meet oppenent Call", player);
-				}else {
-					player.setActiveBet(player.getActiveBet() + betSize);
-					player.setChips(player.getChips() - betSize);
-					gameState.setPotSize(gameState.getPotSize() + betSize);
 				}
-			}		
+			}	
+			player.setActiveBet(player.getActiveBet() + betSize);
+			player.setChips(player.getChips() - betSize);
+			gameState.setPotSize(gameState.getPotSize() + betSize);
+			player.setActiveBet(player.getActiveBet() + betSize);
+			player.setChips(player.getChips() - betSize);
+			gameState.setPotSize(gameState.getPotSize() + betSize);
 		}
 		return null;
 	}
@@ -167,7 +195,7 @@ public class PokerRuleset implements Ruleset {
 	}
 	
 	@Override
-	public void postHandReset(GameState gameState) {
+	public void postHandReset() {
 		//Get new Deck and shuffle it
 		this.newDeck();
 		this.shuffleDeck();	
@@ -178,6 +206,7 @@ public class PokerRuleset implements Ruleset {
 			p.setActiveBet(0);
 			p.emptyHand();
 			this.dealHand(p);
+			p.setActive(true);
 		}
 	
 		
