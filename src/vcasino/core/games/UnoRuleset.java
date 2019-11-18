@@ -109,6 +109,12 @@ public class UnoRuleset implements Ruleset {
 		return null;
 	}
 
+	@Override
+	public void postHandReset(GameState gameState) {
+		// TODO Auto-generated method stub
+		
+	}
+
 	
 
 }

@@ -138,12 +138,11 @@ public class PokerRuleset implements Ruleset {
 				//Check if players bet is greater than or = to oppents current bet 
 				if(player.getActiveBet() + betSize < opponent.getActiveBet()) {
 					throw new RulesException("Under Bet", "Player Did not meet oppenent Call", player);
-				}else {
-					player.setActiveBet(player.getActiveBet() + betSize);
-					player.setChips(player.getChips() - betSize);
-					gameState.setPotSize(gameState.getPotSize() + betSize);
 				}
-			}		
+			}	
+			player.setActiveBet(player.getActiveBet() + betSize);
+			player.setChips(player.getChips() - betSize);
+			gameState.setPotSize(gameState.getPotSize() + betSize);
 		}
 		return null;
 	}

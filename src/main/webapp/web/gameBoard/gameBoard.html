@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Game 123456789</title>
+
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script type="text/javascript" src="gameBoard.js"></script>
+
+<link rel="stylesheet" href="gameBoard.css">
+</head>
+<body>
+	<h2>POT:</h2>
+	<h2 id="pot"></h2>
+	<div class="board">
+		<table id="board" class="board" border="0">
+			<!-- border just for debug -->
+			<tr>
+				<td><span class="corner">&nbsp;</span></td>
+
+				<!-- player 3 -->
+				<td>
+					<table id="player3Table">
+						<tr></tr>
+					</table>
+				</td>
+
+				<td><span class="corner">&nbsp;</span></td>
+			</tr>
+
+			<tr>
+				<td><table id="player2Table">
+						<!-- player 2 -->
+						<tr></tr>
+						<tr></tr>
+						<tr></tr>
+						<tr></tr>
+						<tr></tr>
+					</table></td>
+				<td>
+					<!-- decks -->
+					<table>
+						<tr>
+							<td><img class="discard" src="cards/42.jpg" /></td>
+							<td></td>
+						</tr>
+					</table>
+				</td>
+				<td><table id="player4Table">
+						<!-- player 4 -->
+						<tr></tr>
+						<tr></tr>
+						<tr></tr>
+						<tr></tr>
+						<tr></tr>
+					</table></td>
+			</tr>
+
+			<tr>
+				<td><span class="corner">&nbsp;</span></td>
+
+				<td>
+					<table id="player1Table">
+						<!-- player 1 -->
+						<tr></tr>
+					</table>
+				</td>
+
+				<td><span class="corner">&nbsp;</span></td>
+			</tr>
+
+		</table>
+	</div>
+	<!-- 	<form>
+		<input id="message" type="text">
+		<input onclick="wsSendMessage();" value ="Echo" type="button"/>
+		<input onclick="wsCloseConnection();" value="Disconnect" type="button"/>
+	</form> -->
+	<div>
+		<textarea id="echoText" rows="5" cols="30"></textarea> 
+		<input onclick="drawCard();" value="Draw" type="button" />
+		<input onclick="getWinner();" value="Get Winner" type="button" /> Bet:
+		<input type="number" id="betValue">
+		<input onclick="placeBet();" type="button" value="Place Bet">
+	</div>
+</body>
+</html>
