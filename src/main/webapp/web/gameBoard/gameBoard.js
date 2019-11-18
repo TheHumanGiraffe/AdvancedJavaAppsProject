@@ -80,6 +80,10 @@
     	 wsSendMessage(jsonText);
     }
     
+    function fold(){
+    	var jsonText = '{"action":"fold"}';
+    	wsSendMessage(jsonText);
+    }
     function drawCard(){
       var jsonText ='{ "action":"draw"}'
  	   wsSendMessage(jsonText);
