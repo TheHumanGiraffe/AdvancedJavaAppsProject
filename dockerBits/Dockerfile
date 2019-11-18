@@ -133,15 +133,14 @@ RUN set -e \
 ######################################
 
 COPY ./code/* /run/javaProject/
+RUN mv /run/javaProject/myWarFile.war /usr/local/tomcat/webapps/casino.war
 RUN apt-get update 
 RUN apt-get install mysql-server -y
 
 RUN mysql --version
-# RUN ls
-# RUN find / -name catalina.sh | grep catalina
-# RUN pwd
-# RUN cp $(pwd)/catalina.sh /run/javaProject/catalina.sh
 CMD ["/run/javaProject/run.sh"]
 EXPOSE 8080
 
-# CMD ["catalina.sh", "run"]
+# Run with 
+# docker build -t casino %ThisDirectory%
+# docker run -p 8080:8080 casino:latest
