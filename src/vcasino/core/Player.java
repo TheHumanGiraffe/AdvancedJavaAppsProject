@@ -10,6 +10,8 @@ public class Player {
 	private ArrayList<Card> hand;
 	private String id;
 	private int activeBet;
+	//Can be used in uno after a player plays his last card or in poker for folding
+	private boolean isActive;
 	
 	public Player(String name, int chips, String id) {
 		this.name = name;
@@ -18,6 +20,7 @@ public class Player {
 		this.id = id;
 		hand = new ArrayList<>();
 		this.activeBet = 0;
+		this.isActive = true;
 		
 	}
 
@@ -71,6 +74,15 @@ public class Player {
 
 	public void setActiveBet(int activeBet) {
 		this.activeBet = activeBet;
+	}
+
+	
+	public boolean isActive() {
+		return isActive;
+	}
+
+	public void setActive(boolean isActive) {
+		this.isActive = isActive;
 	}
 
 	@Override
