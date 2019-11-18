@@ -77,11 +77,6 @@ public class UnoRuleset implements Ruleset {
 	}
 
 	@Override
-	public GameEvent placeBet(GameState state, Player player, int betSize)throws RulesException {
-		return new GenericGameEvent(player);
-	}
-
-	@Override
 	public GameEvent showHand(Player player) {
 		return new GenericGameEvent(player);
 	}
@@ -104,13 +99,19 @@ public class UnoRuleset implements Ruleset {
 	}
 
 	@Override
-	public Player declareWinner(GameState gameState) {
+	public Player declareWinner() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void postHandReset(GameState gameState) {
+	public GameEvent placeBet(Player player, int betSize) throws RulesException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void postHandReset() {
 		// TODO Auto-generated method stub
 		
 	}
