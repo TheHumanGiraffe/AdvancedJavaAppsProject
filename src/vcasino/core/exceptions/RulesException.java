@@ -18,8 +18,21 @@ public class RulesException extends Exception {
 		this.byPlayer = p;
 	}
 	
+	public String getRule() {
+		return rule;
+	}
+	
+	public String getDescription() {
+		return description;
+	}
+	
+	public Player getPlayer() {
+		return byPlayer;
+	}
+	
 	@Override
 	public String toString() {
-		return "Broken rule \""+rule+"\": "+description;
+		return "Rule \""+rule+"\" broken by "+byPlayer+": "+description;
 	}
+	
 }

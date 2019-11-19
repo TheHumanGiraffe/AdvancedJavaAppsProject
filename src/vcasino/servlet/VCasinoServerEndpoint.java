@@ -1,33 +1,36 @@
 package vcasino.servlet;
 
 import java.io.IOException;
-import java.net.URI;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 
-import vcasino.encoder.BlindGameStateEncoder;
+import vcasino.encoder.*;
 import vcasino.blind.BlindGameState;
 import vcasino.core.Match;
+import vcasino.core.Match.MatchState;
 import vcasino.core.Player;
 import vcasino.core.events.GameEvent;
 import vcasino.core.events.GameState;
+import vcasino.core.events.RulesViolationEvent;
 import vcasino.core.exceptions.RulesException;
+import vcasino.core.games.*;
 import vcasino.decoder.GameEventDecoder;
 
 
 @ServerEndpoint(
-		value ="/vcasino/{game}/{roomNumber}",
-		encoders = {BlindGameStateEncoder.class},
+		//value ="/vcasino/{game}/{roomNumber}",
+		value = "/vcasino/{game}/{roomNumber}",
+		encoders = {BlindGameStateEncoder.class, GameEventEncoder.class},
 		decoders = {GameEventDecoder.class}
 )
 public class VCasinoServerEndpoint {
 
 	Session userSession = null;
-	private final static HashMap<String, VCasinoServerEndpoint> openSessions = new HashMap<>();
-	private final static HashMap<String, Match> match = new HashMap<>();
+	private final static ConcurrentHashMap<String, VCasinoServerEndpoint> openSessions = new ConcurrentHashMap<>();
+	private final static ConcurrentHashMap<String, Match> matches = new ConcurrentHashMap<>();
 	private String myUniqueId;
     
   
@@ -47,30 +50,40 @@ public class VCasinoServerEndpoint {
 		
 		//Add a new match to the server if one does not exist
 		//Pass the Match Constructor game to set the correct ruleset
-		setupMatch = VCasinoServerEndpoint.match.get(game+roomNumber);
+		setupMatch = VCasinoServerEndpoint.matches.get(game+roomNumber);
 		if(setupMatch == null) {
-			VCasinoServerEndpoint.match.putIfAbsent(game+roomNumber, new Match());
-			
+			VCasinoServerEndpoint.matches.putIfAbsent(game+roomNumber, new ServerMatch(game+roomNumber, new PokerRuleset()));
+			setupMatch = VCasinoServerEndpoint.matches.get(game+roomNumber);
 		}
 		
 		Player newPlayer = (Player)userSession.getUserProperties().get("player");
-		setupMatch.addPlayer(newPlayer);
 		
-		
-		for(VCasinoServerEndpoint currentClient  : VCasinoServerEndpoint.openSessions.values()) {
-			if(currentClient == this) {
-				continue;
+		try {
+			setupMatch.addPlayer(newPlayer);
+			if(setupMatch.getMatchState() != MatchState.MSTATE_PLAYING && setupMatch.getGameState().countPlayers() >= 4) {
+				setupMatch.begin(); //seems legit...
+				sendMessage("Game start!");
 			}
-			//Checks if the connection is open, if the game and roomNumbers match
-			for(VCasinoServerEndpoint connectedUser : VCasinoServerEndpoint.openSessions.values()) {
-	        	if(checkGameAndRoom(connectedUser)) {
-	        		sendGameState(connectedUser, setupMatch.getGameState());
-	        	}
-	        }
+		} catch (RulesException e) {
+			System.out.println("RULES: "+e);
+			broadcastGameEvent(new RulesViolationEvent(e));
+		} finally {
+		
+			for(VCasinoServerEndpoint currentClient  : VCasinoServerEndpoint.openSessions.values()) {
+				//if(currentClient == this) {
+				//	continue;
+				//}
+				//Checks if the connection is open, if the game and roomNumbers match
+				for(VCasinoServerEndpoint connectedUser : VCasinoServerEndpoint.openSessions.values()) {
+		        	if(checkGameAndRoom(connectedUser)) {
+		        		sendGameState(connectedUser, setupMatch.getGameState());
+		        	}
+		        }
+			}
+			System.out.println("Open Connection...\n Session ID: "+ userSession.getId() );
 		}
-		System.out.println("Open Connection...\n Session ID: "+ userSession.getId() );
-		this.sendMessage("Connected!");
-		this.sendMessage(String.format("User ID: %s", this.myUniqueId));
+		//this.sendMessage("Connected!");
+		//this.sendMessage(String.format("User ID: %s", this.myUniqueId));
     }
     
     @OnClose
@@ -97,7 +110,7 @@ public class VCasinoServerEndpoint {
     	String game = (String) userSession.getUserProperties().get("game");
     	
         System.out.println("Message from ClientID:" + userSession.getId() + "GameEvent" + gameEvent);
-        Match usersMatch = VCasinoServerEndpoint.match.get(game+roomNumber);
+        Match usersMatch = VCasinoServerEndpoint.matches.get(game+roomNumber);
         Player currentPlayer =(Player) userSession.getUserProperties().get("player");
       //Add the action for the event
         try {
@@ -117,20 +130,34 @@ public class VCasinoServerEndpoint {
     public void sendMessage(String message) {
     	if(this.userSession != null)
 			try {
-				this.userSession.getBasicRemote().sendText(message);
+				this.userSession.getBasicRemote().sendText("\"message\": {\"text\": \""+message+"\"}");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
     }
     
+    public void broadcastMessage(String message) {
+    	try {
+			this.userSession.getBasicRemote().sendText("\"message\": {\"text\": \""+message+"\"}");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    }
+    
+    public void broadcastGameEvent(GameEvent event) {
+    	System.out.println("BROADCAST EVENT: "+event.toString());
+    	
+    }
+    
     //Sends state of game as JSON object 
     public void sendGameState(VCasinoServerEndpoint client, GameState state) {
     	try {
-    		client.userSession.getBasicRemote().sendObject(state);
-    		/*Player currentPlayer = (Player) client.userSession.getUserProperties().get("player");
-    		BlindGameState blindState = new BlindGameState(state);
-    		blindState = blindState.getBlindGameState(currentPlayer);
-    		client.userSession.getBasicRemote().sendObject(blindState);*/
+    		System.out.println("Sending game state");
+    		
+    		Player currentPlayer = (Player) client.userSession.getUserProperties().get("player");
+    		BlindGameState blindState = new BlindGameState(state, currentPlayer);
+    		client.userSession.getBasicRemote().sendText("HELLO");
+    		client.userSession.getBasicRemote().sendObject(blindState);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

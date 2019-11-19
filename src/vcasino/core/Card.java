@@ -7,6 +7,13 @@ public class Card {
 	private int rank;
 	private String suit;
 	
+	public Card() {
+	}
+	
+	public Card(int id, String suit) {
+		cardID = id;
+		this.suit = suit;
+	}
 	
 	public int getCardID() {
 		return cardID;

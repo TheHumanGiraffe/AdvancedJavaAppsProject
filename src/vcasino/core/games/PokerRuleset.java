@@ -14,7 +14,6 @@ import vcasino.core.exceptions.RulesException;
 
 public class PokerRuleset implements Ruleset {
 
-	private Deck deck;
 	private static int handSize= 5;
 	@Override
 	public String getDescription() {
@@ -28,8 +27,7 @@ public class PokerRuleset implements Ruleset {
 
 	@Override
 	public Deck newDeck() {
-		this.deck = new Deck();
-		return this.deck;
+		return new Deck();
 	}
 
 	@Override
@@ -44,24 +42,19 @@ public class PokerRuleset implements Ruleset {
 	}
 
 	@Override
-	public GameEvent drawCard(Player forPlayer) throws RulesException {
-		forPlayer.addCard(deck.drawCard());
-		return null;
+	public void drawCard(GameState state, Player forPlayer) throws RulesException {
+		if(forPlayer == state.getCurrentPlayer())
+			forPlayer.addCard(state.getDeck().drawCard());
+		throw new RulesException("Turn", "Not their turn!", forPlayer);
 	}
 
 	@Override
-	public GameEvent dealHand(Player forPlayer){
-		for(int i =0; i < handSize; i ++) {
-			forPlayer.addCard(deck.drawCard());
+	public void dealHand(GameState state, Player forPlayer) throws RulesException {
+		for(int i=0;i<handSize;i++) {
+			forPlayer.addCard(state.getDeck().drawCard());
 		}
-		return null;
 	}
-	@Override
-	public GameEvent dealCard(Player toPlayer) {
-		
-		return null;
-	}
-
+	
 	@Override
 	public GameEvent placeCard(Player player) {
 		// TODO Auto-generated method stub
@@ -75,8 +68,20 @@ public class PokerRuleset implements Ruleset {
 	}
 
 	@Override
-	public GameEvent beginMatch() {
-		// TODO Auto-generated method stub
+	public GameEvent beginMatch(GameState state) throws RulesException {
+		Deck deck;
+		
+		shuffleDeck(state);
+		
+		deck = state.getDeck();
+		
+		for(int i=0;i<handSize;i++) {
+			for(Player p : state.getPlayers()) {
+				dealCard(state, p);
+			}
+		}
+		deck.discardTop();
+		
 		return null;
 	}
 
@@ -135,9 +140,8 @@ public class PokerRuleset implements Ruleset {
 	}
 
 	@Override
-	public GameEvent shuffleDeck() {
-		deck.shuffle();
-		return null;
+	public void shuffleDeck(GameState state) {
+		state.getDeck().shuffle();
 	}
 
 	private int makeBestHand(ArrayList<Card> handAsList) {
@@ -146,7 +150,9 @@ public class PokerRuleset implements Ruleset {
 		return hand.getHandRank();
 	}
 	
-	
+	private void dealCard(GameState state, Player forPlayer) {
+		forPlayer.addCard(state.getDeck().drawCard());
+	}
 
 	public enum HandNameAndRank {
 	    HIGH_CARD("High Card", 0), PAIR("Pair", 1), TWO_PAIR("Two Pair", 2),

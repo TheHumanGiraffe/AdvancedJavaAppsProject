@@ -27,6 +27,12 @@ public class GameStateEncoder implements Encoder.Text<GameState>{
 		
 		Gson gson = new Gson();
 		
+		/*Player ourPlayer = (Player)config.getUserProperties().get("player");
+		
+		BlindGameState blind = new BlindGameState(gameState, ourPlayer);
+		String str = gson.toJson(blind);
+		System.out.println("Generated state:" + str);*/
+		
 		return gson.toJson(gameState);
 	}
 

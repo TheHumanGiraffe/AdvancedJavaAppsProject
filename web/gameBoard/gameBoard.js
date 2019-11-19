@@ -1,10 +1,12 @@
 	
 	var urlParams = new URLSearchParams(window.location.search);
 	
-	$.getJSON('../../inbound.json', function(data) {
+	var cardURL = 'https://raw.githubusercontent.com/TheHumanGiraffe/AdvancedJavaAppsProject/master/web/gameBoard/cards/';
+	
+	/*$.getJSON('../../inbound.json', function(data) {
 		var container = document.getElementById('discard');
 		var img = document.createElement('img');
-			img.src = 'https://raw.githubusercontent.com/TheHumanGiraffe/AdvancedJavaAppsProject/master/cards/' + data.topDiscard.CardID + '.jpg'; // img[i] refers to the current URL.
+			img.src = cardURL + data.topDiscard.CardID + '.jpg'; // img[i] refers to the current URL.
 			img.title = data.topDiscard.Name; 
 			container.appendChild(img);
 		$.each(data.table, function (key, val) {
@@ -42,7 +44,7 @@
 				img.title = val.Name;
 				container.appendChild(img);
 		});
-	});
+	});*/
 	
 	
 	//var json = JSON.parse(jsonText); 
@@ -99,34 +101,39 @@
     function wsGetMessage(message){
     	console.log(message);
     	console.log(message.data);
-    	console.log(JSON.parse(message.data));
+    	
     	var json = JSON.parse(message.data);
     	
-    	console.log(json.currentPlayer);
-    	console.log(json.currentPlayer.hand);
-    	console.log(json.currentPlayer.hand[0]);
-    	console.log(json.currentPlayer.hand[0].cardID);
-
-    	var numberOfBlindPlayers = json.blindPlayers.length;
-    	var blindPlayers = json.blindPlayers;
-    	var numberOfCardsInBlindHands =[];
-    	for(i = 0; i < numberOfBlindPlayers; i++){
-    		numberOfCardsInBlindHands[i] = blindPlayers[i].numberOfCards;
+    	console.log(json);
+    	
+    	var gamestate = json.gamestate;
+    	
+    	var currentPlayer = gamestate.players[gamestate.visible];
+    	
+    	console.log(currentPlayer);
+    	console.log(currentPlayer.hand);
+    	if(currentPlayer.hand.length>0) {
+    		console.log(currentPlayer.hand[0]);
+    		console.log(currentPlayer.hand[0].cardID);
+    	} else {
+    		echoText.value += "Waiting for players...\n";
     	}
-		for(i = numberOfBlindPlayers; i < 3; i++ ){
-			numberOfCardsInBlindHands[i] = 0;
-		}
+
+    	var playerCount = gamestate.length;
+    	var players = gamestate.players;
+    	
+    	document.getElementById("discard").src = cardURL + gamestate.deck.discards[0].cardID + '.jpg';
     	
     	var player1Cards = document.getElementById("player1Table");
     	player1Cards.deleteRow(0);
     	var cardRow = player1Cards.insertRow(0);
     	
-    	json.currentPlayer.hand.forEach(function(card){
+    	currentPlayer.hand.forEach(function(card){
     		var x=cardRow.insertCell(-1);
-            x.innerHTML ="<img class=\"p1\" src='cards/" + card.cardID + ".jpg'"+"/>";
+            x.innerHTML ="<img class=\"p1\" src='"+cardURL + card.cardID + ".jpg'"+"/>";
     	});
     	
-    	var player2Cards = document.getElementById("player2Table");
+    	/*var player2Cards = document.getElementById("player2Table");
     	
     	
     	for(i = numberOfCardsInBlindHands[0]; i > 0; i --){
@@ -134,29 +141,9 @@
         	var cardRow = player2Cards.insertRow(i-1);
     		var x=cardRow.insertCell(-1);
             x.innerHTML ="<img class=\"p2\" src=\"cards/0.jpg\"/>";
-            
+           
     	}
-    	player2Cards.insertRow(numberOfCardsInBlindHands[0]);
-    	
-    	var player3Cards = document.getElementById("player3Table");
-    	player3Cards.deleteRow(0);
-    	var cardRow = player3Cards.insertRow(0);
-    	
-    	for(i = numberOfCardsInBlindHands[1]; i > 0; i --){
-    		var x=cardRow.insertCell(-1);
-            x.innerHTML ="<img class=\"p3\" src=\"cards/0.jpg\"/>";
-    	}
-    	
-    	var player4Cards = document.getElementById("player4Table");
-    	
-    	
-    	for(i = numberOfCardsInBlindHands[2]; i > 0; i --){
-    		player4Cards.deleteRow(i-1);
-        	var cardRow = player4Cards.insertRow(i-1);
-    		var x=cardRow.insertCell(-1);
-            x.innerHTML ="<img class=\"p4\" src=\"cards/0.jpg\"/>";
-    	}
-    	player4Cards.insertRow(numberOfCardsInBlindHands[0]);
+    	player2Cards.insertRow(numberOfCardsInBlindHands[0]);*/
 
        // echoText.value += "Message received from the server : " + message.data + "\n";
     }

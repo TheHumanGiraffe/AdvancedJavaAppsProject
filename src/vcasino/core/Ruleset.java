@@ -17,18 +17,17 @@ public interface Ruleset {
 	
 	//Player-level actions
 	GameEvent passCard(Player from, Player to) throws RulesException;
-	GameEvent drawCard(Player forPlayer) throws RulesException;
-	GameEvent dealHand(Player forPlayer);
-	GameEvent dealCard(Player toPlayer);
+	void drawCard(GameState state, Player forPlayer) throws RulesException;
+	void dealHand(GameState state, Player forPlayer) throws RulesException;
 	GameEvent placeCard(Player player);
 	GameEvent fold(Player player);
 	
 	//Table-level actions
-	GameEvent beginMatch();
+	GameEvent beginMatch(GameState state) throws RulesException;
 	Player advanceTurn(Player current, List<Player> players);
 	boolean gameOver();
 	Player declareWinner(GameState gameState);
 	GameEvent placeBet(Player player);
 	GameEvent showHand(Player player);
-	GameEvent shuffleDeck();
+	void shuffleDeck(GameState state);
 }

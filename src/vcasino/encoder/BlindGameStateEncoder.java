@@ -7,11 +7,9 @@ import javax.websocket.EndpointConfig;
 import com.google.gson.Gson;
 
 import vcasino.blind.BlindGameState;
-import vcasino.core.Player;
-import vcasino.core.events.GameState;
 
 
-public class BlindGameStateEncoder implements Encoder.Text<GameState>{
+public class BlindGameStateEncoder implements Encoder.Text<BlindGameState>{
 
 	private EndpointConfig config;
 	
@@ -24,17 +22,15 @@ public class BlindGameStateEncoder implements Encoder.Text<GameState>{
 	@Override
 	public void init(EndpointConfig arg0) {
 		config = arg0;
-		
 	}
 
 	@Override
-	public String encode(GameState gameState) throws EncodeException {
+	public String encode(BlindGameState gameState) throws EncodeException {
 		Gson gson = new Gson();
-		Player ourPlayer = (Player)config.getUserProperties().get("player");
 		
-		BlindGameState blind = new BlindGameState(gameState, ourPlayer);
-				
-		return gson.toJson(blind);
+		String str = gson.toJson(gameState);
+		System.out.println("Generated state:" + str);
+		return "{\"gamestate\": " + str+" }";
 	}
 
 }

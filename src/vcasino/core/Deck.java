@@ -6,19 +6,19 @@ import java.util.Collections;
 import vcasino.constants.*;
 /**
  * Deck handles both the draw deck and the discard deck, in case the discard is required.
- * 
+ * This is a standard, 52 card deck of common usage.
  *
  */
 public class Deck {
-	private ArrayList<Card> cards, discards;
+	protected ArrayList<Card> cards, discards;
 	
 	public Deck() {
 		cards = new ArrayList<>();
 		discards = new ArrayList<>();
 		int rank =2;
 		for(int i = 1; i <=52; i++) {
-			Card c = new Card();
-			c.setCardID(i);
+			Card c = new Card(i, Constants.SUITS.get(i%4));
+			
 			c.setRank(rank);
 			
 			
@@ -43,7 +43,6 @@ public class Deck {
 				c.setName(Integer.toString(rank));
 			}
 			
-			c.setSuit(Constants.SUITS.get(i%4));
 			cards.add(c);
 			
 			if(i%4 == 0) {
@@ -70,8 +69,13 @@ public class Deck {
 	}
 	
 	public void discardTop() {
+		
 		discard(drawCard());
 	}
 	
-	
+	public Card getDiscard(int index) {
+		if(discards.size()>0)
+			return discards.get(index);
+		return new Card();
+	}
 }

@@ -3,7 +3,6 @@ package vcasino.core;
 import vcasino.core.events.GameEvent;
 import vcasino.core.events.GameState;
 import vcasino.core.exceptions.RulesException;
-import vcasino.core.games.PokerRuleset;
 
 import java.util.Deque;
 
@@ -15,35 +14,39 @@ public class Match {
 		MSTATE_PLAYING,
 		MSTATE_GAMEOVER,
 	};
-	
-	//private ArrayList<Player> players; 
+	 
 	private Ruleset gameRules;
 	private String matchId;
 	private Deque<GameEvent> messageQueue;
 	private MatchState state = MatchState.MSTATE_INIT;
 	private GameState gameState;
 	
-	public Match() {
-		gameRules = new PokerRuleset();
-		gameRules.newDeck();
-		gameRules.shuffleDeck();
-		gameState = new GameState();
-		
-		matchId = generateMatchId();
-	}
-	public Match(String id, Ruleset rules, Player [] players, Deque<GameEvent> q) {
+	public Match(String id, Ruleset rules/* , Deque<GameEvent> q */) {
 		matchId = id;
 		gameRules = rules;
+		
+		gameState = new GameState(gameRules);
+		
 		//Collections.addAll(this.players, players);
-		messageQueue = q;
+		//messageQueue = q;
 	}
 	
-	public void addPlayer(Player newPlayer) {
-		if(gameState.getPlayers().size() == 0) {
+	public void addPlayer(Player newPlayer) throws RulesException {
+		
+		if(gameState.countPlayers() == 4)
+			throw new RulesException("Players", "Too many players!", newPlayer);
+		
+		if(state == MatchState.MSTATE_PLAYING)
+			gameRules.dealHand(gameState, newPlayer);
+		
+		if(gameState.countPlayers() == 0) {
 			newPlayer.setTurn(true);
 		}
+		
 		gameState.addPlayer(newPlayer);
-		gameRules.dealHand(newPlayer);
+		
+		if(gameState.countPlayers() < 4)
+			state = MatchState.MSTATE_AWAITINGPLAYERS;
 		
 	}
 	
@@ -51,7 +54,7 @@ public class Match {
 		if(player.isTurn()) {
 			switch(action) {
 				case "draw":
-					gameRules.drawCard(player);
+					gameRules.drawCard(gameState, player);
 					//gameState.setPlayer(player);
 					break;
 				case "play":
@@ -83,8 +86,9 @@ public class Match {
 		return messageQueue.pollFirst();
 	}
 	
-	void begin() {
-		
+	public void begin() throws RulesException {
+		gameRules.beginMatch(gameState);
+		state = MatchState.MSTATE_PLAYING;
 	}
 	
 	void checkDoTurn() {
@@ -95,6 +99,14 @@ public class Match {
 		
 	}
 	
+	public String getMatchId() {
+		return matchId;
+	}
+	
+	public MatchState getMatchState() {
+		return state;
+	}
+	
 	public GameState getGameState() {
 		return gameState;
 	}
@@ -103,11 +115,15 @@ public class Match {
 		this.gameState = gameState;
 	}
 	
-	private String generateMatchId() {
+	public static final String generateMatchId() {
 		String ret="";
 		for(int i=0;i<16;i++) {
 			ret += (Math.random() * 64 + 'a');
 		}
 		return ret;
+	}
+	
+	private boolean matchInDb() {
+		return false;
 	}
 }

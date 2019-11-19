@@ -27,12 +27,7 @@ public class UnoRuleset implements Ruleset {
 	@Override
 	public Deck newDeck() {
 		Deck deck = new UnoDeck();
-		deck.discardTop();
 		return deck;
-	}
-
-	public void setCurrentPlayer(Player player) {
-		
 	}
 	
 	@Override
@@ -46,13 +41,17 @@ public class UnoRuleset implements Ruleset {
 	}
 
 	@Override
-	public GameEvent drawCard(Player forPlayer) throws RulesException {
-		return new GenericGameEvent(forPlayer);
+	public void drawCard(GameState state, Player forPlayer) throws RulesException {
+		if(forPlayer == state.getCurrentPlayer())
+			forPlayer.addCard(state.getDeck().drawCard());
+		throw new RulesException("Turn", "Not their turn!", forPlayer);
 	}
 
 	@Override
-	public GameEvent dealCard(Player toPlayer) {
-		return new GenericGameEvent(toPlayer);
+	public void dealHand(GameState state, Player forPlayer) throws RulesException {
+		for(int i=0;i<getInitialHandCount();i++) {
+			forPlayer.addCard(state.getDeck().drawCard());
+		}
 	}
 
 	@Override
@@ -66,8 +65,21 @@ public class UnoRuleset implements Ruleset {
 	}
 
 	@Override
-	public GameEvent beginMatch() {
-		return new GenericGameEvent(null);
+	public GameEvent beginMatch(GameState state) throws RulesException {
+		Deck deck;
+		
+		shuffleDeck(state);
+		
+		deck = state.getDeck();
+		
+		for(int i=0;i<getInitialHandCount();i++) {
+			for(Player p : state.getPlayers()) {
+				drawCard(state, p);
+			}
+		}
+		deck.discardTop();
+		
+		return null;
 	}
 
 	@Override
@@ -87,18 +99,7 @@ public class UnoRuleset implements Ruleset {
 	}
 
 	@Override
-	public GameEvent shuffleDeck() {
-		return new GenericGameEvent(null);
-	}
-
-	@Override
 	public Player advanceTurn(Player current, List<Player> players) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public GameEvent dealHand(Player forPlayer) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -107,6 +108,11 @@ public class UnoRuleset implements Ruleset {
 	public Player declareWinner(GameState gameState) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void shuffleDeck(GameState state) {
+		state.getDeck().shuffle();
 	}
 
 	

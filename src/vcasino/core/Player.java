@@ -6,7 +6,7 @@ public class Player {
 
 	private String name;
 	private int chips;
-	private boolean isTurn;
+	private boolean isTurn, isActive;
 	private ArrayList<Card> hand;
 	private String id;
 	
@@ -14,6 +14,7 @@ public class Player {
 		this.name = name;
 		this.chips = chips;
 		isTurn = false;
+		isActive = true;
 		this.id = id;
 		hand = new ArrayList<>();
 		
@@ -38,11 +39,23 @@ public class Player {
 	public boolean isTurn() {
 		return isTurn;
 	}
-
+	
 	public void setTurn(boolean isTurn) {
 		this.isTurn = isTurn;
 	}
 
+	public boolean isActive() {
+		return isActive;
+	}
+	
+	public void activate() {
+		isActive = true;
+	}
+	
+	public void deactivate() {
+		isActive = false;
+	}
+	
 	public ArrayList<Card> getHand() {
 		return hand;
 	}

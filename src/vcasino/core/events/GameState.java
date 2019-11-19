@@ -3,26 +3,36 @@ package vcasino.core.events;
 import java.util.ArrayList;
 
 import vcasino.core.Card;
+import vcasino.core.Deck;
 import vcasino.core.Player;
+import vcasino.core.Ruleset;
 
 public class GameState {
-	protected Card topDiscard;
+	protected Ruleset rules;
+	protected Deck deck;
 	protected ArrayList<Card> table;
 	protected ArrayList<Player> players;
 	protected Player currentPlayer, winner;
 	
-	public GameState() {
-		topDiscard = new Card();
+	public GameState(Ruleset rules) {
+		this.rules = rules;
+		deck = this.rules.newDeck();
 		table = new ArrayList<>();
 		players = new ArrayList<>();
 	}
 	
+	public Ruleset getRules() {
+		return rules;
+	}
+	
+	public Deck getDeck() {
+		return deck;
+	}
+	
 	public Card getTopDiscard() {
-		return topDiscard;
+		return deck.getDiscard(0);
 	}
-	public void setTopDiscard(Card topDiscard) {
-		this.topDiscard = topDiscard;
-	}
+	
 	public ArrayList<Card> getTable() {
 		return table;
 	}
@@ -56,12 +66,17 @@ public class GameState {
 	}
 	
 	public Player getPlayer(Player player) {
-		for(int i =0; i < players.size(); i++) {
-			if(players.get(i).equals(player)) {
-				return players.get(i);
-			}
-		}	
+		if(players.contains(player)) 
+			return player;
 		return null;
+	}
+	
+	public Player getPlayer(int i) {
+		return players.get(i);
+	}
+	
+	public int countPlayers() {
+		return players.size();
 	}
 	
 	public Player getCurrentPlayer() {
