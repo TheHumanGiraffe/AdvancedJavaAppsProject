@@ -1,8 +1,8 @@
-table{display: block;height:100%;}
+table#board{display: block;height:100%;}
 
 img{
-	height: 150px;
-	width: 100px;
+	height: 90px;
+	width: 60px;
 }
 
 div.board{
@@ -17,15 +17,16 @@ tr, td {
 
 span.corner {
 	display: block;
-	width: 200px;
+	width: 100px;
 }
 
-img.p4 {
-	-webkit-transform:rotate(270deg);
-	-moz-transform: rotate(270deg);
-	-ms-transform: rotate(270deg);
-	-o-transform: rotate(270deg);
-	transform: rotate(270deg);
+img.p2, img.p4 {
+	-webkit-transform:rotate(90deg);
+	-moz-transform: rotate(90deg);
+	-ms-transform: rotate(90deg);
+	-o-transform: rotate(90deg);
+	transform: rotate(90deg);
+	padding-left:20px;
 }
 
 img.p3 {
@@ -34,14 +35,6 @@ img.p3 {
 	-ms-transform: rotate(180deg);
 	-o-transform: rotate(180deg);
 	transform: rotate(180deg);
-}
-
-img.p2 {
-	-webkit-transform:rotate(90deg);
-	-moz-transform: rotate(90deg);
-	-ms-transform: rotate(90deg);
-	-o-transform: rotate(90deg);
-	transform: rotate(90deg);
 }
 
 img.p1 {
