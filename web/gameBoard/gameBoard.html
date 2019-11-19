@@ -11,63 +11,29 @@
 </head>
 <body>
 	<div class="board">
-		<table id="board" class="board" border="0"> <!-- border just for debug -->
-			<tr><td><span class="corner">&nbsp;</span></td>
-			
-			<!-- player 3 -->
-			<td>
-				<table id="player3Table" >
-				<tr></tr>
-				</table>
-			</td>
-			
-			<td><span class="corner">&nbsp;</span></td></tr>
-			
+		<table id="board" class="board" style="margin: auto;">
 			<tr>
-			<td><table id="player2Table"><!-- player 2 --><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr></table></td>
-			<td>
-			<!-- decks -->
-			<table><tr><td><img id="discard" class="discard" src="cards/42.jpg"/></td></td></tr></table>
-			</td>
-			<td><table id="player4Table"><!-- player 4 --><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr></table></td>
+				<td><span class="corner">&nbsp;</span></td>
+				<td><div id="player3Div"></div></td>
+				<td><span class="corner">&nbsp;</span></td>
 			</tr>
-			
-			<tr><td><span class="corner">&nbsp;</span></td>
-			
-			<td>
-			<table id="player1Table"><!-- player 1 --><tr></tr></table>
-			</td>
-			
-			<td><span class="corner">&nbsp;</span></td></tr>
-			
+			<tr>
+				<td><div id="player2Div"></div></td>
+				<td><div id="discard"></div></td>
+				<td><div id="player4Div"></div></td>
+			</tr>
+			<tr>
+				<td><span class="corner">&nbsp;</span></td>
+				<td><div id="player1Div"></div></td>
+				<td><span class="corner">&nbsp;</span></td>
+			</tr>
 		</table>
-</div>
-		<!-- <div id="chat"> -->
-		<textarea id="echoText" rows="5" cols="300"></textarea>
-<!-- 		</div>
- -->		
-<!--		<div id="topDiscard">Discard pile:</div>
-		<div id="table">Dealer:</div>
-		<div class="row">		
-			<span id="player1">Player 1:</span>
-			<span id="player2">Player 2:</span>
+		<div class="options" style="text-align: center;">
+			<textarea id="echoText" rows="5" cols="30" readonly></textarea>
+			<input onclick="drawCard();" value ="Draw" type="button"/>
+			<input onclick="getWinner();" value ="Get Winner" type="button"/>
 		</div>
-		<div class="row">		
-			<span id="player3">Player 3:</span>
-			<span id="player4">Player 4:</span>
-		</div>
-		<div id="player5">Player 5:</div>
 	</div>
--->
-<!-- 	<form>
-		<input id="message" type="text">
-		<input onclick="wsSendMessage();" value ="Echo" type="button"/>
-		<input onclick="wsCloseConnection();" value="Disconnect" type="button"/>
-	</form>
-	
-	<textarea id="echoText" rows="5" cols="30"></textarea> -->
-	<input onclick="drawCard();" value ="Draw" type="button"/>
-	<input onclick="getWinner();" value ="Get Winner" type="button"/>
-	
+
 </body>
 </html>
