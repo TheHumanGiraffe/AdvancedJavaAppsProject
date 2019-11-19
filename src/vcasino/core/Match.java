@@ -49,9 +49,10 @@ public class Match {
 		
 	}
 	
-	public void doAction(String action, Player player) throws RulesException {
+	//Needs to be GameEvent becuase they will be addtional info tied to it other than the action. IE card ID and bet amount
+	public void doAction(GameEvent action, Player player) throws RulesException {
 		if(player.isTurn()) {
-			switch(action) {
+			switch(action.getAction()) {
 				case "draw":
 					gameRules.drawCard(gameState, player);
 					//gameState.setPlayer(player);
@@ -61,15 +62,21 @@ public class Match {
 		        case "chat":
 		        	break;
 		        case "fold":
+		        	gameRules.fold(player);
 		        	break;
 		        case "bet":
+		        	gameRules.placeBet(gameState, player, action.getBetAmount());
 		        	break;
 				case "winner":
 					Player winner = gameRules.declareWinner(gameState);
+					gameRules.postHandReset(gameState);
 					gameState.setWinner(winner);
 					break;
 				default:
 					System.out.println("NO ACTION");
+			}
+			if(gameRules.gameOver(gameState)) {
+				gameRules.declareWinner(gameState);
 			}
 			gameState.setCurrentPlayer(gameRules.advanceTurn(player, gameState.getPlayers()));
 			

@@ -114,7 +114,7 @@ public class VCasinoServerEndpoint {
         Player currentPlayer =(Player) userSession.getUserProperties().get("player");
       //Add the action for the event
         try {
-        	usersMatch.doAction(gameEvent.getAction(), currentPlayer);
+        	usersMatch.doAction(gameEvent, currentPlayer);
         } catch (RulesException e) {
         	//TODO: we need to alert the user that they did something wrong!
 			e.printStackTrace();
@@ -147,6 +147,7 @@ public class VCasinoServerEndpoint {
     public void broadcastGameEvent(GameEvent event) {
     	System.out.println("BROADCAST EVENT: "+event.toString());
     	
+    	
     }
     
     //Sends state of game as JSON object 
@@ -156,7 +157,6 @@ public class VCasinoServerEndpoint {
     		
     		Player currentPlayer = (Player) client.userSession.getUserProperties().get("player");
     		BlindGameState blindState = new BlindGameState(state, currentPlayer);
-    		client.userSession.getBasicRemote().sendText("HELLO");
     		client.userSession.getBasicRemote().sendObject(blindState);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
