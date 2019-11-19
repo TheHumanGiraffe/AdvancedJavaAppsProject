@@ -25,6 +25,7 @@ public class BlindGameState extends GameState {
 		this.table = gameState.getTable();
 		this.currentPlayer = gameState.getCurrentPlayer();
 		this.winner = gameState.getWinner();
+		this.potSize = gameState.getPotSize();
 	}
 	
 }

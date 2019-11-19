@@ -135,6 +135,8 @@ public class PokerRuleset implements Ruleset {
 			}
 			
 		}
+		
+		winner.addChips(gameState.getPotSize());
 		return winner;
 	}
 
@@ -157,9 +159,7 @@ public class PokerRuleset implements Ruleset {
 					player.setActiveBet(player.getActiveBet() + betSize);
 					player.setChips(player.getChips() - betSize);
 					state.setPotSize(state.getPotSize() + betSize);
-					player.setActiveBet(player.getActiveBet() + betSize);
-					player.setChips(player.getChips() - betSize);
-					state.setPotSize(state.getPotSize() + betSize);
+					
 				}
 	}
 

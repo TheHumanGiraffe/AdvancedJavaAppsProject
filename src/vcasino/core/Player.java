@@ -86,6 +86,10 @@ public class Player {
 	public void emptyHand() {
 		this.hand = new ArrayList<>();
 	}
+	
+	public void addChips(int numberOfChips) {
+		this.chips = this.chips + numberOfChips;
+	}
 
 	@Override
 	public boolean equals(Object o) { 

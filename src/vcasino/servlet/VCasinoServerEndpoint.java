@@ -157,7 +157,6 @@ public class VCasinoServerEndpoint {
     		
     		Player currentPlayer = (Player) client.userSession.getUserProperties().get("player");
     		BlindGameState blindState = new BlindGameState(state, currentPlayer);
-    		client.userSession.getBasicRemote().sendText("HELLO");
     		client.userSession.getBasicRemote().sendObject(blindState);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
