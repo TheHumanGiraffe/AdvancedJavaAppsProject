@@ -8,6 +8,8 @@ public class GameEvent {
 	
 	private String action;
 	private int cardID;
+	private int betAmount;
+
 	
 	public String getAction() {
 		return action;
@@ -29,6 +31,14 @@ public class GameEvent {
 		eventOwner = by;
 	}
 
+	public int getBetAmount() {
+		return betAmount;
+	}
+
+	public void setBetAmount(int betAmount) {
+		this.betAmount = betAmount;
+	}
+	
 	@Override
 	public String toString() {
 		return "GameEvent [eventOwner=" + eventOwner + ", action=" + action + ", cardID=" + cardID + "]";

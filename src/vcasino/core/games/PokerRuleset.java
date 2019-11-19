@@ -15,6 +15,7 @@ import vcasino.core.exceptions.RulesException;
 public class PokerRuleset implements Ruleset {
 
 	private static int handSize= 5;
+
 	@Override
 	public String getDescription() {
 		return "Simple 5 card stud ruleset";
@@ -63,7 +64,7 @@ public class PokerRuleset implements Ruleset {
 
 	@Override
 	public GameEvent fold(Player player) {
-		// TODO Auto-generated method stub
+		player.deactivate();		
 		return null;
 	}
 
@@ -91,16 +92,26 @@ public class PokerRuleset implements Ruleset {
 		int i = players.indexOf(current)+1;
 		
 		current.setTurn(false);
-		
+		while(!players.get(i >= players.size() ? 0 : i).isActive()) {
+			i = (i>= players.size() ? 0 : i+1);
+		}
 		nextPlayer = players.get(i >= players.size() ? 0 : i);
-		
 		nextPlayer.setTurn(true);
 		return nextPlayer;
 	}
 
 	@Override
-	public boolean gameOver() {
-		// TODO Auto-generated method stub
+	public boolean gameOver(GameState state) {
+		int numberOfFold = 0;
+		for(Player p : state.getPlayers()) {
+			if(!p.isActive()) {
+				numberOfFold++;
+			}
+			//If all but one fold. hand is over. Game/Round is over;
+			if(numberOfFold == state.getPlayers().size()-1) {
+				return true;
+			}		
+		}
 		return false;
 	}
 
@@ -128,9 +139,28 @@ public class PokerRuleset implements Ruleset {
 	}
 
 	@Override
-	public GameEvent placeBet(Player player) {
-		// TODO Auto-generated method stub
-		return null;
+	public void placeBet(GameState state, Player player, int betSize) throws RulesException {
+		//Check if player has enough chips to bet
+				if(player.getChips() - betSize < 0) {
+					throw new RulesException("Over Bet", "Not enough Chips", player);
+				}else {
+					for(Player opponent : state.getPlayers()) {
+						//Skip current player
+						if(opponent.equals(player)) {
+							continue;
+						}
+						//Check if players bet is greater than or = to oppents current bet 
+						if(player.getActiveBet() + betSize < opponent.getActiveBet()) {
+							throw new RulesException("Under Bet", "Player Did not meet oppenent Call", player);
+						}
+					}	
+					player.setActiveBet(player.getActiveBet() + betSize);
+					player.setChips(player.getChips() - betSize);
+					state.setPotSize(state.getPotSize() + betSize);
+					player.setActiveBet(player.getActiveBet() + betSize);
+					player.setChips(player.getChips() - betSize);
+					state.setPotSize(state.getPotSize() + betSize);
+				}
 	}
 
 	@Override
@@ -154,6 +184,25 @@ public class PokerRuleset implements Ruleset {
 		forPlayer.addCard(state.getDeck().drawCard());
 	}
 
+	
+	@Override
+	public void postHandReset(GameState state) {
+		//Get new Deck and shuffle it
+		this.newDeck();
+		this.shuffleDeck(state);	
+		state.setPotSize(0);
+		
+		for(Player p : state.getPlayers()) {
+			//Reset player betting and give new hand
+			p.setActiveBet(0);
+			p.emptyHand();
+			try {
+				this.dealHand(state, p);
+			} catch (RulesException e) {e.printStackTrace();}
+			p.activate();
+		}		
+	}
+	
 	public enum HandNameAndRank {
 	    HIGH_CARD("High Card", 0), PAIR("Pair", 1), TWO_PAIR("Two Pair", 2),
 	    THREE_OF_A_KIND("Three of a kind", 3), STRIGHT("Stright", 4), FLUSH("Flush", 5),

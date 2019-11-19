@@ -25,9 +25,10 @@ public interface Ruleset {
 	//Table-level actions
 	GameEvent beginMatch(GameState state) throws RulesException;
 	Player advanceTurn(Player current, List<Player> players);
-	boolean gameOver();
+	boolean gameOver(GameState state);
 	Player declareWinner(GameState gameState);
-	GameEvent placeBet(Player player);
+	void placeBet(GameState state, Player player, int betSize) throws RulesException;
 	GameEvent showHand(Player player);
 	void shuffleDeck(GameState state);
+	void postHandReset(GameState state);
 }

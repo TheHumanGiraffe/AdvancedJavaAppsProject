@@ -114,7 +114,7 @@ public class VCasinoServerEndpoint {
         Player currentPlayer =(Player) userSession.getUserProperties().get("player");
       //Add the action for the event
         try {
-        	usersMatch.doAction(gameEvent.getAction(), currentPlayer);
+        	usersMatch.doAction(gameEvent, currentPlayer);
         } catch (RulesException e) {
         	//TODO: we need to alert the user that they did something wrong!
 			e.printStackTrace();
@@ -146,6 +146,7 @@ public class VCasinoServerEndpoint {
     
     public void broadcastGameEvent(GameEvent event) {
     	System.out.println("BROADCAST EVENT: "+event.toString());
+    	
     	
     }
     

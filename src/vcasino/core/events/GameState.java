@@ -13,12 +13,14 @@ public class GameState {
 	protected ArrayList<Card> table;
 	protected ArrayList<Player> players;
 	protected Player currentPlayer, winner;
+	protected int potSize;
 	
 	public GameState(Ruleset rules) {
 		this.rules = rules;
 		deck = this.rules.newDeck();
 		table = new ArrayList<>();
 		players = new ArrayList<>();
+		potSize = 0;
 	}
 	
 	public Ruleset getRules() {
@@ -87,4 +89,13 @@ public class GameState {
 		this.currentPlayer = currentPlayer;
 	}
 
+	public int getPotSize() {
+		return potSize;
+	}
+
+	public void setPotSize(int potSize) {
+		this.potSize = potSize;
+	}
+
+	
 }
