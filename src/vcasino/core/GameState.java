@@ -1,11 +1,6 @@
-package vcasino.core.events;
+package vcasino.core;
 
 import java.util.ArrayList;
-
-import vcasino.core.Card;
-import vcasino.core.Deck;
-import vcasino.core.Player;
-import vcasino.core.Ruleset;
 
 public class GameState {
 	protected Ruleset rules;

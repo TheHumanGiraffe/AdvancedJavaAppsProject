@@ -5,11 +5,11 @@ import java.util.List;
 
 import vcasino.core.Card;
 import vcasino.core.Deck;
+import vcasino.core.GameState;
 import vcasino.core.Hand;
 import vcasino.core.Player;
 import vcasino.core.Ruleset;
 import vcasino.core.events.GameEvent;
-import vcasino.core.events.GameState;
 import vcasino.core.exceptions.RulesException;
 
 public class PokerRuleset implements Ruleset {

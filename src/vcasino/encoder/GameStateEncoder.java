@@ -6,7 +6,7 @@ import javax.websocket.EndpointConfig;
 
 import com.google.gson.Gson;
 
-import vcasino.core.events.GameState;
+import vcasino.core.GameState;
 
 public class GameStateEncoder implements Encoder.Text<GameState>{
 

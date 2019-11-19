@@ -4,7 +4,6 @@ package vcasino.core;
 import java.util.List;
 
 import vcasino.core.events.GameEvent;
-import vcasino.core.events.GameState;
 import vcasino.core.exceptions.RulesException;
 
 public interface Ruleset {
