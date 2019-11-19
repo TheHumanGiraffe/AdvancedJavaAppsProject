@@ -1,7 +1,6 @@
 package vcasino.core;
 
 import vcasino.core.events.GameEvent;
-import vcasino.core.events.GameState;
 import vcasino.core.exceptions.RulesException;
 
 import java.util.Deque;

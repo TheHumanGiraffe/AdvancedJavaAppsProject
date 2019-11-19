@@ -1,7 +1,7 @@
 package vcasino.blind;
 
+import vcasino.core.GameState;
 import vcasino.core.Player;
-import vcasino.core.events.GameState;
 
 public class BlindGameState extends GameState {
 	private int visible;

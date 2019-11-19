@@ -9,11 +9,11 @@ import javax.websocket.server.ServerEndpoint;
 
 import vcasino.encoder.*;
 import vcasino.blind.BlindGameState;
+import vcasino.core.GameState;
 import vcasino.core.Match;
 import vcasino.core.Match.MatchState;
 import vcasino.core.Player;
 import vcasino.core.events.GameEvent;
-import vcasino.core.events.GameState;
 import vcasino.core.events.RulesViolationEvent;
 import vcasino.core.exceptions.RulesException;
 import vcasino.core.games.*;

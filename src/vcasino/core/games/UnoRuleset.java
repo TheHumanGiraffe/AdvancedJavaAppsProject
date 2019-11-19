@@ -5,7 +5,6 @@ import java.util.List;
 import vcasino.core.*;
 import vcasino.core.events.GenericGameEvent;
 import vcasino.core.events.GameEvent;
-import vcasino.core.events.GameState;
 import vcasino.core.exceptions.RulesException;
 
 public class UnoRuleset implements Ruleset {
