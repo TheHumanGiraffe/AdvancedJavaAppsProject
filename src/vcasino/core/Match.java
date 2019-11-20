@@ -65,7 +65,7 @@ public class Match {
 	//Needs to be GameAction because they will be addtional info tied to it other than the action. IE card ID and bet amount
 	public void doAction(GameAction action, Player player) throws RulesException {
 		if(player.isTurn()) {
-			switch(action.name) {
+			switch(action.action) {
 				case "draw":
 					gameRules.drawCard(gameState, player);
 					//gameState.setPlayer(player);

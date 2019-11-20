@@ -96,7 +96,8 @@ public class VCasinoServerEndpoint {
         //System.out.println("Message from ClientID: " + userSession.getId() + " GameAction " + action);
         Match usersMatch = VCasinoServerEndpoint.matches.get(game+roomNumber);
         Player currentPlayer =(Player) userSession.getUserProperties().get("player");
-      //Add the action for the event
+        
+        //Add the action for the event
         try {
         	usersMatch.doAction(action, currentPlayer);
         } catch (RulesException e) {

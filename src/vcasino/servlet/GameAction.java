@@ -1,8 +1,7 @@
 package vcasino.servlet;
 
 public class GameAction {
-	public String player="";
-	public String name="";
+	public String action="";
 	public String arg0="";
 	public String arg1;
 	public String arg2;
@@ -11,6 +10,6 @@ public class GameAction {
 	
 	@Override
 	public String toString() {
-		return player + name + arg0;
+		return action + arg0;
 	}
 }

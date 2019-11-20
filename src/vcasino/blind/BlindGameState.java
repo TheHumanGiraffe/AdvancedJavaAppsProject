@@ -4,6 +4,7 @@ import vcasino.core.GameState;
 import vcasino.core.Player;
 
 public class BlindGameState extends GameState {
+	@SuppressWarnings("unused")
 	private int visible;
 	
 	public BlindGameState(GameState gameState, Player sight) {
