@@ -82,6 +82,7 @@ public class PokerRuleset implements Ruleset {
 			}
 		}
 		deck.discardTop();
+		state.getPlayers().get(0).setTurn(true);
 		
 		return null;
 	}

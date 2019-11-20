@@ -90,7 +90,9 @@ public class Match {
 					System.out.println("NO ACTION");
 			}
 			if(gameRules.gameOver(gameState)) {
-				gameRules.declareWinner(gameState);
+				Player winner = gameRules.declareWinner(gameState);
+				gameRules.postHandReset(gameState);
+				gameState.setWinner(winner);
 			}
 			gameState.setCurrentPlayer(gameRules.advanceTurn(player, gameState.getPlayers()));
 			update(gameState);
