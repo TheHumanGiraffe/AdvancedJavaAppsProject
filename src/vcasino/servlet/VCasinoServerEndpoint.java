@@ -8,8 +8,7 @@ import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 
 import vcasino.encoder.*;
-import vcasino.blind.BlindGameState;
-import vcasino.core.GameState;
+import vcasino.decoder.*;
 import vcasino.core.Match;
 import vcasino.core.Match.MatchState;
 import vcasino.core.Player;
@@ -17,14 +16,12 @@ import vcasino.core.events.GameEvent;
 import vcasino.core.events.RulesViolationEvent;
 import vcasino.core.exceptions.RulesException;
 import vcasino.core.games.*;
-import vcasino.decoder.GameEventDecoder;
 
 
 @ServerEndpoint(
-		//value ="/vcasino/{game}/{roomNumber}",
 		value = "/vcasino/{game}/{roomNumber}",
 		encoders = {BlindGameStateEncoder.class, GameEventEncoder.class},
-		decoders = {GameEventDecoder.class}
+		decoders = {GameActionDecoder.class}
 )
 public class VCasinoServerEndpoint {
 
@@ -52,14 +49,12 @@ public class VCasinoServerEndpoint {
 		//Pass the Match Constructor game to set the correct ruleset
 		setupMatch = VCasinoServerEndpoint.matches.get(game+roomNumber);
 		if(setupMatch == null) {
-			VCasinoServerEndpoint.matches.putIfAbsent(game+roomNumber, new ServerMatch(game+roomNumber, new PokerRuleset()));
+			VCasinoServerEndpoint.matches.putIfAbsent(game+roomNumber, new Match(game+roomNumber, new PokerRuleset()));
 			setupMatch = VCasinoServerEndpoint.matches.get(game+roomNumber);
 		}
 		
-		Player newPlayer = (Player)userSession.getUserProperties().get("player");
-		
 		try {
-			setupMatch.addPlayer(newPlayer);
+			setupMatch.addPlayer(userSession);
 			if(setupMatch.getMatchState() != MatchState.MSTATE_PLAYING && setupMatch.getGameState().countPlayers() >= 4) {
 				setupMatch.begin(); //seems legit...
 				sendMessage("Game start!");
@@ -69,17 +64,6 @@ public class VCasinoServerEndpoint {
 			broadcastGameEvent(new RulesViolationEvent(e));
 		} finally {
 		
-			for(VCasinoServerEndpoint currentClient  : VCasinoServerEndpoint.openSessions.values()) {
-				//if(currentClient == this) {
-				//	continue;
-				//}
-				//Checks if the connection is open, if the game and roomNumbers match
-				for(VCasinoServerEndpoint connectedUser : VCasinoServerEndpoint.openSessions.values()) {
-		        	if(checkGameAndRoom(connectedUser)) {
-		        		sendGameState(connectedUser, setupMatch.getGameState());
-		        	}
-		        }
-			}
 			System.out.println("Open Connection...\n Session ID: "+ userSession.getId() );
 		}
 		//this.sendMessage("Connected!");
@@ -105,26 +89,20 @@ public class VCasinoServerEndpoint {
     }
 
     @OnMessage
-    public void onMessage(GameEvent gameEvent, Session userSession) {
+    public void onMessage(GameAction action, Session userSession) {
     	String roomNumber = (String) userSession.getUserProperties().get("roomNumber");
     	String game = (String) userSession.getUserProperties().get("game");
     	
-        System.out.println("Message from ClientID:" + userSession.getId() + "GameEvent" + gameEvent);
+        //System.out.println("Message from ClientID: " + userSession.getId() + " GameAction " + action);
         Match usersMatch = VCasinoServerEndpoint.matches.get(game+roomNumber);
         Player currentPlayer =(Player) userSession.getUserProperties().get("player");
       //Add the action for the event
         try {
-        	usersMatch.doAction(gameEvent, currentPlayer);
+        	usersMatch.doAction(action, currentPlayer);
         } catch (RulesException e) {
-        	//TODO: we need to alert the user that they did something wrong!
-			e.printStackTrace();
+        	sendMessage(e.getLocalizedMessage());
+        	e.printStackTrace();
 		}
-        for(VCasinoServerEndpoint connectedUser : VCasinoServerEndpoint.openSessions.values()) {
-        	if(checkGameAndRoom(connectedUser)) {
-        		sendGameState(connectedUser, usersMatch.getGameState());
-        	}
-        }
-        
     }
 
     public void sendMessage(String message) {
@@ -149,38 +127,9 @@ public class VCasinoServerEndpoint {
     	
     	
     }
-    
-    //Sends state of game as JSON object 
-    public void sendGameState(VCasinoServerEndpoint client, GameState state) {
-    	try {
-    		System.out.println("Sending game state");
-    		
-    		Player currentPlayer = (Player) client.userSession.getUserProperties().get("player");
-    		BlindGameState blindState = new BlindGameState(state, currentPlayer);
-    		client.userSession.getBasicRemote().sendObject(blindState);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-    	
-    }
-    public void sendRequest(String command, String payload) {
-    	sendMessage("{\"request\": {\"command\": \""+command+"\",\n\"payload\": \""+payload+"\"\n}}");
-    }
 
     private String getMyUniqueId() {
 		return Integer.toHexString(this.hashCode());
 	}
-    
-    private boolean checkGameAndRoom(VCasinoServerEndpoint client) {
-    	if(VCasinoServerEndpoint.openSessions.get(this.myUniqueId).userSession.isOpen() &&
-    	VCasinoServerEndpoint.openSessions.get(client.myUniqueId).userSession.getUserProperties().get("game")
-    	.equals(this.userSession.getUserProperties().get("game")) 
-    	&& VCasinoServerEndpoint.openSessions.get(client.myUniqueId).userSession.getUserProperties().get("roomNumber")
-    	.equals(this.userSession.getUserProperties().get("roomNumber"))) {
-    		return true;
-    	}
-    	return false;
-    }
     
 }

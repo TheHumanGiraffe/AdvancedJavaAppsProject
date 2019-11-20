@@ -82,14 +82,13 @@ public class UnoRuleset implements Ruleset {
 	}
 
 	@Override
-	public boolean gameOver() {
+	public boolean gameOver(GameState state) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public GameEvent placeBet(Player player) {
-		return new GenericGameEvent(player);
+	public void placeBet(GameState state, Player player, int betSize) throws RulesException {
 	}
 
 	@Override
@@ -112,6 +111,12 @@ public class UnoRuleset implements Ruleset {
 	@Override
 	public void shuffleDeck(GameState state) {
 		state.getDeck().shuffle();
+	}
+
+	@Override
+	public void postHandReset(GameState state) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	

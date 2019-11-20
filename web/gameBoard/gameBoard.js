@@ -32,12 +32,17 @@
     
     
     function drawCard(){
-      var jsonText ='{ "action":"draw"}'
+      var jsonText ='{ "name":"draw"}';
  	   wsSendMessage(jsonText);
     }
     
+    function playCard(card){
+      var jsonText ='{ "name":"play", "arg0": "'+card+'"}';
+      wsSendMessage(jsonText);
+    }
+    
     function getWinner(){
- 	   var jsonText ='{ "action":"winner"}'
+ 	   var jsonText ='{ "name":"winner"}'
  	   wsSendMessage(jsonText);
     }
    

@@ -90,7 +90,7 @@ public class Player {
 	public void addChips(int numberOfChips) {
 		this.chips = this.chips + numberOfChips;
 	}
-
+	
 	@Override
 	public boolean equals(Object o) { 
 		   // If the object is compared with itself then return true   
