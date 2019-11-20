@@ -79,7 +79,7 @@ public class Match {
 		        	gameRules.fold(player);
 		        	break;
 		        case "bet":
-		        	gameRules.placeBet(gameState, player, Integer.parseInt(action.arg1));
+		        	gameRules.placeBet(gameState, player, Integer.parseInt(action.arg0));
 		        	break;
 				case "winner":
 					Player winner = gameRules.declareWinner(gameState);

@@ -1,6 +1,6 @@
 
 var urlParams = new URLSearchParams(window.location.search);
-
+var gameState = null;
 var cardURL = 'https://raw.githubusercontent.com/TheHumanGiraffe/AdvancedJavaAppsProject/master/web/gameBoard/cards/';
 
 $(document).ready(function() {
@@ -59,42 +59,22 @@ function getWinner(){
 	wsSendMessage(jsonText);
 }
 
-
-function wsOpen(message){
-	// echoText.value += "Connecting ... \n";
-}
-function wsSendMessage(jsonText){
-	// webSocket.send(message.value);
-	// webSocket.send(json);
-	webSocket.send(jsonText);
-	// echoText.value += "Message sent to the server : " + message.value + "\n";
-	// message.value = "";
-}
-function wsCloseConnection(){
-	webSocket.close();
-}
-function wsGetMessage(message){
+function renderGamestate(gamestate) {
 	var player1div = document.getElementById('player1Div');
 	var player2div = document.getElementById('player2Div');
 	var player3div = document.getElementById('player3Div');
 	var player4div = document.getElementById('player4Div');
+	
+	if(gamestate==null)
+		return;
 	
 	player1div.innerHTML = "";
 	player2div.innerHTML = "";
 	player3div.innerHTML = "";
 	player4div.innerHTML = "";
 	
-
-
-	console.dir(message);
-	console.dir(message.data);
-
-	var json = JSON.parse(message.data);
-
-	console.dir(json);
-
-	var gamestate = json.gamestate;
-
+	gameState = gamestate; //save it for lates
+	
 	var currentPlayer = gamestate.players[gamestate.visible];
 	console.dir(gamestate);
 	console.dir(currentPlayer);
@@ -160,7 +140,40 @@ function wsGetMessage(message){
     	player2Cards.insertRow(numberOfCardsInBlindHands[0]);*/
 
 	// echoText.value += "Message received from the server : " + message.data + "\n";
+}
 
+function wsOpen(message){
+	// echoText.value += "Connecting ... \n";
+}
+function wsSendMessage(jsonText){
+	// webSocket.send(message.value);
+	// webSocket.send(json);
+	webSocket.send(jsonText);
+	// echoText.value += "Message sent to the server : " + message.value + "\n";
+	// message.value = "";
+}
+function wsCloseConnection(){
+	webSocket.close();
+}
+function wsGetMessage(message){
+
+	console.dir(message);
+	console.dir(message.data);
+
+	var json = JSON.parse(message.data);
+
+	console.dir(json);
+
+	if(json["message"] != null) {
+		
+		alert(json.message.text);
+		echoText.value += "ALERT: "+json.message.text+"\n";
+	} else if(json["chat"] != null) {
+		echoText.value += json.chat.Player+": "+json.chat.text+"\n";
+	} else {
+	
+		renderGamestate(json.gamestate);
+	}
 }
 function wsClose(message){
 	// echoText.value += "Disconnect ... \n";

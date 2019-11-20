@@ -101,7 +101,7 @@ public class VCasinoServerEndpoint {
         try {
         	usersMatch.doAction(action, currentPlayer);
         } catch (RulesException e) {
-        	sendMessage(e.getLocalizedMessage());
+        	sendMessage(e.getDescription());
         	e.printStackTrace();
 		}
     }
@@ -109,7 +109,7 @@ public class VCasinoServerEndpoint {
     public void sendMessage(String message) {
     	if(this.userSession != null)
 			try {
-				this.userSession.getBasicRemote().sendText("\"message\": {\"text\": \""+message+"\"}");
+				this.userSession.getBasicRemote().sendText("{ \"message\": {\"text\": \""+message+"\"}}");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -117,7 +117,7 @@ public class VCasinoServerEndpoint {
     
     public void broadcastMessage(String message) {
     	try {
-			this.userSession.getBasicRemote().sendText("\"message\": {\"text\": \""+message+"\"}");
+			this.userSession.getBasicRemote().sendText("{ \"message\": {\"text\": \""+message+"\"}}");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
