@@ -46,7 +46,6 @@ public class PokerRuleset implements Ruleset {
 	public void drawCard(GameState state, Player forPlayer) throws RulesException {
 		if(forPlayer == state.getCurrentPlayer())
 			forPlayer.addCard(state.getDeck().drawCard());
-		throw new RulesException("Turn", "Not their turn!", forPlayer);
 	}
 
 	@Override
@@ -82,6 +81,7 @@ public class PokerRuleset implements Ruleset {
 			}
 		}
 		deck.discardTop();
+		
 		state.getPlayers().get(0).setTurn(true);
 		
 		return null;
