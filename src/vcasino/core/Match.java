@@ -149,9 +149,10 @@ public class Match {
 	}
 	
 	public void sendMessage(String message) {
+		String msg = "{ \"message\": {\"text\": \""+message+"\"}}";
 		for(Session userSession : sessions) {
 			try {
-				userSession.getBasicRemote().sendText("\"message\": {\"text\": \""+message+"\"}");
+				userSession.getBasicRemote().sendText(msg);
 			} catch (IOException e) {
 				e.printStackTrace();
 				((Player)userSession.getUserProperties().get("player")).deactivate();

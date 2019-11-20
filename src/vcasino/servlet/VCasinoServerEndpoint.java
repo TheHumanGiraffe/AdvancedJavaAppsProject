@@ -57,7 +57,7 @@ public class VCasinoServerEndpoint {
 			setupMatch.addPlayer(userSession);
 			if(setupMatch.getMatchState() != MatchState.MSTATE_PLAYING && setupMatch.getGameState().countPlayers() >= 4) {
 				setupMatch.begin(); //seems legit...
-				sendMessage("Game start!");
+				broadcastMessage("Game start!");
 			}
 		} catch (RulesException e) {
 			System.out.println("RULES: "+e);
@@ -116,11 +116,10 @@ public class VCasinoServerEndpoint {
     }
     
     public void broadcastMessage(String message) {
-    	try {
-			this.userSession.getBasicRemote().sendText("{ \"message\": {\"text\": \""+message+"\"}}");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+    	String game = (String) userSession.getUserProperties().get("game");
+		String roomNumber = (String) userSession.getUserProperties().get("roomNumber");
+		Match usersMatch = VCasinoServerEndpoint.matches.get(game+roomNumber);
+		usersMatch.sendMessage(message);
     }
     
     public void broadcastGameEvent(GameEvent event) {
