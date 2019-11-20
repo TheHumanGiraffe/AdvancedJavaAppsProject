@@ -108,7 +108,7 @@ public class PokerRuleset implements Ruleset {
 			if(!p.isActive()) {
 				numberOfFold++;
 			}
-			//If all but one fold. hand is over. Game/Round is over;
+			//If all but one fold. hand is over. Game/Round is over
 			if(numberOfFold == state.getPlayers().size()-1) {
 				return true;
 			}		
