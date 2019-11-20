@@ -1,21 +1,20 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="UTF-8">
-	<title>Game 123456789</title>
-	
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-	<script type="text/javascript" src="gameBoard.js"></script>
-	
-	<link rel="stylesheet" href="gameBoard.css">
+<meta charset="UTF-8">
+<title>Game 123456789</title>
+
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script type="text/javascript" src="gameBoard.js"></script>
+
+<link rel="stylesheet" href="gameBoard.css">
 </head>
 <body>
 	<div class="board">
+		<div id="pot" style="text-align: center;"></div>
+		<div id="currentPlayer" style="text-align: center;"></div>
 		<table id="board" class="board" style="margin: auto;">
-			<tr>
-				<td><span id="bet"></span></td>
-				<td><span id="currentPlayer"></span></td>
-			</tr>
 			<tr>
 				<td><span class="corner">&nbsp;</span></td>
 				<td><div id="player3Div"></div></td>
@@ -23,7 +22,7 @@
 			</tr>
 			<tr>
 				<td><div id="player2Div"></div></td>
-				<td><div id="discard"></div></td>
+				<td><div><img id="discard" src="https://raw.githubusercontent.com/TheHumanGiraffe/AdvancedJavaAppsProject/master/web/gameBoard/cards/0.jpg" /></div></td>
 				<td><div id="player4Div"></div></td>
 			</tr>
 			<tr>
@@ -32,10 +31,13 @@
 				<td><span class="corner">&nbsp;</span></td>
 			</tr>
 		</table>
-		<div class="options" style="text-align: center;">
+		<div class="options" style="text-align: center; color: white;">
 			<textarea id="echoText" rows="5" cols="30" readonly></textarea>
-			<input onclick="drawCard();" value ="Draw" type="button"/>
-			<input onclick="getWinner();" value ="Get Winner" type="button"/>
+			<input onclick="drawCard();" value="Draw" type="button" /> 
+			<input onclick="getWinner();" value="Get Winner" type="button" /> 
+			Bet: <input type="number" id="betValue"> 
+			<input onclick="placeBet();" type="button" value="Place Bet"> 
+			<input onclick="fold();"value="Fold" type="button" />
 		</div>
 	</div>
 
