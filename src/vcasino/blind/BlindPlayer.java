@@ -20,7 +20,8 @@ public class BlindPlayer extends Player {
 	
 	public BlindPlayer(Player p){
 		super(p.getName(), p.getChips(), p.getId());
-		
+		this.setTurn(p.isTurn());
+		this.setActiveBet(p.getActiveBet());
 		ArrayList<Card> hand = new ArrayList<>();
 		
 		for(@SuppressWarnings("unused") Card c : p.getHand()) {
