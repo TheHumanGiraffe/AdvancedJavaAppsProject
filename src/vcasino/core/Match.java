@@ -62,6 +62,15 @@ public class Match {
 		update(gameState);
 	}
 	
+	public void dropPlayer(Session deadSession) {
+		Player player = (Player)deadSession.getUserProperties().get("player");
+		player.deactivate();
+		
+		//keep going without them or just pause?
+		
+		update(gameState);
+	}
+	
 	//Needs to be GameAction because they will be addtional info tied to it other than the action. IE card ID and bet amount
 	public void doAction(GameAction action, Player player) throws RulesException {
 		if(player.isTurn()) {
@@ -77,6 +86,7 @@ public class Match {
 					break;
 		        case "fold":
 		        	gameRules.fold(player);
+		        	sendMessage(player.getName()+" has folded.");
 		        	break;
 		        case "bet":
 		        	gameRules.placeBet(gameState, player, Integer.parseInt(action.arg0));
@@ -90,7 +100,8 @@ public class Match {
 					System.out.println("NO ACTION");
 			}
 			if(gameRules.gameOver(gameState)) {
-				gameRules.declareWinner(gameState);
+				Player winner = gameRules.declareWinner(gameState);
+				sendMessage(winner.getName() + " has won the round!");
 			}
 			gameState.setCurrentPlayer(gameRules.advanceTurn(player, gameState.getPlayers()));
 			update(gameState);

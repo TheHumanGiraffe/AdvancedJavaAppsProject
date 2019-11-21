@@ -166,7 +166,7 @@ function wsGetMessage(message){
 
 	if(json["message"] != null) {
 		
-		alert(json.message.text);
+		//alert(json.message.text);
 		echoText.value += "ALERT: "+json.message.text+"\n";
 	} else if(json["chat"] != null) {
 		echoText.value += json.chat.Player+": "+json.chat.text+"\n";

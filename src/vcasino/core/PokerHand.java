@@ -8,7 +8,7 @@ import java.util.Map;
 
 import vcasino.core.games.PokerRuleset.HandNameAndRank;
 
-public class Hand {
+public class PokerHand {
     private List<Card> hand;
     private int handRank;
     private String handName;
@@ -16,11 +16,11 @@ public class Hand {
     private Map<String, Integer> suitFreq;
 
 
-   public Hand(){
+   public PokerHand(){
         this.hand = new ArrayList<>(5);
     }
 
-   public Hand(List<Card> cards){
+   public PokerHand(List<Card> cards){
         rankFreq = new HashMap<Integer,Integer>(5);
         suitFreq = new HashMap<String, Integer>(5);
         if(cards.size() == 5) {
@@ -36,7 +36,7 @@ public class Hand {
 
         }
     }
-   public Hand(Card card1,Card card2,Card card3,Card card4,Card card5){
+   public PokerHand(Card card1,Card card2,Card card3,Card card4,Card card5){
         rankFreq = new HashMap<Integer,Integer>(5);
         suitFreq = new HashMap<String, Integer>(5);
         this.hand = new ArrayList<Card>(5);
@@ -76,7 +76,7 @@ public class Hand {
 
     }
     
-    public static int compare(Hand h1, Hand h2){
+    public static int compare(PokerHand h1, PokerHand h2){
     	int highestFreqH1=0;
     	int highestRankH1=0;
     	int highestFreqH2=0;

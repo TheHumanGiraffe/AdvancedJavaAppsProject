@@ -103,6 +103,11 @@ public class VCasinoServerEndpoint {
         } catch (RulesException e) {
         	sendMessage(e.getDescription());
         	e.printStackTrace();
+		} catch (IllegalStateException ise) {
+			usersMatch.dropPlayer(userSession);
+			try {
+				userSession.close();
+			} catch (IOException e) {}
 		}
     }
 

@@ -6,7 +6,7 @@ import java.util.List;
 import vcasino.core.Card;
 import vcasino.core.Deck;
 import vcasino.core.GameState;
-import vcasino.core.Hand;
+import vcasino.core.PokerHand;
 import vcasino.core.Player;
 import vcasino.core.Ruleset;
 import vcasino.core.events.GameEvent;
@@ -46,7 +46,7 @@ public class PokerRuleset implements Ruleset {
 	public void drawCard(GameState state, Player forPlayer) throws RulesException {
 		if(forPlayer == state.getCurrentPlayer())
 			forPlayer.addCard(state.getDeck().drawCard());
-		throw new RulesException("Turn", "Not their turn!", forPlayer);
+		throw new RulesException("Turn", "You cannot draw a card outside your turn.", forPlayer);
 	}
 
 	@Override
@@ -102,17 +102,15 @@ public class PokerRuleset implements Ruleset {
 
 	@Override
 	public boolean gameOver(GameState state) {
-		int numberOfFold = 0;
+		ArrayList<Player> playingSet = new ArrayList<>();
+		
 		for(Player p : state.getPlayers()) {
-			if(!p.isActive()) {
-				numberOfFold++;
+			if(p.isActive()) {
+				playingSet.add(p);
 			}
-			//If all but one fold. hand is over. Game/Round is over;
-			if(numberOfFold == state.getPlayers().size()-1) {
-				return true;
-			}		
 		}
-		return false;
+		//If all but one fold. hand is over. Game/Round is over;
+		return (playingSet.size()==1);
 	}
 
 	@Override
@@ -122,12 +120,12 @@ public class PokerRuleset implements Ruleset {
 		int currentHigh = -1;
 		for(Player player : players) {
 			if(makeBestHand(player.getHand()) == currentHigh) {
-				Hand h1 = new Hand(player.getHand());
-				Hand h2 = new Hand(winner.getHand());
-				if(Hand.compare(h1, h2) == 0) {
+				PokerHand h1 = new PokerHand(player.getHand());
+				PokerHand h2 = new PokerHand(winner.getHand());
+				if(PokerHand.compare(h1, h2) == 0) {
 					winner = player;
 				}
-				
+				continue;
 			}
 			if(makeBestHand(player.getHand()) > currentHigh) {
 				winner = player;
@@ -175,7 +173,7 @@ public class PokerRuleset implements Ruleset {
 	}
 
 	private int makeBestHand(ArrayList<Card> handAsList) {
-		Hand hand = new Hand(handAsList);
+		PokerHand hand = new PokerHand(handAsList);
 		hand.makeBestHand();
 		return hand.getHandRank();
 	}
