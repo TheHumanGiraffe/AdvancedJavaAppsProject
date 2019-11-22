@@ -18,7 +18,7 @@ if(urlParams.has('game')){
 	var game = 'loser'
 }
 
-var webSocket = new WebSocket("ws://localhost:8080/AdvancedJavaAppsProject/vcasino/"+game+"/"+roomNumber);
+var webSocket = new WebSocket("ws://136.32.57.193:8080/AdvancedJavaAppsProject/vcasino/"+game+"/"+roomNumber);
 //var webSocket = new WebSocket("ws://ec2-3-89-73-209.compute-1.amazonaws.com:8080/webSocketTest4/websocketendpoint");
 
 // var echoText = document.getElementById("echoText");
@@ -64,6 +64,8 @@ function renderGamestate(gamestate) {
 	var player2div = document.getElementById('player2Div');
 	var player3div = document.getElementById('player3Div');
 	var player4div = document.getElementById('player4Div');
+	var tablediv = document.getElementById('tableDiv');
+
 	
 	if(gamestate==null)
 		return;
@@ -72,6 +74,7 @@ function renderGamestate(gamestate) {
 	player2div.innerHTML = "";
 	player3div.innerHTML = "";
 	player4div.innerHTML = "";
+	tablediv.innerHTML = "";
 	
 	gameState = gamestate; //save it for lates
 	
@@ -125,7 +128,15 @@ function renderGamestate(gamestate) {
 		});
 		iterator++;
 	});
-
+	
+	var table = gamestate.table;
+	table.forEach(function(table){
+		console.log(table);
+		var img = document.createElement("img");
+		img.src = cardURL + table.cardID + ".jpg";
+		
+		document.getElementById('tableDiv').appendChild(img);
+	})
 
 	/*var player2Cards = document.getElementById("player2Table");
 

@@ -49,7 +49,7 @@ public class VCasinoServerEndpoint {
 		//Pass the Match Constructor game to set the correct ruleset
 		setupMatch = VCasinoServerEndpoint.matches.get(game+roomNumber);
 		if(setupMatch == null) {
-			VCasinoServerEndpoint.matches.putIfAbsent(game+roomNumber, new Match(game+roomNumber, new PokerRuleset()));
+			VCasinoServerEndpoint.matches.putIfAbsent(game+roomNumber, new Match(game+roomNumber, new TexasHoldemRuleSet()));
 			setupMatch = VCasinoServerEndpoint.matches.get(game+roomNumber);
 		}
 		
