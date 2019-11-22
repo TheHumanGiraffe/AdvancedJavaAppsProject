@@ -18,7 +18,7 @@ if(urlParams.has('game')){
 	var game = 'loser'
 }
 
-var webSocket = new WebSocket("ws://136.32.57.193:8080/AdvancedJavaAppsProject/vcasino/"+game+"/"+roomNumber);
+var webSocket = new WebSocket("ws://localhost:8080/AdvancedJavaAppsProject/vcasino/"+game+"/"+roomNumber);
 //var webSocket = new WebSocket("ws://ec2-3-89-73-209.compute-1.amazonaws.com:8080/webSocketTest4/websocketendpoint");
 
 // var echoText = document.getElementById("echoText");
