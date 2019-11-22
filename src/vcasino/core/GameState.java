@@ -25,6 +25,9 @@ public class GameState {
 	public Deck getDeck() {
 		return deck;
 	}
+	public void newDeck() {
+		this.deck = this.rules.newDeck();;
+	}
 	
 	public Card getTopDiscard() {
 		return deck.getDiscard(0);

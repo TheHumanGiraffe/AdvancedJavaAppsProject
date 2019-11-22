@@ -17,16 +17,16 @@ public class PokerHand {
 
 
    public PokerHand(){
-        this.hand = new ArrayList<>(5);
+        this.hand = new ArrayList<>();
     }
 
    public PokerHand(List<Card> cards){
         rankFreq = new HashMap<Integer,Integer>(5);
         suitFreq = new HashMap<String, Integer>(5);
-        if(cards.size() == 5) {
-            this.hand = cards;
-            sortHand();
-        }
+       
+        this.hand = cards;
+        sortHand();
+        
         for(Card c : hand){
             Integer j = rankFreq.get(c.getRank());
             Integer k = suitFreq.get(c.getSuit());
@@ -130,7 +130,7 @@ public class PokerHand {
     private boolean isTwoPair(){
         boolean firstPair = false;
         for(int i : rankFreq.keySet()){
-            if(rankFreq.get(i) == 2){
+            if(rankFreq.get(i) == 2 && !firstPair){
                 firstPair = true;
                 continue;
             }

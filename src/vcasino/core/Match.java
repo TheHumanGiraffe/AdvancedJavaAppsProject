@@ -93,7 +93,6 @@ public class Match {
 		        	break;
 				case "winner":
 					Player winner = gameRules.declareWinner(gameState);
-					gameRules.postHandReset(gameState);
 					gameState.setWinner(winner);
 					break;
 				default:
