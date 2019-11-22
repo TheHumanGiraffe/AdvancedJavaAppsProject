@@ -39,6 +39,12 @@ function placeBet(){
 	wsSendMessage(jsonText);
 }
 
+function add10(){
+	var oldBetValue = parseInt(document.getElementById('betValue').value, 10);
+	var newBetValue = oldBetValue + 10; 
+	document.getElementById('betValue').value = newBetValue;
+}
+
 function add20(){
 	var oldBetValue = parseInt(document.getElementById('betValue').value, 10);
 	var newBetValue = oldBetValue + 20; 
