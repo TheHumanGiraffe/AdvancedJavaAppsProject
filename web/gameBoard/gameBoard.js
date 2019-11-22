@@ -39,6 +39,10 @@ function placeBet(){
 	wsSendMessage(jsonText);
 }
 
+function resetBet(){
+	document.getElementById("betValue").value = 0;
+}
+
 function add10(){
 	var oldBetValue = parseInt(document.getElementById('betValue').value, 10);
 	var newBetValue = oldBetValue + 10; 
@@ -126,7 +130,7 @@ function renderGamestate(gamestate) {
 	var playerCount = gamestate.length;
 	var players = gamestate.players;
 
-	document.getElementById("discard").src = cardURL + gamestate.deck.discards[0].cardID + '.jpg';
+	document.getElementById("discard").innerHTML = "<img src= '" + cardURL + gamestate.deck.discards[0].cardID + ".jpg' />";
 	document.getElementById("pot").innerHTML="<h2>Pot Size: " + gamestate.potSize + "</h2>";
 	
 	players.forEach(function(player){
@@ -163,7 +167,7 @@ function renderGamestate(gamestate) {
 	players.forEach(function(player) {
 		console.log(player);
 
-		var workingDiv = document.getElementById('player' + iterator + 'Div');
+		var workingDiv = documentgame.getElementById('player' + iterator + 'Div');
 		var workingInfo = document.getElementById('player' + iterator + 'info');
 		
 		player.hand.forEach(function(card){
@@ -191,21 +195,27 @@ function renderGamestate(gamestate) {
 		
 		iterator++;
 	});
+}
 
-
-	/*var player2Cards = document.getElementById("player2Table");
-
-
-    	for(i = numberOfCardsInBlindHands[0]; i > 0; i --){
-    		player2Cards.deleteRow(i-1);
-        	var cardRow = player2Cards.insertRow(i-1);
-    		var x=cardRow.insertCell(-1);
-            x.innerHTML ="<img class=\"p2\" src=\"cards/0.jpg\"/>";
-
-    	}
-    	player2Cards.insertRow(numberOfCardsInBlindHands[0]);*/
-
-	// echoText.value += "Message received from the server : " + message.data + "\n";
+function renderGameList(gameList) {
+	var parentDiv = document.createElement("div");
+	var title = document.createElement("h3");
+	
+	title.innerHTML = "Games List:";
+	parentDiv.appendChild(title);
+	
+	gameList.forEach(function(game) {
+		var link = document.createElement("a");
+		link.href = "../gameBoard.html?game=" + game.type + "&roomNumber=" + game.room;
+		
+		var element = document.createElement("h3");
+		element.innerHTML = "Game: " + game.type + " Players: " + game.players + "/4";
+		
+		link.appendChild(element);
+		parentDiv.appendChild(link);
+	});
+	
+	document.getElementById('discard').appendChild(parentDiv);
 }
 
 function wsOpen(message){
@@ -236,8 +246,10 @@ function wsGetMessage(message){
 		echoText.value += "ALERT: "+json.message.text+"\n";
 	} else if(json["chat"] != null) {
 		echoText.value += json.chat.Player+": "+json.chat.text+"\n";
-	} else {
-	
+	} else if (json["games"] != null) {
+		renderGameList(json.games);
+	} 
+	}else {
 		renderGamestate(json.gamestate);
 	}
 }
