@@ -65,7 +65,7 @@ public class PokerHand {
         isFourOfAKind()||
         isFullHouse()||
         isFlush()||
-        isStright()||
+        isStraight()||
         isThreeOfAKind()||
         isTwoPair()||
         isPair()||
@@ -152,16 +152,21 @@ public class PokerHand {
         }
         return false;
     }
-    private boolean isStright(){
+    private boolean isStraight(){
+    	 	
         int currentRank = hand.get(0).getRank();
-
-        for(int i = 1; i < hand.size(); i ++){
-            if(currentRank+1 == hand.get(i).getRank()){
-                currentRank = hand.get(i).getRank();
-            }else{
-                return  false;
-            }
+                
+        for(int i = 0; i < 3; i++) {
+        	currentRank = hand.get(0).getRank();
+        	for(int k = 0; k < 4; k++) {
+        		if(currentRank+1 == hand.get(k).getRank()){
+                    currentRank = hand.get(k).getRank();
+                }else {
+                	break;
+                }
+        	}
         }
+
         this.handName = HandNameAndRank.STRIGHT.handName();
         this.handRank = HandNameAndRank.STRIGHT.handRank();
         return true;
@@ -195,7 +200,7 @@ public class PokerHand {
         return false;
     }
     private boolean isStrightFlush(){
-        if(isFlush() && isStright()){
+        if(isFlush() && isStraight()){
             this.handName = HandNameAndRank.STRIGHT_FLUSH.handName();
             this.handRank = HandNameAndRank.STRIGHT_FLUSH.handRank();
             return true;
@@ -204,7 +209,7 @@ public class PokerHand {
     }
     private boolean isRoyalFlush(){
         if(hand.get(0).getRank() == 10){
-            if(isFlush() && isStright()){
+            if(isFlush() && isStraight()){
                 this.handName = HandNameAndRank.ROYAL_FLUSH.handName();
                 this.handRank = HandNameAndRank.ROYAL_FLUSH.handRank();
                 return true;
