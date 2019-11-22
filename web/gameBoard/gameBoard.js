@@ -64,6 +64,11 @@ function renderGamestate(gamestate) {
 	var player2div = document.getElementById('player2Div');
 	var player3div = document.getElementById('player3Div');
 	var player4div = document.getElementById('player4Div');
+
+	var player1info = document.getElementById('player1info');
+	var player2info = document.getElementById('player2info');
+	var player3info = document.getElementById('player3info');
+	var player4info = document.getElementById('player4info');
 	
 	if(gamestate==null)
 		return;
@@ -72,6 +77,11 @@ function renderGamestate(gamestate) {
 	player2div.innerHTML = "";
 	player3div.innerHTML = "";
 	player4div.innerHTML = "";
+	
+	player1info.innerHTML = "";
+	player2info.innerHTML = "";
+	player3info.innerHTML = "";
+	player4info.innerHTML = "";
 	
 	gameState = gamestate; //save it for lates
 	
@@ -108,6 +118,10 @@ function renderGamestate(gamestate) {
 		img.className = "p1";
 		player1div.appendChild(img);
 	})
+	
+	var text = document.createElement("h3");
+	text.innerHTML = "Player: " + currentPlayer.name + "  Chips: " + currentPlayer.chips;
+	player1info.appendChild(text);
 
 	players.splice(gamestate.visible, 1);
 
@@ -116,13 +130,30 @@ function renderGamestate(gamestate) {
 		console.log(player);
 
 		var workingDiv = document.getElementById('player' + iterator + 'Div');
-
+		var workingInfo = document.getElementById('player' + iterator + 'info');
+		
 		player.hand.forEach(function(card){
 			var img = document.createElement("img");
 			img.src = cardURL + card.cardID + ".jpg";
 			img.className = "p" + iterator;
 			workingDiv.appendChild(img);
 		});
+		
+		if(iterator == 3){
+			var text = document.createElement("h3");
+			text.innerHTML = "Player: " + player.name + "  Chips: " + player.chips;
+			workingInfo.appendChild(text);
+		} else {
+			var playerName = document.createElement("h3");
+			playerName.innerHTML = "Player: " + player.name;
+			
+			var playerChips = document.createElement("h3");
+			playerChips.innerHTML = "Chips: " + player.chips;
+			
+			workingInfo.appendChild(playerName);
+			workingInfo.appendChild(playerChips);
+		}
+		
 		iterator++;
 	});
 

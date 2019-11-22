@@ -2,9 +2,13 @@ html {
 	background-image: url("felt.jpg");
 }
 
+#player2info, #player4info {width: 150px;}
+
 textarea{resize:none;}
 
 h1{color:white;}
+
+h3{color:white;}
 
 p{color:white:}
 
