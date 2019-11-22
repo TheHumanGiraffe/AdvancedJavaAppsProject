@@ -39,6 +39,24 @@ function placeBet(){
 	wsSendMessage(jsonText);
 }
 
+function addOne(){
+	var oldBetValue = parseInt(document.getElementById('betValue').value, 10);
+	var newBetValue = oldBetValue + 1; 
+	document.getElementById('betValue').value = newBetValue;
+}
+
+function addFive(){
+	var oldBetValue = parseInt(document.getElementById('betValue').value, 10);
+	var newBetValue = oldBetValue + 5;
+	document.getElementById('betValue').value = newBetValue;
+}
+
+function addTen(){
+	var oldBetValue = parseInt(document.getElementById('betValue').value, 10);
+	var newBetValue = oldBetValue + 10;
+	document.getElementById('betValue').value = newBetValue;
+}
+
 function fold(){
 	var jsonText = '{"action":"fold"}';
 	wsSendMessage(jsonText);
@@ -60,6 +78,8 @@ function getWinner(){
 }
 
 function renderGamestate(gamestate) {
+	
+	//resets all divs
 	var player1div = document.getElementById('player1Div');
 	var player2div = document.getElementById('player2Div');
 	var player3div = document.getElementById('player3Div');
@@ -90,9 +110,6 @@ function renderGamestate(gamestate) {
 	console.dir(currentPlayer);
 	console.dir(currentPlayer.hand);
 	
-	
-
-	
 	if(currentPlayer.hand.length>0) {
 		console.dir(currentPlayer.hand[0]);
 		console.log(currentPlayer.hand[0].cardID);
@@ -104,11 +121,11 @@ function renderGamestate(gamestate) {
 	var players = gamestate.players;
 
 	document.getElementById("discard").src = cardURL + gamestate.deck.discards[0].cardID + '.jpg';
-	document.getElementById("pot").innerHTML="<h1>Pot Size: " + gamestate.potSize + "</h1>";
+	document.getElementById("pot").innerHTML="<h2>Pot Size: " + gamestate.potSize + "</h2>";
 	
 	players.forEach(function(player){
 		if(player.isTurn){
-			document.getElementById("currentPlayer").innerHTML = "<h1>Current Player: " + player.name + "</h1>";
+			document.getElementById("currentPlayer").innerHTML = "<h2>Current Player: " + player.name + "</h2>";
 		}
 	});
 
@@ -120,6 +137,7 @@ function renderGamestate(gamestate) {
 	})
 	
 	var text = document.createElement("h3");
+	text.className = "p1Stats";
 	text.innerHTML = "Player: " + currentPlayer.name + "  Chips: " + currentPlayer.chips;
 	player1info.appendChild(text);
 
@@ -141,6 +159,7 @@ function renderGamestate(gamestate) {
 		
 		if(iterator == 3){
 			var text = document.createElement("h3");
+			text.className = "p3Stats";
 			text.innerHTML = "Player: " + player.name + "  Chips: " + player.chips;
 			workingInfo.appendChild(text);
 		} else {
