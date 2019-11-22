@@ -39,21 +39,21 @@ function placeBet(){
 	wsSendMessage(jsonText);
 }
 
-function addOne(){
+function add20(){
 	var oldBetValue = parseInt(document.getElementById('betValue').value, 10);
-	var newBetValue = oldBetValue + 1; 
+	var newBetValue = oldBetValue + 20; 
 	document.getElementById('betValue').value = newBetValue;
 }
 
-function addFive(){
+function add50(){
 	var oldBetValue = parseInt(document.getElementById('betValue').value, 10);
-	var newBetValue = oldBetValue + 5;
+	var newBetValue = oldBetValue + 50;
 	document.getElementById('betValue').value = newBetValue;
 }
 
-function addTen(){
+function add100(){
 	var oldBetValue = parseInt(document.getElementById('betValue').value, 10);
-	var newBetValue = oldBetValue + 10;
+	var newBetValue = oldBetValue + 100;
 	document.getElementById('betValue').value = newBetValue;
 }
 
@@ -130,10 +130,20 @@ function renderGamestate(gamestate) {
 	});
 
 	currentPlayer.hand.forEach(function(card) {
+		var imgContainer = document.createElement("span");
+		imgContainer.className = "imgWrap";
+		
 		var img = document.createElement("img");
 		img.src = cardURL + card.cardID + ".jpg";
 		img.className = "p1";
-		player1div.appendChild(img);
+		imgContainer.appendChild(img);
+		
+		var span = document.createElement("span");
+		span.innerHTML = card.name + " of " + card.suit;
+		span.className = "tooltip";
+		imgContainer.appendChild(span);
+		
+		player1div.appendChild(imgContainer);
 	})
 	
 	var text = document.createElement("h3");
