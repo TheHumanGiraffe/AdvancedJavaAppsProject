@@ -13,12 +13,11 @@ import vcasino.core.events.GameEvent;
 import vcasino.core.exceptions.RulesException;
 
 public class TexasHoldemRuleSet implements Ruleset {
-
+	
 	private static int handSize= 2;
 	private boolean isFlopDone = false;
 	private boolean isTurnDone = false;
 	private boolean isRiverDone = false;
-	
 
 	@Override
 	public String getDescription() {
@@ -28,8 +27,7 @@ public class TexasHoldemRuleSet implements Ruleset {
 
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
-		return null;
+		return "poker";
 	}
 
 	@Override
@@ -67,13 +65,13 @@ public class TexasHoldemRuleSet implements Ruleset {
 
 	
 	@Override
-	public GameEvent placeCard(Player player) {
+	public GameEvent playCard(GameState state, Player player, int handIndex) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public GameEvent fold(Player player) {
+	public GameEvent fold(GameState state, Player player) {
 		player.deactivate();		
 		return null;
 	}

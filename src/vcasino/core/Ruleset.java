@@ -7,7 +7,8 @@ import vcasino.core.events.GameEvent;
 import vcasino.core.exceptions.RulesException;
 
 public interface Ruleset {
-
+	public static String CARDS="poker";
+	
 	//general actions
 	String getDescription();
 	String getName();
@@ -18,8 +19,8 @@ public interface Ruleset {
 	GameEvent passCard(Player from, Player to) throws RulesException;
 	void drawCard(GameState state, Player forPlayer) throws RulesException;
 	void dealHand(GameState state, Player forPlayer) throws RulesException;
-	GameEvent placeCard(Player player);
-	GameEvent fold(Player player);
+	GameEvent playCard(GameState state, Player player, int handIndex) throws RulesException;
+	GameEvent fold(GameState state, Player player) throws RulesException;
 	
 	//Table-level actions
 	GameEvent beginMatch(GameState state) throws RulesException;

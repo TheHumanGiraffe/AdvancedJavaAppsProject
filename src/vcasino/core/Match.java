@@ -80,12 +80,13 @@ public class Match {
 					//gameState.setPlayer(player);
 					break;
 				case "play":
-		        	break;
+					gameRules.playCard(gameState, player, Integer.parseInt(action.arg0));
+					break;
 				case "chat":
 					
 					break;
 		        case "fold":
-		        	gameRules.fold(player);
+		        	gameRules.fold(gameState, player);
 		        	sendMessage(player.getName()+" has folded.");
 		        	break;
 		        case "bet":
@@ -144,6 +145,10 @@ public class Match {
 	
 	public void setGameState(GameState gameState) {
 		this.gameState = gameState;
+	}
+	
+	public int countPlayers() {
+		return sessions.size();
 	}
 	
 	public static final String generateMatchId() {

@@ -9,6 +9,10 @@ import vcasino.core.exceptions.RulesException;
 
 public class UnoRuleset implements Ruleset {
 	
+	private boolean clockwise = true;
+	private boolean skip = false;
+	private String color;
+	
 	@Override
 	public String getDescription() {
 		//Copied from http://wonkavator.com/uno/unorules.html
@@ -20,7 +24,7 @@ public class UnoRuleset implements Ruleset {
 
 	@Override
 	public String getName() {
-		return "Uno";
+		return "uno";
 	}
 	
 	@Override
@@ -33,7 +37,7 @@ public class UnoRuleset implements Ruleset {
 	public int getInitialHandCount() {
 		return 7;
 	}
-
+	
 	@Override
 	public GameEvent passCard(Player from, Player to) throws RulesException {
 		return new GenericGameEvent(from);
@@ -54,12 +58,77 @@ public class UnoRuleset implements Ruleset {
 	}
 
 	@Override
-	public GameEvent placeCard(Player player) {
+	public GameEvent playCard(GameState state, Player player, int handIndex) throws RulesException {
+		
+		Card discard = state.getTopDiscard();
+		
+		Card play = player.getHand().get(handIndex);
+		
+		if(!discard.matchSuit(play) && !discard.matchRank(play)) {
+			throw new RulesException("Card", "You must play a card that matches the color or the value of the top card", player);
+		}
+		
+		player.getHand().remove(handIndex);
+		
+		//now, was it something fun?
+		switch(play.getRank()) {
+			case 100: //skip turn!
+				state.getDeck().discard(play);
+				skip = true;
+				break;
+			case 110:
+				state.getDeck().discard(play);
+				state.reverseOrder();
+				clockwise = !clockwise;
+				break;
+			case 120:
+				state.getDeck().discard(play);
+				//ha-ha!
+				for(Player p : state.getPlayers()) {
+					if(p != player ) {
+						if(state.getDeck().size() < 2) {
+							createCleanDeck(state);
+							state.getDeck().shuffle();
+						}
+						p.addCard(state.getDeck().drawCard());
+						p.addCard(state.getDeck().drawCard());
+					}
+				}
+				break;
+			case 300:
+				//FIXME: welp.
+				//Card c = new Card(play.getCardID(), action.arg1);
+				//c.setRank(UnoDeck.rankMap[play.getCardID()]);
+				//state.getDeck().discard(c);
+				break;
+			case 400:
+				for(Player p : state.getPlayers()) {
+					if(p != player ) {
+						if(state.getDeck().size() < 4) {
+							createCleanDeck(state);
+							state.getDeck().shuffle();
+						}
+						p.addCard(state.getDeck().drawCard());
+						p.addCard(state.getDeck().drawCard());
+						p.addCard(state.getDeck().drawCard());
+						p.addCard(state.getDeck().drawCard());
+					}
+				}
+				//FIXME: umm...
+				//Card c = new Card(play.getCardID(), action.arg1);
+				//c.setRank(UnoDeck.rankMap[play.getCardID()]);
+				//state.getDeck().discard(c);
+				break;
+			default:
+				state.getDeck().discard(play);
+				break;
+		}
+		
 		return new GenericGameEvent(player);
 	}
 
 	@Override
-	public GameEvent fold(Player player) {
+	public GameEvent fold(GameState state, Player player) {
 		return new GenericGameEvent(player);
 	}
 
@@ -73,9 +142,10 @@ public class UnoRuleset implements Ruleset {
 		
 		for(int i=0;i<getInitialHandCount();i++) {
 			for(Player p : state.getPlayers()) {
-				drawCard(state, p);
+				dealCard(state, p);
 			}
 		}
+		
 		deck.discardTop();
 		
 		return null;
@@ -88,8 +158,34 @@ public class UnoRuleset implements Ruleset {
 
 	@Override
 	public Player advanceTurn(Player current, List<Player> players) {
-		// TODO Auto-generated method stub
-		return null;
+		Player nextPlayer=current;
+		
+		current.setTurn(false);
+		
+		do {
+			if(clockwise) {
+				int i = players.indexOf(current)+1;
+				
+				while(!players.get(i >= players.size() ? 0 : i).isActive()) {
+					i = (i>= players.size() ? 0 : i+1);
+				}
+				nextPlayer = players.get(i >= players.size() ? 0 : i);
+				nextPlayer.setTurn(true);
+			} else {
+				int i = players.indexOf(current)-1;
+				
+				if( i < 0 )
+					i = players.size()-1;
+				
+				while(!players.get(i).isActive()) {
+					i = (i>0  ? i-1 : players.size()-1);
+				}
+				nextPlayer = players.get(i);
+				nextPlayer.setTurn(true);
+			}
+		} while(skip && !(skip = !skip)); //this is evil.
+		
+		return nextPlayer;
 	}
 
 	@Override
@@ -122,6 +218,32 @@ public class UnoRuleset implements Ruleset {
 		
 	}
 
-	
+	private void dealCard(GameState state, Player forPlayer) {
+		forPlayer.addCard(state.getDeck().drawCard());
+	}
 
+	/**
+	 * So the reason for this function is that the logic above actually injects 
+	 * "choose color" cards with the suit (color) specified instead of "any". This
+	 * causes a problem when shuffling the discard pile back into the deck. Hence,
+	 * this function creates a new deck and removes the cards that the players have 
+	 * in their hand as well as the top of the old discard pile.
+	 * 
+	 * @param state
+	 */
+	private void createCleanDeck(GameState state) {
+		Card discard = state.getDeck().getDiscard(0);
+		
+		state.newDeck();
+		
+		Deck deck = state.getDeck();
+		
+		for(Player p : state.getPlayers()) {
+			deck.getCards().removeAll(p.getHand());
+		}
+		
+		deck.getCards().remove(discard);
+		
+		deck.discard(discard);
+	}
 }

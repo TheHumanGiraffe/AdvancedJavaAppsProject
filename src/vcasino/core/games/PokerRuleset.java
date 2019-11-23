@@ -15,7 +15,7 @@ import vcasino.core.exceptions.RulesException;
 public class PokerRuleset implements Ruleset {
 
 	private static int handSize= 5;
-
+	
 	@Override
 	public String getDescription() {
 		return "Simple 5 card stud ruleset";
@@ -23,7 +23,7 @@ public class PokerRuleset implements Ruleset {
 
 	@Override
 	public String getName() {
-		return "Poker Rules";
+		return "poker";
 	}
 
 	@Override
@@ -57,13 +57,13 @@ public class PokerRuleset implements Ruleset {
 	}
 	
 	@Override
-	public GameEvent placeCard(Player player) {
+	public GameEvent playCard(GameState state, Player player, int handIndex) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public GameEvent fold(Player player) {
+	public GameEvent fold(GameState state, Player player) {
 		player.deactivate();		
 		return null;
 	}
