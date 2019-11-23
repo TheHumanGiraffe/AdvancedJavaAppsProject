@@ -1,6 +1,7 @@
 package vcasino.core;
 
 import vcasino.blind.BlindGameState;
+import vcasino.core.events.ChatEvent;
 import vcasino.core.events.GameEvent;
 import vcasino.core.exceptions.RulesException;
 import vcasino.servlet.GameAction;
@@ -27,6 +28,7 @@ public class Match {
 	private Deque<GameEvent> messageQueue;
 	private MatchState state = MatchState.MSTATE_INIT;
 	private GameState gameState;
+	private GameAction lastAction;
 	
 	public Match(String id, Ruleset rules/* , Deque<GameEvent> q */) {
 		matchId = id;
@@ -73,6 +75,7 @@ public class Match {
 	
 	//Needs to be GameAction because they will be addtional info tied to it other than the action. IE card ID and bet amount
 	public void doAction(GameAction action, Player player) throws RulesException {
+		lastAction = action;
 		if(player.isTurn()) {
 			switch(action.action) {
 				case "draw":
@@ -83,7 +86,7 @@ public class Match {
 					gameRules.playCard(gameState, player, Integer.parseInt(action.arg0));
 					break;
 				case "chat":
-					
+					sendEvent(new ChatEvent(player, action.arg0));
 					break;
 		        case "fold":
 		        	gameRules.fold(gameState, player);
@@ -175,13 +178,15 @@ public class Match {
 		}
 	}
 	
-	private void sendEvent(GameEvent event) throws EncodeException {
+	private void sendEvent(GameEvent event) {
 		for(Session userSession : sessions) {
 			try {
 				userSession.getBasicRemote().sendObject(event);
 			} catch (IOException e) {
 				e.printStackTrace();
 				((Player)userSession.getUserProperties().get("player")).deactivate();
+			} catch (EncodeException e) {
+				e.printStackTrace();
 			}
 		}
 	}

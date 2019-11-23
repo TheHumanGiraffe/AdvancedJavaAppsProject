@@ -1,6 +1,7 @@
 package vcasino.servlet;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.websocket.*;
@@ -48,33 +49,38 @@ public class VCasinoServerEndpoint {
 		VCasinoServerEndpoint.openSessions.put(myUniqueId, this);
 		
 		try {
-			if(roomNumber.equals("0")) {
-				setupMatch = findOrCreateMatch(game);
-			} else {
-				//Add a new match to the server if one does not exist
-				//Pass the Match Constructor game to set the correct ruleset
-				setupMatch = VCasinoServerEndpoint.matches.get(game+roomNumber);
-				if(setupMatch == null) {
-					VCasinoServerEndpoint.matches.putIfAbsent(game+roomNumber, new Match(game+roomNumber, new UnoRuleset()));
+			
+			if(roomNumber.equals("browse")) {
+				sendBrowseList(userSession, game);
+			} else { 
+				if(roomNumber.equals("0")) {
+					setupMatch = findOrCreateMatch(game);
+				} else {
+					//Add a new match to the server if one does not exist
+					//Pass the Match Constructor game to set the correct ruleset
 					setupMatch = VCasinoServerEndpoint.matches.get(game+roomNumber);
+					if(setupMatch == null) {
+						VCasinoServerEndpoint.matches.putIfAbsent(game+roomNumber, new Match(game+roomNumber, new UnoRuleset()));
+						setupMatch = VCasinoServerEndpoint.matches.get(game+roomNumber);
+					}
 				}
-			}
-			
-			try {
-				setupMatch.addPlayer(userSession);
-				if(setupMatch.getMatchState() != MatchState.MSTATE_PLAYING && setupMatch.getGameState().countPlayers() >= 4) {
-					setupMatch.begin(); //seems legit...
-					broadcastMessage("Game start!");
+				
+				try {
+					setupMatch.addPlayer(userSession);
+					if(setupMatch.getMatchState() != MatchState.MSTATE_PLAYING && setupMatch.getGameState().countPlayers() >= 4) {
+						setupMatch.begin(); //seems legit...
+						broadcastMessage("Game start!");
+					}
+				} catch (RulesException e) {
+					System.out.println("RULES: "+e);
+					broadcastGameEvent(new RulesViolationEvent(e));
+				} finally {
+				
+					System.out.println("Open Connection...\n Session ID: "+ userSession.getId() );
 				}
-			} catch (RulesException e) {
-				System.out.println("RULES: "+e);
-				broadcastGameEvent(new RulesViolationEvent(e));
-			} finally {
-			
-				System.out.println("Open Connection...\n Session ID: "+ userSession.getId() );
+				//this.sendMessage("Connected!");
+				//this.sendMessage(String.format("User ID: %s", this.myUniqueId));
 			}
-			//this.sendMessage("Connected!");
-			//this.sendMessage(String.format("User ID: %s", this.myUniqueId));
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -171,5 +177,23 @@ public class VCasinoServerEndpoint {
     	}
     	
     	throw new Exception("Invalid game type");
+    }
+    
+    private void sendBrowseList(Session session, String name) throws IOException {
+    	ArrayList<Match> openMatches = new ArrayList<>();
+    	String array="[";
+    	for(Match match : VCasinoServerEndpoint.matches.values()) {
+    		String str="";
+    		
+    		if(match.getGameState().getRules().getName().equals(name)) {
+    			str = "{\"room\": "+match.getMatchId()+", \"players\": "+match.countPlayers()+", \"type\": \""+match.getGameState().getRules().getName()+"\"}, ";
+    		}
+    		
+    		array += str;
+    	}
+    	
+    	array += "]";
+    	
+		session.getBasicRemote().sendText(array);
     }
 }
