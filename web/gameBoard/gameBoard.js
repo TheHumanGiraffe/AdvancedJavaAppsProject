@@ -39,6 +39,34 @@ function placeBet(){
 	wsSendMessage(jsonText);
 }
 
+function resetBet(){
+	document.getElementById("betValue").value = 0;
+}
+
+function add10(){
+	var oldBetValue = parseInt(document.getElementById('betValue').value, 10);
+	var newBetValue = oldBetValue + 10; 
+	document.getElementById('betValue').value = newBetValue;
+}
+
+function add20(){
+	var oldBetValue = parseInt(document.getElementById('betValue').value, 10);
+	var newBetValue = oldBetValue + 20; 
+	document.getElementById('betValue').value = newBetValue;
+}
+
+function add50(){
+	var oldBetValue = parseInt(document.getElementById('betValue').value, 10);
+	var newBetValue = oldBetValue + 50;
+	document.getElementById('betValue').value = newBetValue;
+}
+
+function add100(){
+	var oldBetValue = parseInt(document.getElementById('betValue').value, 10);
+	var newBetValue = oldBetValue + 100;
+	document.getElementById('betValue').value = newBetValue;
+}
+
 function fold(){
 	var jsonText = '{"action":"fold"}';
 	wsSendMessage(jsonText);
@@ -60,12 +88,17 @@ function getWinner(){
 }
 
 function renderGamestate(gamestate) {
+	
+	//resets all divs
 	var player1div = document.getElementById('player1Div');
 	var player2div = document.getElementById('player2Div');
 	var player3div = document.getElementById('player3Div');
 	var player4div = document.getElementById('player4Div');
-	var tablediv = document.getElementById('tableDiv');
 
+	var player1info = document.getElementById('player1info');
+	var player2info = document.getElementById('player2info');
+	var player3info = document.getElementById('player3info');
+	var player4info = document.getElementById('player4info');
 	
 	if(gamestate==null)
 		return;
@@ -76,15 +109,17 @@ function renderGamestate(gamestate) {
 	player4div.innerHTML = "";
 	tablediv.innerHTML = "";
 	
+	player1info.innerHTML = "";
+	player2info.innerHTML = "";
+	player3info.innerHTML = "";
+	player4info.innerHTML = "";
+	
 	gameState = gamestate; //save it for lates
 	
 	var currentPlayer = gamestate.players[gamestate.visible];
 	console.dir(gamestate);
 	console.dir(currentPlayer);
 	console.dir(currentPlayer.hand);
-	
-	
-
 	
 	if(currentPlayer.hand.length>0) {
 		console.dir(currentPlayer.hand[0]);
@@ -96,21 +131,37 @@ function renderGamestate(gamestate) {
 	var playerCount = gamestate.players.length;
 	var players = gamestate.players;
 
-	document.getElementById("discard").src = cardURL + gamestate.cards + '/' + gamestate.deck.discards[0].cardID + '.jpg';
-	document.getElementById("pot").innerHTML="<h1>Pot Size: " + gamestate.potSize + "</h1>";
+	document.getElementById("discard").innerHTML = "<img src= '" + cardURL + gamestate.deck.discards[0].cardID + ".jpg' />";
+	document.getElementById("pot").innerHTML="<h2>Pot Size: " + gamestate.potSize + "</h2>";
+
 	
 	players.forEach(function(player){
 		if(player.isTurn){
-			document.getElementById("currentPlayer").innerHTML = "<h1>Current Player: " + player.name + "</h1>";
+			document.getElementById("currentPlayer").innerHTML = "<h2>Current Player: " + player.name + "</h2>";
 		}
 	});
 
 	currentPlayer.hand.forEach(function(card) {
+		var imgContainer = document.createElement("span");
+		imgContainer.className = "imgWrap";
+		
 		var img = document.createElement("img");
 		img.src = cardURL + gamestate.cards + '/' + card.cardID + ".jpg";
 		img.className = "p1";
-		player1div.appendChild(img);
+		imgContainer.appendChild(img);
+		
+		var span = document.createElement("span");
+		span.innerHTML = card.name + " of " + card.suit;
+		span.className = "tooltip";
+		imgContainer.appendChild(span);
+		
+		player1div.appendChild(imgContainer);
 	})
+	
+	var text = document.createElement("h3");
+	text.className = "p1Stats";
+	text.innerHTML = "Player: " + currentPlayer.name + "  Chips: " + currentPlayer.chips;
+	player1info.appendChild(text);
 
 	players.splice(gamestate.visible, 1);
 
@@ -118,39 +169,56 @@ function renderGamestate(gamestate) {
 	players.forEach(function(player) {
 		console.log(player);
 
-		var workingDiv = document.getElementById('player' + iterator + 'Div');
-
+		var workingDiv = documentgame.getElementById('player' + iterator + 'Div');
+		var workingInfo = document.getElementById('player' + iterator + 'info');
+		
 		player.hand.forEach(function(card){
 			var img = document.createElement("img");
 			img.src = cardURL + gamestate.cards + '/' + card.cardID + ".jpg";
 			img.className = "p" + iterator;
 			workingDiv.appendChild(img);
 		});
+		
+		if(iterator == 3){
+			var text = document.createElement("h3");
+			text.className = "p3Stats";
+			text.innerHTML = "Player: " + player.name + "  Chips: " + player.chips;
+			workingInfo.appendChild(text);
+		} else {
+			var playerName = document.createElement("h3");
+			playerName.innerHTML = "Player: " + player.name;
+			
+			var playerChips = document.createElement("h3");
+			playerChips.innerHTML = "Chips: " + player.chips;
+			
+			workingInfo.appendChild(playerName);
+			workingInfo.appendChild(playerChips);
+		}
+		
 		iterator++;
 	});
+}
+
+function renderGameList(gameList) {
+	var parentDiv = document.createElement("div");
+	var title = document.createElement("h3");
 	
-	var table = gamestate.table;
-	table.forEach(function(table){
-		console.log(table);
-		var img = document.createElement("img");
-		img.src = cardURL + gamestate.cards + '/' + table.cardID + ".jpg";
+	title.innerHTML = "Games List:";
+	parentDiv.appendChild(title);
+	
+	gameList.forEach(function(game) {
+		var link = document.createElement("a");
+		link.href = "../gameBoard.html?game=" + game.type + "&roomNumber=" + game.room;
 		
-		document.getElementById('tableDiv').appendChild(img);
-	})
+		var element = document.createElement("h3");
+		element.innerHTML = "Game: " + game.type + " Players: " + game.players + "/4";
+		
+		link.appendChild(element);
+		parentDiv.appendChild(link);
+	});
+	
+	document.getElementById('discard').appendChild(parentDiv);
 
-	/*var player2Cards = document.getElementById("player2Table");
-
-
-    	for(i = numberOfCardsInBlindHands[0]; i > 0; i --){
-    		player2Cards.deleteRow(i-1);
-        	var cardRow = player2Cards.insertRow(i-1);
-    		var x=cardRow.insertCell(-1);
-            x.innerHTML ="<img class=\"p2\" src=\"cards/0.jpg\"/>";
-
-    	}
-    	player2Cards.insertRow(numberOfCardsInBlindHands[0]);*/
-
-	// echoText.value += "Message received from the server : " + message.data + "\n";
 }
 
 function wsOpen(message){
@@ -181,8 +249,10 @@ function wsGetMessage(message){
 		echoText.value += "ALERT: "+json.message.text+"\n";
 	} else if(json["chat"] != null) {
 		echoText.value += json.chat.Player+": "+json.chat.text+"\n";
-	} else {
-	
+	} else if (json["games"] != null) {
+		renderGameList(json.games);
+	} 
+	}else {
 		renderGamestate(json.gamestate);
 	}
 }

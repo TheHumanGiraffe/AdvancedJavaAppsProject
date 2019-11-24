@@ -45,7 +45,7 @@ public class VCasinoServerEndpoint {
 		
 		userSession.getUserProperties().put("roomNumber", roomNumber);
 		userSession.getUserProperties().put("game", game);
-		userSession.getUserProperties().put("player", new Player(this.myUniqueId,100, this.myUniqueId));
+		userSession.getUserProperties().put("player", new Player(this.myUniqueId,1000, this.myUniqueId));
 		
 		VCasinoServerEndpoint.openSessions.put(myUniqueId, this);
 		
