@@ -2,6 +2,9 @@ package vcasino.db;
 
 import java.sql.*;
 
+import vcasino.core.exceptions.RulesException;
+import vcasino.servlet.VCasinoServerEndpoint;
+
 /**
  * 
  * @author Morgan Patterson
@@ -23,32 +26,13 @@ public class DatabaseConnection {
 		}
     }
     
-    public static void main(String[] args) throws SQLException, ClassNotFoundException {
-    	DatabaseConnection connection = new DatabaseConnection();
-    	
-    	connection.connect();
-        ResultSet x = connection.executeQuery("Select * from game");
-        System.out.println(x);
-        connection.executeQuery("Insert into game(id,gameName) VALUES ('7', 'poker')");
-        ResultSet y = connection.executeQuery("Select * from game");
-        System.out.println(y);
-        connection.disconnect();
-    }
-    
-    public void connect() throws SQLException {
-//      System.out.println("Connecting to database...");
-    	conn = DriverManager.getConnection(DB_URL, USER, PASS);
-    }
-    
     public void disconnect() throws SQLException {
     	conn.close();
     }
     
-    public ResultSet executeQuery(String statement) throws SQLException {
-        
-
-        
-//        System.out.println("Creating database...");
+    public ResultSet executeQuery(String statement) throws SQLException, RulesException {
+    	conn = DriverManager.getConnection(DB_URL, USER, PASS);
+        System.out.println("Creating database...");
         ResultSet rs = null;
         try {
             Statement stmt = conn.createStatement();
@@ -59,6 +43,10 @@ public class DatabaseConnection {
                 stmt.executeUpdate(statement);
             }
         } catch(SQLException e){
+        	if (e.getErrorCode() == 1062) {
+    			throw new RulesException("Login", "can't use a duplicate login", null);
+
+        	}
             System.out.println("Error: " + e);
             e.printStackTrace();
             //FIXME: in case this was a connection error, RECONNECT!

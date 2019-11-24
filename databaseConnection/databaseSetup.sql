@@ -8,6 +8,6 @@ CREATE DATABASE casino;
 \c casino;
 CREATE TABLE game (id int, gameName text, PRIMARY KEY(id));
 CREATE TABLE gameHistory(id int, players json, winner int, game int REFERENCES game(id), PRIMARY KEY(id));
-CREATE TABLE player(id int, name text, currentGame int REFERENCES game(id), chips int, PRIMARY KEY(id));
+CREATE TABLE player(id int NOT NULL AUTO_INCREMENT, name text NOT NULL, password text NOT NULL, chips int NOT NULL, PRIMARY KEY(id));
 alter role casinoManager witH superuser;
 ```

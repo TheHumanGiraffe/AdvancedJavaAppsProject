@@ -1,7 +1,7 @@
 
 var urlParams = new URLSearchParams(window.location.search);
 var gameState = null;
-var cardURL = 'https://raw.githubusercontent.com/TheHumanGiraffe/AdvancedJavaAppsProject/master/web/gameBoard/cards/';
+var cardURL = 'https://raw.githubusercontent.com/TheHumanGiraffe/AdvancedJavaAppsProject/mathiasBranch/web/gameBoard/cards/';
 
 $(document).ready(function() {
 	$("#echoText").val('');
@@ -10,12 +10,12 @@ $(document).ready(function() {
 if(urlParams.has('roomNumber')){
 	var roomNumber = urlParams.get('roomNumber')
 }else{
-	var roomNumber = "TheWrongRoom"
+	var roomNumber = "1"
 }
 if(urlParams.has('game')){
 	var game = urlParams.get('game');
 }else{
-	var game = 'loser'
+	var game = 'uno'
 }
 
 var webSocket = new WebSocket("ws://localhost:8080/AdvancedJavaAppsProject/vcasino/"+game+"/"+roomNumber);
@@ -64,6 +64,8 @@ function renderGamestate(gamestate) {
 	var player2div = document.getElementById('player2Div');
 	var player3div = document.getElementById('player3Div');
 	var player4div = document.getElementById('player4Div');
+	var tablediv = document.getElementById('tableDiv');
+
 	
 	if(gamestate==null)
 		return;
@@ -72,6 +74,7 @@ function renderGamestate(gamestate) {
 	player2div.innerHTML = "";
 	player3div.innerHTML = "";
 	player4div.innerHTML = "";
+	tablediv.innerHTML = "";
 	
 	gameState = gamestate; //save it for lates
 	
@@ -90,10 +93,10 @@ function renderGamestate(gamestate) {
 		echoText.value += "Waiting for players...\n";
 	}
 
-	var playerCount = gamestate.length;
+	var playerCount = gamestate.players.length;
 	var players = gamestate.players;
 
-	document.getElementById("discard").src = cardURL + gamestate.deck.discards[0].cardID + '.jpg';
+	document.getElementById("discard").src = cardURL + gamestate.cards + '/' + gamestate.deck.discards[0].cardID + '.jpg';
 	document.getElementById("pot").innerHTML="<h1>Pot Size: " + gamestate.potSize + "</h1>";
 	
 	players.forEach(function(player){
@@ -104,7 +107,7 @@ function renderGamestate(gamestate) {
 
 	currentPlayer.hand.forEach(function(card) {
 		var img = document.createElement("img");
-		img.src = cardURL + card.cardID + ".jpg";
+		img.src = cardURL + gamestate.cards + '/' + card.cardID + ".jpg";
 		img.className = "p1";
 		player1div.appendChild(img);
 	})
@@ -119,13 +122,21 @@ function renderGamestate(gamestate) {
 
 		player.hand.forEach(function(card){
 			var img = document.createElement("img");
-			img.src = cardURL + card.cardID + ".jpg";
+			img.src = cardURL + gamestate.cards + '/' + card.cardID + ".jpg";
 			img.className = "p" + iterator;
 			workingDiv.appendChild(img);
 		});
 		iterator++;
 	});
-
+	
+	var table = gamestate.table;
+	table.forEach(function(table){
+		console.log(table);
+		var img = document.createElement("img");
+		img.src = cardURL + gamestate.cards + '/' + table.cardID + ".jpg";
+		
+		document.getElementById('tableDiv').appendChild(img);
+	})
 
 	/*var player2Cards = document.getElementById("player2Table");
 
