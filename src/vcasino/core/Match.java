@@ -29,6 +29,7 @@ public class Match {
 	private MatchState state = MatchState.MSTATE_INIT;
 	private GameState gameState;
 	private GameAction lastAction;
+	private boolean complete=false;
 	
 	public Match(String id, Ruleset rules/* , Deque<GameEvent> q */) {
 		matchId = id;
@@ -83,6 +84,7 @@ public class Match {
 					//gameState.setPlayer(player);
 					break;
 				case "play":
+					gameRules.setArg1(action.arg1);
 					gameRules.playCard(gameState, player, Integer.parseInt(action.arg0));
 					break;
 				case "chat":
@@ -105,6 +107,7 @@ public class Match {
 			if(gameRules.gameOver(gameState)) {
 				Player winner = gameRules.declareWinner(gameState);
 				sendMessage(winner.getName() + " has won the round!");
+				complete=true;
 			}
 			gameState.setCurrentPlayer(gameRules.advanceTurn(player, gameState.getPlayers()));
 			update(gameState);

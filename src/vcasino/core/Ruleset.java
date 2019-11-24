@@ -31,4 +31,7 @@ public interface Ruleset {
 	GameEvent showHand(Player player);
 	void shuffleDeck(GameState state);
 	void postHandReset(GameState state);
+	
+	//Ugly hacks
+	void setArg1(String arg1);
 }

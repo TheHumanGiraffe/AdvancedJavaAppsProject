@@ -1,7 +1,6 @@
 package vcasino.servlet;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.websocket.*;
@@ -148,6 +147,7 @@ public class VCasinoServerEndpoint {
         	e.printStackTrace();
 		} catch (IllegalStateException ise) {
 			usersMatch.dropPlayer(userSession);
+			VCasinoServerEndpoint.openSessions.remove(userSession);
 			try {
 				userSession.close();
 			} catch (IOException e) {}
@@ -207,7 +207,6 @@ public class VCasinoServerEndpoint {
     }
     
     private void sendBrowseList(Session session, String name) throws IOException {
-    	ArrayList<Match> openMatches = new ArrayList<>();
     	String array="[";
     	for(Match match : VCasinoServerEndpoint.matches.values()) {
     		String str="";

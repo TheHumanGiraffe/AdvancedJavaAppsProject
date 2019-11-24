@@ -278,6 +278,11 @@ public class TexasHoldemRuleSet implements Ruleset {
 				isRiverDone = false;
 	}
 	
+	@Override
+	public void setArg1(String arg1) {
+		//this.arg1 = arg1;
+	}
+	
 	/*
 	 * Add 3 cards to community cards
 	 */

@@ -50,7 +50,7 @@ function drawCard(){
 }
 
 function playCard(card){
-	var jsonText ='{ "action":"draw", "arg0": "'+card+'"}'
+	var jsonText ='{ "action":"play", "arg0": "'+card+'"}'
 	wsSendMessage(jsonText);
 }
 
@@ -105,10 +105,14 @@ function renderGamestate(gamestate) {
 		}
 	});
 
+	var img_id=0;
 	currentPlayer.hand.forEach(function(card) {
 		var img = document.createElement("img");
 		img.src = cardURL + gamestate.cards + '/' + card.cardID + ".jpg";
 		img.className = "p1";
+		img.id = img_id;
+		img.addEventListener('click', function() {playCard(img.id);});
+		img_id++;
 		player1div.appendChild(img);
 	})
 

@@ -112,4 +112,9 @@ public class GoFishRuleset implements Ruleset {
 
 	}
 
+	@Override
+	public void setArg1(String arg1) {
+		//this.arg1 = arg1;
+	}
+	
 }
