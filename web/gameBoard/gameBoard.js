@@ -140,7 +140,7 @@ function renderGamestate(gamestate) {
 			document.getElementById("currentPlayer").innerHTML = "<h2>Current Player: " + player.name + "</h2>";
 		}
 	});
-
+ 	var img_id=0;
 	currentPlayer.hand.forEach(function(card) {
 		var imgContainer = document.createElement("span");
 		imgContainer.className = "imgWrap";
@@ -148,7 +148,12 @@ function renderGamestate(gamestate) {
 		var img = document.createElement("img");
 		img.src = cardURL + gamestate.cards + '/' + card.cardID + ".jpg";
 		img.className = "p1";
+		img.id = img_id;
+		img.addEventListener('click', function() {playCard(img.id);});
+		img_id++;
 		imgContainer.appendChild(img);
+		
+		
 		
 		var span = document.createElement("span");
 		span.innerHTML = card.name + " of " + card.suit;
