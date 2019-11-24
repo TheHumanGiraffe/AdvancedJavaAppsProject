@@ -122,6 +122,16 @@ public class VCasinoServerEndpoint {
     		}
     		return;
     	}
+    	else if (action.action.equals("newUser")) {
+    		String result = Login.newLogin(action);
+    		if (!result.equals("Success")) {
+    			sendMessage("loginError");
+    		}
+    		else {
+    			sendMessage(action.arg0);
+    		}
+    		return;
+    	}
     	
     	String roomNumber = (String) userSession.getUserProperties().get("roomNumber");
     	String game = (String) userSession.getUserProperties().get("game");

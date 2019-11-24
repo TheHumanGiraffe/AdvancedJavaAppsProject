@@ -13,13 +13,10 @@ public class Login {
 		System.out.println(action.arg1);
 		if (!action.arg2.equals(action.arg1)) {return "loginError";}
 
-		String mysqlQuery = "Insert into player Values(\""+action.arg0+"\",\""+action.arg1+"\",1000);";
+		String mysqlQuery = "Insert into player Values(\""+action.arg0+"\",\""+action.arg1+"\",1000,0,0);";
 		System.out.println(mysqlQuery);
 		try {
-			ResultSet result = db.executeQuery(mysqlQuery);
-			if (result == null) {
-
-			}
+			db.executeQuery(mysqlQuery);
 		}
 		catch (RulesException e){
 			System.out.println("someone tried do do something that was an invalid login");
