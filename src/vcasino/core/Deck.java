@@ -56,6 +56,10 @@ public class Deck {
 		return 52;
 	}
 	
+	public ArrayList<Card> getCards() {
+		return cards;
+	}
+	
 	public Card drawCard() {
 		return cards.remove(0);
 	}
@@ -64,8 +68,14 @@ public class Deck {
 		Collections.shuffle(cards);
 	}
 	
+	public void mergeDiscard() {
+		int sz = discards.size();
+		for(int i=1;i<sz;i++)
+			cards.add(discards.remove(1));
+	}
+	
 	public void discard(Card c) {
-		discards.add(c);
+		discards.add(0, c);
 	}
 	
 	public void discardTop() {

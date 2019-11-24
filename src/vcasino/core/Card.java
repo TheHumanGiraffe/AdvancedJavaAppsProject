@@ -45,9 +45,17 @@ public class Card {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Card card = (Card) o;
-        return this.getRank() == card.getRank();
+        return this.getRank() == card.getRank() && this.getSuit().equals(card.getSuit());
     }
 
+    public boolean matchRank(Card b) {
+    	return getRank() == b.getRank();
+    }
+    
+    public boolean matchSuit(Card b) {
+    	return getSuit().equals(b.getSuit());
+    }
+    
     public int compare(Card c1){
         if(this.getRank() == c1.getRank()){
             return 0;

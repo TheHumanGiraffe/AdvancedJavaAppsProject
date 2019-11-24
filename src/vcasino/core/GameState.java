@@ -9,6 +9,8 @@ public class GameState {
 	protected ArrayList<Player> players;
 	protected Player currentPlayer, winner;
 	protected int potSize;
+	protected boolean clockwiseOrder;
+	protected String cards;
 	
 	public GameState(Ruleset rules) {
 		this.rules = rules;
@@ -16,6 +18,8 @@ public class GameState {
 		table = new ArrayList<>();
 		players = new ArrayList<>();
 		potSize = 0;
+		clockwiseOrder = true;
+		cards = rules.getName();
 	}
 	
 	public Ruleset getRules() {
@@ -24,6 +28,9 @@ public class GameState {
 	
 	public Deck getDeck() {
 		return deck;
+	}
+	public void newDeck() {
+		this.deck = this.rules.newDeck();
 	}
 	
 	public Card getTopDiscard() {
@@ -90,5 +97,13 @@ public class GameState {
 
 	public void setPotSize(int potSize) {
 		this.potSize = potSize;
+	}
+	
+	public boolean getOrder() {
+		return clockwiseOrder;
+	}
+	
+	public void reverseOrder() {
+		clockwiseOrder = !clockwiseOrder;
 	}
 }

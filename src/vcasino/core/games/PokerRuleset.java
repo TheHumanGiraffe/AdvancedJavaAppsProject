@@ -15,7 +15,7 @@ import vcasino.core.exceptions.RulesException;
 public class PokerRuleset implements Ruleset {
 
 	private static int handSize= 5;
-
+	
 	@Override
 	public String getDescription() {
 		return "Simple 5 card stud ruleset";
@@ -23,7 +23,7 @@ public class PokerRuleset implements Ruleset {
 
 	@Override
 	public String getName() {
-		return "Poker Rules";
+		return "poker";
 	}
 
 	@Override
@@ -44,25 +44,26 @@ public class PokerRuleset implements Ruleset {
 
 	@Override
 	public void drawCard(GameState state, Player forPlayer) throws RulesException {
-		if(forPlayer == state.getCurrentPlayer())
 			forPlayer.addCard(state.getDeck().drawCard());
 	}
 
 	@Override
 	public void dealHand(GameState state, Player forPlayer) throws RulesException {
 		for(int i=0;i<handSize;i++) {
-			forPlayer.addCard(state.getDeck().drawCard());
+			for(Player p : state.getPlayers()) {
+				dealCard(state, p);
+			}
 		}
 	}
 	
 	@Override
-	public GameEvent placeCard(Player player) {
+	public GameEvent playCard(GameState state, Player player, int handIndex) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public GameEvent fold(Player player) {
+	public GameEvent fold(GameState state, Player player) {
 		player.deactivate();		
 		return null;
 	}
@@ -120,6 +121,11 @@ public class PokerRuleset implements Ruleset {
 		Player winner = null;
 		int currentHigh = -1;
 		for(Player player : players) {
+			
+			//Skip the folded players
+			if(!player.isActive()) {
+				continue;
+			}
 			if(makeBestHand(player.getHand()) == currentHigh) {
 				PokerHand h1 = new PokerHand(player.getHand());
 				PokerHand h2 = new PokerHand(winner.getHand());
@@ -136,12 +142,18 @@ public class PokerRuleset implements Ruleset {
 		}
 		
 		winner.addChips(gameState.getPotSize());
+		
+		postHandReset(gameState);
 		return winner;
 	}
 
 	@Override
 	public void placeBet(GameState state, Player player, int betSize) throws RulesException {
-		//Check if player has enough chips to bet
+				Integer activeBet = player.getActiveBet();
+				//If active bet is null tmp set it to 0
+				activeBet = activeBet == null ? 0 : activeBet;
+				
+				//Check if player has enough chips to bet
 				if(player.getChips() - betSize < 0) {
 					throw new RulesException("Over Bet", "Not enough Chips", player);
 				}else {
@@ -151,15 +163,49 @@ public class PokerRuleset implements Ruleset {
 							continue;
 						}
 						//Check if players bet is greater than or = to oppents current bet 
-						if(player.getActiveBet() + betSize < opponent.getActiveBet()) {
+						Integer opponetActiveBet = opponent.getActiveBet();
+						opponetActiveBet = opponetActiveBet == null ? 0 : opponetActiveBet;
+						if(activeBet + betSize < opponetActiveBet) {
 							throw new RulesException("Under Bet", "Player Did not meet oppenent Call", player);
 						}
 					}	
-					player.setActiveBet(player.getActiveBet() + betSize);
+					player.setActiveBet(activeBet + betSize);
 					player.setChips(player.getChips() - betSize);
 					state.setPotSize(state.getPotSize() + betSize);
 					
 				}
+				if(isBettingOver(player, state)) {
+					declareWinner(state);
+				}
+	}
+	
+	public boolean isBettingOver(Player player, GameState state) {
+		//Check if current player has placed a bet
+		Integer activeBet = player.getActiveBet();
+		if(activeBet == null) {
+			return false;
+		}
+		
+		for(Player opponent : state.getPlayers()) {
+			//Skip current player
+			if(opponent.equals(player)) {
+				continue;
+			}
+			//Skip opponents that have folded
+			if(!opponent.isActive()) {
+				continue;
+			}
+			//Check if opponent has placed a bet
+			if(opponent.getActiveBet() == null) {
+				return false;
+			}
+			//Check if all the bets are equal across the table;
+			if(activeBet != opponent.getActiveBet()) {
+				return false;
+			}		
+		}	
+		//If everyone has placed a bet and they are equal betting is over
+		return true;		
 	}
 
 	@Override
@@ -187,13 +233,13 @@ public class PokerRuleset implements Ruleset {
 	@Override
 	public void postHandReset(GameState state) {
 		//Get new Deck and shuffle it
-		this.newDeck();
-		this.shuffleDeck(state);	
+		state.newDeck();
+		shuffleDeck(state);	
 		state.setPotSize(0);
 		
 		for(Player p : state.getPlayers()) {
 			//Reset player betting and give new hand
-			p.setActiveBet(0);
+			p.setActiveBet(null);
 			p.emptyHand();
 			try {
 				this.dealHand(state, p);
