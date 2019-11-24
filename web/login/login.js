@@ -39,7 +39,7 @@ function createUser(){
 	var password = document.getElementById("newPwd").value;
 	var confirmPassword = document.getElementById("newConfirmPwd").value;
 	if (confirmPassword != password){alert("passwords don't match"); return;}
-	var jsonText = '{"action":"login", "arg0": "'+username+'", "arg1": "'+confirmPassword+'", "arg2":"'+password+'"}';
+	var jsonText = '{"action":"newUser", "arg0": "'+username+'", "arg1": "'+confirmPassword+'", "arg2":"'+password+'"}';
 	console.log(jsonText);
 	wsSendMessage(jsonText);
 }
@@ -56,9 +56,19 @@ function wsCloseConnection(){
 function wsGetMessage(message){
 	var json = JSON.parse(message.data);
 //	console.log(json.message.text)
-	if (json.message.text == "loginError"){alert("fix your login");}
+	if (json.message.text == "loginError"){
+		alert("fix your login");
+		document.cookie="username=";
+	}
 	else{
 		document.cookie = "username="+json.message.text;
+	}
+	redirect()
+}
+
+function redirect(){
+	if (getCookie("username") != ""){
+		window.location.href = document.location.href.split("/login/")[0]+"/gameBoard/gameBoard.html?game=browse"
 	}
 }
 
