@@ -1,5 +1,6 @@
 package vcasino.core.games;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import vcasino.core.*;
@@ -11,7 +12,7 @@ public class UnoRuleset implements Ruleset {
 	
 	private boolean clockwise = true;
 	private boolean skip = false;
-	private String color;
+	private String arg1="red";
 	
 	@Override
 	public String getDescription() {
@@ -47,7 +48,8 @@ public class UnoRuleset implements Ruleset {
 	public void drawCard(GameState state, Player forPlayer) throws RulesException {
 		if(forPlayer == state.getCurrentPlayer())
 			forPlayer.addCard(state.getDeck().drawCard());
-		throw new RulesException("Turn", "Not their turn!", forPlayer);
+		else
+			throw new RulesException("Turn", "Not their turn!", forPlayer);
 	}
 
 	@Override
@@ -64,7 +66,7 @@ public class UnoRuleset implements Ruleset {
 		
 		Card play = player.getHand().get(handIndex);
 		
-		if(!discard.matchSuit(play) && !discard.matchRank(play)) {
+		if(!discard.matchSuit(play) && !discard.matchRank(play) && !play.getSuit().equals("any")) {
 			throw new RulesException("Card", "You must play a card that matches the color or the value of the top card", player);
 		}
 		
@@ -84,40 +86,28 @@ public class UnoRuleset implements Ruleset {
 			case 120:
 				state.getDeck().discard(play);
 				//ha-ha!
-				for(Player p : state.getPlayers()) {
-					if(p != player ) {
-						if(state.getDeck().size() < 2) {
-							createCleanDeck(state);
-							state.getDeck().shuffle();
-						}
-						p.addCard(state.getDeck().drawCard());
-						p.addCard(state.getDeck().drawCard());
-					}
-				}
+				Player p = advanceTurn(player, state.getPlayers());
+				p.addCard(state.getDeck().drawCard());
+				p.addCard(state.getDeck().drawCard());
+				skip=true;
 				break;
 			case 300:
 				//FIXME: welp.
-				//Card c = new Card(play.getCardID(), action.arg1);
-				//c.setRank(UnoDeck.rankMap[play.getCardID()]);
-				//state.getDeck().discard(c);
+				Card c = new Card(play.getCardID(), arg1);
+				c.setRank(UnoDeck.rankMap[play.getCardID()]);
+				state.getDeck().discard(c);
 				break;
 			case 400:
-				for(Player p : state.getPlayers()) {
-					if(p != player ) {
-						if(state.getDeck().size() < 4) {
-							createCleanDeck(state);
-							state.getDeck().shuffle();
-						}
-						p.addCard(state.getDeck().drawCard());
-						p.addCard(state.getDeck().drawCard());
-						p.addCard(state.getDeck().drawCard());
-						p.addCard(state.getDeck().drawCard());
-					}
-				}
+				p = advanceTurn(player, state.getPlayers());
+				p.addCard(state.getDeck().drawCard()); //four mathias
+				p.addCard(state.getDeck().drawCard());
+				p.addCard(state.getDeck().drawCard());
+				p.addCard(state.getDeck().drawCard());
+				skip=true;
 				//FIXME: umm...
-				//Card c = new Card(play.getCardID(), action.arg1);
-				//c.setRank(UnoDeck.rankMap[play.getCardID()]);
-				//state.getDeck().discard(c);
+				Card cd = new Card(play.getCardID(), arg1);
+				cd.setRank(UnoDeck.rankMap[play.getCardID()]);
+				state.getDeck().discard(cd);
 				break;
 			default:
 				state.getDeck().discard(play);
@@ -148,6 +138,9 @@ public class UnoRuleset implements Ruleset {
 		
 		deck.discardTop();
 		
+		while(deck.getDiscard(0).getRank() == 400 || deck.getDiscard(0).getRank() == 300)
+			deck.discardTop();
+		
 		return null;
 	}
 	
@@ -160,20 +153,23 @@ public class UnoRuleset implements Ruleset {
 	public Player advanceTurn(Player current, List<Player> players) {
 		Player nextPlayer=current;
 		
-		current.setTurn(false);
+		System.out.println("advance");
 		
 		do {
+			nextPlayer.setTurn(false);
+			System.out.println("Skip: "+skip);
+			System.out.println("Skip check: "+(skip && !(!skip)));
 			if(clockwise) {
-				int i = players.indexOf(current)+1;
-				
+				int i = players.indexOf(nextPlayer)+1;
+				System.out.println("next: "+i);
 				while(!players.get(i >= players.size() ? 0 : i).isActive()) {
 					i = (i>= players.size() ? 0 : i+1);
 				}
 				nextPlayer = players.get(i >= players.size() ? 0 : i);
 				nextPlayer.setTurn(true);
 			} else {
-				int i = players.indexOf(current)-1;
-				
+				int i = players.indexOf(nextPlayer)-1;
+				System.out.println("next: "+i);
 				if( i < 0 )
 					i = players.size()-1;
 				
@@ -190,8 +186,23 @@ public class UnoRuleset implements Ruleset {
 
 	@Override
 	public Player declareWinner(GameState gameState) {
-		// TODO Auto-generated method stub
-		return null;
+		ArrayList<Player> players = gameState.getPlayers();
+		Player winner = null;
+		
+		for(Player player : players) {
+			if(!player.isActive()) {
+				continue;
+			}
+			
+			if(player.getHand().size() == 0) {
+				winner = player;
+				break;
+			}
+		}
+
+		winner.addChips(gameState.getPotSize());
+		
+		return winner;
 	}
 
 	@Override
@@ -202,7 +213,10 @@ public class UnoRuleset implements Ruleset {
 	@Override
 
 	public boolean gameOver(GameState state) {
-		// TODO Auto-generated method stub
+		for(Player p : state.getPlayers()) {
+			if(p.getHand().size() == 0)
+				return true;
+		}
 		return false;
 	}
 
@@ -218,6 +232,11 @@ public class UnoRuleset implements Ruleset {
 		
 	}
 
+	@Override
+	public void setArg1(String arg1) {
+		this.arg1 = arg1;
+	}
+	
 	private void dealCard(GameState state, Player forPlayer) {
 		forPlayer.addCard(state.getDeck().drawCard());
 	}

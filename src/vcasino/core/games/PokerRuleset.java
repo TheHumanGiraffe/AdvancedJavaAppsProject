@@ -248,6 +248,11 @@ public class PokerRuleset implements Ruleset {
 		}		
 	}
 	
+	@Override
+	public void setArg1(String arg1) {
+		//this.arg1 = arg1;
+	}
+	
 	public enum HandNameAndRank {
 	    HIGH_CARD("High Card", 0), PAIR("Pair", 1), TWO_PAIR("Two Pair", 2),
 	    THREE_OF_A_KIND("Three of a kind", 3), STRIGHT("Stright", 4), FLUSH("Flush", 5),
