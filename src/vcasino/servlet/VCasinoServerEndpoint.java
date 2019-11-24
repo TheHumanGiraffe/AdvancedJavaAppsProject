@@ -20,7 +20,7 @@ import vcasino.core.games.*;
 
 
 @ServerEndpoint(
-		value = "/vcasino/{game}/{roomNumber}",
+		value = "/vcasino/{userId}/{game}/{roomNumber}",
 		encoders = {BlindGameStateEncoder.class, GameEventEncoder.class},
 		decoders = {GameActionDecoder.class}
 )
@@ -33,7 +33,8 @@ public class VCasinoServerEndpoint {
     
   
     @OnOpen
-    public void onOpen(Session userSession,@PathParam("game") final String game, @PathParam("roomNumber") final String roomNumber) {
+    public void onOpen(Session userSession,@PathParam("userId") final String userId, @PathParam("game") final String game, @PathParam("roomNumber") final String roomNumber) {
+
     	Match setupMatch;
     	
     	System.out.println("game " + game + " room "+roomNumber);
@@ -49,7 +50,11 @@ public class VCasinoServerEndpoint {
 		VCasinoServerEndpoint.openSessions.put(myUniqueId, this);
 		
 		try {
-			
+			System.out.println(game);
+			if(game.equals("login")) {
+				return;
+			}
+					
 			if(roomNumber.equals("browse")) {
 				sendBrowseList(userSession, game);
 			} else { 
@@ -106,6 +111,18 @@ public class VCasinoServerEndpoint {
 
     @OnMessage
     public void onMessage(GameAction action, Session userSession) {
+    	System.out.println(action);
+    	if (action.action.equals("login")) {
+    		String result = Login.login(action);
+    		if (!result.equals("Success")) {
+    			sendMessage("loginError");
+    		}
+    		else {
+    			sendMessage(action.arg0);
+    		}
+    		return;
+    	}
+    	
     	String roomNumber = (String) userSession.getUserProperties().get("roomNumber");
     	String game = (String) userSession.getUserProperties().get("game");
     	

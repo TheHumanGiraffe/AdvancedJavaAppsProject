@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Login</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="login.js"></script>
+  
+</head>
+<body>
+
+<div class="jumbotron text-center">
+  <h1>Login </h1>
+  <p>Or just waste all of my hard work on the database and login as guest</p> 
+</div>
+  
+<div class="container">
+  <div class="row">
+    <div class="col-sm-4">
+       <h1>Login</h1>
+		  <div class="form-group">
+		    <label for="username">Username:</label>
+		    <input type="text" class="form-control" id="existingUsername">
+		  </div>
+		  <div class="form-group">
+		    <label for="pwd">Password:</label>
+		    <input type="password" class="form-control" id="existingPwd">
+		  </div>
+		  <button onclick="login()" class="btn btn-default">Submit</button>
+
+    </div>
+    <div class="col-sm-4">
+       <h1>New User</h1>
+		  <div class="form-group">
+		    <label for="username">Username:</label>
+		    <input type="text" class="form-control" id="newUsername">
+		  </div>
+		  <div class="form-group">
+		    <label for="pwd">Password:</label>
+		    <input type="password" class="form-control" id="newPwd">
+   		    <label for="confirmpwd">Confirm password:</label>
+		    
+   		    <input type="password" class="form-control" id="newConfirmPwd">
+		    
+		  </div>
+		  <button onclick="createUser()" class="btn btn-default">Submit</button>  
+	</div>
+    <div class="col-sm-4">
+    	<h1>Guest</h1>
+       <button type="button" class="btn">Continue as guest (Like a bitch)</button>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
