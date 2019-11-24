@@ -17,46 +17,39 @@
 		<table id="board" class="board" style="margin: auto;">
 			<tr>
 				<td><span class="corner">&nbsp;</span></td>
-				<td><span class="corner">&nbsp;</span></td>
-				<td><div id="player3info"></div>
-					<div id="player3Div"></div></td>
-				<td><span class="corner">&nbsp;</span></td>
+				<td><div id="player3Div"></div></td>
 				<td><span class="corner">&nbsp;</span></td>
 			</tr>
 			<tr>
-				<td><div id="player2info"></div></td>
 				<td><div id="player2Div"></div></td>
-				<td><div id="discard"></div></td>
-
+				<td><div><img id="discard" src="https://raw.githubusercontent.com/TheHumanGiraffe/AdvancedJavaAppsProject/master/web/gameBoard/cards/0.jpg" /></div></td>
+				<td><div id="tableDiv"></div></td>
+				
 				<td><div id="player4Div"></div></td>
-				<td><div id="player4info"></div></td>
 			</tr>
 			<tr>
 				<td><span class="corner">&nbsp;</span></td>
-				<td><span class="corner">&nbsp;</span></td>
-				<td><div id="player1Div"></div>
-					<div id="player1info"></div></td>
-				<td><span class="corner">&nbsp;</span></td>
+				<td><div id="player1Div"></div></td>
 				<td><span class="corner">&nbsp;</span></td>
 			</tr>
 		</table>
 		<div class="options" style="text-align: center; color: white;">
-			<div>
-				<textarea id="echoText" rows="5" cols="30" readonly></textarea>
-				<input onclick="drawCard();" value="Draw" type="button" /> 
-				<input onclick="getWinner();" value="Get Winner" type="button" /> 
-				<input onclick="fold();"value="Fold" type="button" />
-			</div>
-			<div>
-				Bet: <input type="number" id="betValue" value="0" readonly /> 
-				<input onclick="placeBet();" type="button" value="Place Bet" />
-				<input onClick="resetBet();" type="button" value="Reset" />
-				<span class="imgWrap"><img class="chip" src="chips/blueChip.png" onClick="add10()"><span class="tooltip">Add Ten Chips</span></span>
-				<span class="imgWrap"><img class="chip" src="chips/greenChip.png" onClick="add20()"><span class="tooltip">Add Twenty Chips</span></span>
-				<span class="imgWrap"><img class="chip" src="chips/redChip.png" onClick="add50()"><span class="tooltip">Add Fifty Chips</span></span>
-				<span class="imgWrap"><img class="chip" src="chips/blackChip.png" onClick="add100()"><span class="tooltip">Add One Hundred Chips</span></span>
-			</div>
+			<textarea id="echoText" rows="5" cols="30" readonly></textarea>
+			<input onclick="drawCard();" value="Draw" type="button" /> 
+			<input onclick="getWinner();" value="Get Winner" type="button" /> 
+			Bet: <input type="number" id="betValue"> 
+			<input onclick="placeBet();" type="button" value="Place Bet"> 
+			<input onclick="fold();"value="Fold" type="button" />
 		</div>
+	</div>
+
+	<div id="login">
+		user<input type="text"/><br/>
+		pass<input type="text"/><br/>
+		<input type="button" value="login"/>
+	</div>
+	
+	<div id="chooser"><h1>Choose a match</h1>
 	</div>
 </body>
 </html>
