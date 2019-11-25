@@ -80,7 +80,7 @@ function drawCard(){
 }
 
 function playCard(card){
-	var jsonText ='{ "action":"draw", "arg0": "'+card+'"}'
+	var jsonText ='{ "action":"play", "arg0": "'+card+'"}'
 	wsSendMessage(jsonText);
 }
 
@@ -131,8 +131,8 @@ function renderGamestate(gamestate) {
 
 	var playerCount = gamestate.players.length;
 	var players = gamestate.players;
-	console.log("<img src='" + cardURL + gamestate.cards + '/' + gamestate.deck.discards[0].cardID + '.jpg" />')
-	document.getElementById("discard").innerHTML = "<img src='" + cardURL + gamestate.cards + '/' + gamestate.deck.discards[0].cardID + '.jpg" />';
+	console.log("<img src='" + cardURL + gamestate.cards + '/' + gamestate.deck.discards[0].cardID + ".jpg' />")
+	document.getElementById("discard").innerHTML = "<img src='" + cardURL + gamestate.cards + '/' + gamestate.deck.discards[0].cardID + ".jpg' />";
 	document.getElementById("pot").innerHTML="<h2>Pot Size: " + gamestate.potSize + "</h2>";
 	
 	players.forEach(function(player){

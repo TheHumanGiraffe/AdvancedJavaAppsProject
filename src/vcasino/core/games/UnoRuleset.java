@@ -157,8 +157,6 @@ public class UnoRuleset implements Ruleset {
 		
 		do {
 			nextPlayer.setTurn(false);
-			System.out.println("Skip: "+skip);
-			System.out.println("Skip check: "+(skip && !(!skip)));
 			if(clockwise) {
 				int i = players.indexOf(nextPlayer)+1;
 				System.out.println("next: "+i);
