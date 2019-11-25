@@ -1,10 +1,17 @@
 html {
-	background-image: url("felt.jpg");
+	/* background-image: url("felt.jpg"); */
+	background-color: #004f27;
 }
 
-#player2info, #player4info {width: 150px;}
+#player2info, #player4info {vertical-align: middle; width: 150px;}
 
-textarea{resize:none;}
+textarea {
+	resize:none;
+	border-radius: 25px;
+	padding: 20px;
+	background-color: #e3dcc2;
+	border: 0;
+}
 
 h2, h3 {
 	color:white;
@@ -23,6 +30,14 @@ div.board{
 
 div#player2Div, div#player4Div {
 	width:90px;
+	height: 400px;
+	vertical-align: middle;
+}
+
+div#player3Div {
+	text-align: center;
+	transform: translate(40%, 0%);
+	width: 100%;
 }
 
 tr, td {
@@ -105,9 +120,40 @@ img.chip {
 .p3Stats {margin-bottom:0em;}
 .p1Stats, .p3Stats{text-align: center;}
 
-.colorchoose {
-	background-color: #ffffff;
+div.chatarea {
+	float: left;
+	vertical-align: middle;
+}
+
+div.cardh {
+	position: relative;
+	float: left;
+}
+
+div.cardv {
+	position: relative;
+	float: top;
+}
+
+div.hand {
+}
+
+div.table {
+	float: left;
+}
+
+.deck {
+	align: center;
+}
+
+.chooser {
+	border-radius: 25px;
+	padding: 20px;
+	background-color: #e3dcc2;
 	float: left;
 	position: absolute;
-	top: 50%;
+	top: 75%;
+	left: 50%;
+	display: none;
 }
+

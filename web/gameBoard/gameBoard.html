@@ -14,6 +14,9 @@
 	<div class="board" id="board">
 		<div id="pot" style="text-align: center;"></div>
 		<div id="currentPlayer" style="text-align: center;"></div>
+		
+		<div class="chatarea"><textarea id="echoText" rows="45" cols="30" readonly></textarea></div>
+		<div class="table">
 		<table id="board" class="board" style="margin: auto;">
 			<tr>
 				<td><span class="corner">&nbsp;</span></td>
@@ -26,7 +29,7 @@
 			<tr>
 				<td><div id="player2info"></div></td>
 				<td><div id="player2Div"></div></td>
-				<td><div id="discard"></div></td>
+				<td><div id="centertable"><table style="width: 100%;"><tr><td class="deck"><div id="discard"></div></td><td>&nbsp;</td><td class="deck"><div id="deck" onclick="drawCard()"></div></td></tr></table></div></td>
 				<td><div id="player4Div"></div></td>
 				<td><div id="player4info"></div></td>
 			</tr>
@@ -39,17 +42,16 @@
 				<td><span class="corner">&nbsp;</span></td>
 			</tr>
 		</table>
+		</div>
 		<div class="options" style="text-align: center; color: white;">
 			<div>
-				<textarea id="echoText" rows="5" cols="30" readonly></textarea>
-				<input onclick="drawCard();" value="Draw" type="button" /> 
-				<input onclick="getWinner();" value="Get Winner" type="button" /> 
-				<input onclick="fold();" value="Fold" type="button" />
+				<!-- account info goes here -->
 			</div>
 			<div>
-				Bet: <input type="number" id="betValue" value="0" readonly /> 
+				<h3 class="header">Bet</h3>
+				<!-- Bet: <input type="number" id="betValue" value="0" readonly /> 
 				<input onclick="placeBet();" type="button" value="Place Bet" />
-				<input onClick="resetBet();" type="button" value="Reset" />
+				<input onClick="resetBet();" type="button" value="Reset" />  -->
 				<span class="imgWrap"><img class="chip" src="chips/blueChip.png" onClick="add10()"><span class="tooltip">Add Ten Chips</span></span>
 				<span class="imgWrap"><img class="chip" src="chips/greenChip.png" onClick="add20()"><span class="tooltip">Add Twenty Chips</span></span>
 				<span class="imgWrap"><img class="chip" src="chips/redChip.png" onClick="add50()"><span class="tooltip">Add Fifty Chips</span></span>
@@ -57,11 +59,16 @@
 			</div>
 		</div>
 	</div>
-	<div class="colorchoose">
-		<input type="radio" name="color" value="red" onclick="playCard(handCard, 'red')"> Red<br/>
-		<input type="radio" name="color" value="yellow" onclick="playCard(handCard, 'yellow')"> Yellow<br/>
-		<input type="radio" name="color" value="green" onclick="playCard(handCard, 'green')"> Green<br/>
-		<input type="radio" name="color" value="blue" onclick="playCard(handCard, 'blue')"> Blue<br/>
+	<div class="chooser" id="colorchooser">
+		<input type="radio" name="color" value="red" onclick="closeDialog(); playCard(handCard, 'red');"> Red<br/>
+		<input type="radio" name="color" value="yellow" onclick="closeDialog(); playCard(handCard, 'yellow');"> Yellow<br/>
+		<input type="radio" name="color" value="green" onclick="closeDialog(); playCard(handCard, 'green');"> Green<br/>
+		<input type="radio" name="color" value="blue" onclick="closeDialog(); playCard(handCard, 'blue');"> Blue<br/>
+	</div>
+	<div class="chooser" id="playerchooser">
+		<input type="radio" name="player" value="yellow" onclick="closeDialog(); playCard(handCard, 'yellow');"> Yellow<br/>
+		<input type="radio" name="player" value="green" onclick="closeDialog(); playCard(handCard, 'green');"> Green<br/>
+		<input type="radio" name="player" value="blue" onclick="closeDialog(); playCard(handCard, 'blue');"> Blue<br/>
 	</div>
 </body>
 </html>
