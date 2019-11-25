@@ -104,3 +104,10 @@ img.chip {
 .p1Stats {margin-top:0em;}
 .p3Stats {margin-bottom:0em;}
 .p1Stats, .p3Stats{text-align: center;}
+
+.colorchoose {
+	background-color: #ffffff;
+	float: left;
+	position: absolute;
+	top: 50%;
+}

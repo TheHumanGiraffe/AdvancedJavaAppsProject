@@ -66,6 +66,9 @@ public class UnoRuleset implements Ruleset {
 		
 		Card play = player.getHand().get(handIndex);
 		
+		if(play == null)
+			throw new RulesException("Card", "Please choose a valid card", player);
+		
 		if(!discard.matchSuit(play) && !discard.matchRank(play) && !play.getSuit().equals("any")) {
 			throw new RulesException("Card", "You must play a card that matches the color or the value of the top card", player);
 		}
@@ -93,11 +96,14 @@ public class UnoRuleset implements Ruleset {
 				break;
 			case 300:
 				//FIXME: welp.
-				Card c = new Card(play.getCardID(), arg1);
+				System.out.println("played color choose: "+arg1);
+				Card c = new Card(UnoDeck.getColoredCardId(play.getCardID(), arg1), arg1);
 				c.setRank(UnoDeck.rankMap[play.getCardID()]);
+				System.out.println("new card: "+c);
 				state.getDeck().discard(c);
 				break;
 			case 400:
+				System.out.println("played +4: "+arg1);
 				p = advanceTurn(player, state.getPlayers());
 				p.addCard(state.getDeck().drawCard()); //four mathias
 				p.addCard(state.getDeck().drawCard());
@@ -105,8 +111,9 @@ public class UnoRuleset implements Ruleset {
 				p.addCard(state.getDeck().drawCard());
 				skip=true;
 				//FIXME: umm...
-				Card cd = new Card(play.getCardID(), arg1);
+				Card cd = new Card(UnoDeck.getColoredCardId(play.getCardID(), arg1), arg1);
 				cd.setRank(UnoDeck.rankMap[play.getCardID()]);
+				System.out.println("new card: "+cd);
 				state.getDeck().discard(cd);
 				break;
 			default:

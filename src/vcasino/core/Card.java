@@ -40,6 +40,11 @@ public class Card {
 		this.suit = suit;
 	}
 	
+	@Override
+	public String toString() {
+		return "Card "+cardID+" suit "+suit+" rank "+rank;
+	}
+	
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

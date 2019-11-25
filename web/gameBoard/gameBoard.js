@@ -2,9 +2,11 @@
 var urlParams = new URLSearchParams(window.location.search);
 var gameState = null;
 var cardURL = 'https://raw.githubusercontent.com/TheHumanGiraffe/AdvancedJavaAppsProject/master/web/gameBoard/cards/';
+var handCard = -1;
 
 $(document).ready(function() {
 	$("#echoText").val('');
+	$('.colorchoose').dialog({ autoOpen: false });
 });
 
 if(urlParams.has('roomNumber')){
@@ -79,8 +81,8 @@ function drawCard(){
 	wsSendMessage(jsonText);
 }
 
-function playCard(card){
-	var jsonText ='{ "action":"play", "arg0": "'+card+'"}'
+function playCard(card, arg1){
+	var jsonText ='{ "action":"play", "arg0": "'+card+'", "arg1": "'+arg1+'"}'
 	wsSendMessage(jsonText);
 }
 
@@ -149,7 +151,9 @@ function renderGamestate(gamestate) {
 		img.src = cardURL + gamestate.cards + '/' + card.cardID + ".jpg";
 		img.className = "p1";
 		img.id = img_id;
-		img.addEventListener('click', function() {playCard(img.id);});
+		if(card.suit == "any")
+			img.addEventListener('click', function() {handCard = img.id; $('.colorchoose').dialog("open");});
+		else img.addEventListener('click', function() {playCard(img.id, "");});
 		img_id++;
 		imgContainer.appendChild(img);
 		
