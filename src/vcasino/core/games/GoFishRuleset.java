@@ -14,7 +14,7 @@ public class GoFishRuleset implements Ruleset {
 
 	private static int handSize=5;
 	private String arg1;
-
+	
 	@Override
 	public String getDescription() {
 		return "Simple 5 card stud ruleset";
@@ -71,8 +71,11 @@ public class GoFishRuleset implements Ruleset {
 				}
 			}
 			
-			if(!found)
+			if(!found) {
 				drawCard(state, player);
+				event = new GameEvent("Go Fish!", 0);
+				event.to(player);
+			}
 			
 			//check for match 4
 			int count;
@@ -87,6 +90,7 @@ public class GoFishRuleset implements Ruleset {
 				}
 				
 				if(count == 4) {
+					//matched! remove them...
 					for(int j=0;j<player.getHand().size();j++) {
 						if(player.getHand().get(j).matchRank(comp)) {
 							state.getDeck().discard(player.getHand().remove(j));
@@ -97,11 +101,9 @@ public class GoFishRuleset implements Ruleset {
 				}
 			}
 			
-			if(!found) {
-				event = new GameEvent("Go Fish!", 0);
-				event.to(player);
-			}
-		}catch (Exception e) {
+			if(player.getHand().size()==0)
+				drawCard(state, player);
+		} catch (Exception e) {
 			
 		} finally {
 			
