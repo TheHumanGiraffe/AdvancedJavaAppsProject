@@ -86,9 +86,25 @@ function playCard(card, arg1){
 	wsSendMessage(jsonText);
 }
 
-function getWinner(){
-	var jsonText ='{ "action":"winner"}'
-	wsSendMessage(jsonText);
+function updatePlayerChooser(){
+	var chooser = document.getElementById("playerchooser");
+	var html = ""
+	
+	for(var i=0;i<gameState.players.length;i++) {
+		if(i == gameState.visible)
+			continue;
+		html = html + '<input type="radio" name="player" value="'+gameState.players[i].name+'" onclick="closeDialog(); playCard(handCard, \''+gameState.players[i].name+'\');"> '+gameState.players[i].name+'<br/>';
+	}
+	
+	chooser.innerHTML = html;
+}
+
+function closeDialog() {
+	if ($('#colorchooser').is(':visible'))
+		$('#colorchooser').toggle();
+	
+	if ($('#playerchooser').is(':visible'))
+		$('#playerchooser').toggle();
 }
 
 function renderGamestate(gamestate) {
@@ -127,6 +143,7 @@ function renderGamestate(gamestate) {
 	if(currentPlayer.hand.length>0) {
 		console.dir(currentPlayer.hand[0]);
 		console.log(currentPlayer.hand[0].cardID);
+		updatePlayerChooser();
 	} else {
 		echoText.value += "Waiting for players...\n";
 	}
@@ -153,6 +170,8 @@ function renderGamestate(gamestate) {
 		img.id = img_id;
 		if(card.suit == "any")
 			img.addEventListener('click', function() {handCard = img.id; $('.colorchoose').dialog("open");});
+		else if(game == "gofish")
+			img.addEventListener('click', function() {handCard = img.id; $('#playerchooser').toggle();});
 		else img.addEventListener('click', function() {playCard(img.id, "");});
 		img_id++;
 		imgContainer.appendChild(img);
@@ -229,6 +248,11 @@ function renderGameList(gameList) {
 	document.getElementById('discard').appendChild(parentDiv);
 }
 
+function handleEvent(event) {
+	if(event.priority==0)
+		echoText.value += "EVENT: "+event.action+"\n";
+}
+
 function wsOpen(message){
 	// echoText.value += "Connecting ... \n";
 }
@@ -257,6 +281,8 @@ function wsGetMessage(message){
 		echoText.value += "ALERT: "+json.message.text+"\n";
 	} else if(json["chat"] != null) {
 		echoText.value += json.chat.Player+": "+json.chat.text+"\n";
+	} else if(json["event"] != null) {
+		handleEvent(json.event);
 	} else if (json["games"] != null) {
 		renderGameList(json.games);
 	} 

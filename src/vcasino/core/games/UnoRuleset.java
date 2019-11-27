@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import vcasino.core.*;
-import vcasino.core.events.GenericGameEvent;
 import vcasino.core.events.GameEvent;
 import vcasino.core.exceptions.RulesException;
 
@@ -40,8 +39,8 @@ public class UnoRuleset implements Ruleset {
 	}
 	
 	@Override
-	public GameEvent passCard(Player from, Player to) throws RulesException {
-		return new GenericGameEvent(from);
+	public GameEvent passCard(Player from, Player to, int index) throws RulesException {
+		return new GameEvent(from.getName() + " passed card to "+to.getName(), 0);
 	}
 
 	@Override
@@ -121,12 +120,12 @@ public class UnoRuleset implements Ruleset {
 				break;
 		}
 		
-		return new GenericGameEvent(player);
+		return null;
 	}
 
 	@Override
 	public GameEvent fold(GameState state, Player player) {
-		return new GenericGameEvent(player);
+		return null;
 	}
 
 	@Override
@@ -153,7 +152,7 @@ public class UnoRuleset implements Ruleset {
 	
 	@Override
 	public GameEvent showHand(Player player) {
-		return new GenericGameEvent(player);
+		return null;
 	}
 
 	@Override
