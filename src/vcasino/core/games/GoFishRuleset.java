@@ -14,6 +14,7 @@ public class GoFishRuleset implements Ruleset {
 
 	private static int handSize=5;
 	private String arg1;
+	private boolean continueTurn=false;
 	
 	@Override
 	public String getDescription() {
@@ -57,21 +58,22 @@ public class GoFishRuleset implements Ruleset {
 		try {
 			Player target = state.getPlayer(arg1);
 			Card card = player.getHand().get(handIndex);
-			boolean found=false;
 			
 			if(!target.isActive())
 				throw new RulesException("Player", "The player you chose has left!", player);
 
+			continueTurn = false;
+			
 			for(int i=0;i<target.getHand().size();i++) {
 				Card c = target.getHand().get(i);
 				if(c.getRank() == card.getRank()) {
 					passCard(target, player, i);
 					i=0; //safeguard the loop
-					found=true;
+					continueTurn=true;
 				}
 			}
 			
-			if(!found) {
+			if(!continueTurn) {
 				drawCard(state, player);
 				event = new GameEvent("Go Fish!", 0);
 				event.to(player);
@@ -103,6 +105,8 @@ public class GoFishRuleset implements Ruleset {
 			
 			if(player.getHand().size()==0)
 				drawCard(state, player);
+			if(target.getHand().size()==0)
+				drawCard(state, target);
 		} catch (Exception e) {
 			
 		} finally {
@@ -133,15 +137,20 @@ public class GoFishRuleset implements Ruleset {
 
 	@Override
 	public Player advanceTurn(Player current, List<Player> players) {
-		Player nextPlayer;
-		int i = players.indexOf(current)+1;
+		Player nextPlayer=current;
 		
-		current.setTurn(false);
-		while(!players.get(i >= players.size() ? 0 : i).isActive()) {
-			i = (i>= players.size() ? 0 : i+1);
+		if(continueTurn) {
+			continueTurn = false;
+		} else {
+			int i = players.indexOf(current)+1;
+			
+			current.setTurn(false);
+			while(!players.get(i >= players.size() ? 0 : i).isActive()) {
+				i = (i>= players.size() ? 0 : i+1);
+			}
+			nextPlayer = players.get(i >= players.size() ? 0 : i);
+			nextPlayer.setTurn(true);
 		}
-		nextPlayer = players.get(i >= players.size() ? 0 : i);
-		nextPlayer.setTurn(true);
 		return nextPlayer;
 	}
 
