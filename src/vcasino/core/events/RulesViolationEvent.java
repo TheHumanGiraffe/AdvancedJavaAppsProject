@@ -7,7 +7,7 @@ public class RulesViolationEvent extends GameEvent {
 	private String desc;
 	
 	public RulesViolationEvent(RulesException e) {
-		super(e.getPlayer());
+		super(e.getDescription(), 0);
 		
 		rule = e.getRule();
 		desc = e.getDescription();

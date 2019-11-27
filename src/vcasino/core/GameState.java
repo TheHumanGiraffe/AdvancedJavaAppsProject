@@ -46,9 +46,11 @@ public class GameState {
 	public ArrayList<Player> getPlayers() {
 		return players;
 	}
+	
 	public void setPlayers(ArrayList<Player> players) {
 		this.players = players;
 	}
+	
 	public void addPlayer(Player newPlayer) {
 		players.add(newPlayer);
 	}
@@ -77,6 +79,14 @@ public class GameState {
 	
 	public Player getPlayer(int i) {
 		return players.get(i);
+	}
+	
+	public Player getPlayer(String name) throws Exception {
+		for(Player p : players) {
+			if(p.getName().equals(name))
+				return p;
+		}
+		throw new Exception("Player not found!");
 	}
 	
 	public int countPlayers() {

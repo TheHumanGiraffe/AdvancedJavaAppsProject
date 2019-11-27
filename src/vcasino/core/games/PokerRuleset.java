@@ -37,7 +37,7 @@ public class PokerRuleset implements Ruleset {
 	}
 
 	@Override
-	public GameEvent passCard(Player from, Player to) throws RulesException {
+	public GameEvent passCard(Player from, Player to, int index) throws RulesException {
 		// TODO Auto-generated method stub
 		return null;
 	}

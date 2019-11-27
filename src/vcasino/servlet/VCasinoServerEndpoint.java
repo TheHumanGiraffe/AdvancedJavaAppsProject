@@ -44,6 +44,7 @@ public class VCasinoServerEndpoint {
 		
 		userSession.getUserProperties().put("roomNumber", roomNumber);
 		userSession.getUserProperties().put("game", game);
+		userSession.getUserProperties().put("id", myUniqueId);
 		userSession.getUserProperties().put("player", new Player(this.myUniqueId,100, this.myUniqueId));
 		
 		VCasinoServerEndpoint.openSessions.put(myUniqueId, this);
@@ -64,7 +65,7 @@ public class VCasinoServerEndpoint {
 					//Pass the Match Constructor game to set the correct ruleset
 					setupMatch = VCasinoServerEndpoint.matches.get(game+roomNumber);
 					if(setupMatch == null) {
-						VCasinoServerEndpoint.matches.putIfAbsent(game+roomNumber, new Match(game+roomNumber, new UnoRuleset()));
+						VCasinoServerEndpoint.matches.putIfAbsent(game+roomNumber, new Match(game+roomNumber, new GoFishRuleset()));
 						setupMatch = VCasinoServerEndpoint.matches.get(game+roomNumber);
 					}
 				}
@@ -73,7 +74,7 @@ public class VCasinoServerEndpoint {
 					setupMatch.addPlayer(userSession);
 					if(setupMatch.getMatchState() != MatchState.MSTATE_PLAYING && setupMatch.getGameState().countPlayers() >= 4) {
 						setupMatch.begin(); //seems legit...
-						broadcastMessage("Game start!");
+						//broadcastMessage("Game start!");
 					}
 				} catch (RulesException e) {
 					System.out.println("RULES: "+e);
@@ -147,7 +148,7 @@ public class VCasinoServerEndpoint {
         	e.printStackTrace();
 		} catch (IllegalStateException ise) {
 			usersMatch.dropPlayer(userSession);
-			VCasinoServerEndpoint.openSessions.remove(userSession);
+			VCasinoServerEndpoint.openSessions.remove(userSession.getUserProperties().get("id"));
 			try {
 				userSession.close();
 			} catch (IOException e) {}

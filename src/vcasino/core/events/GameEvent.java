@@ -4,12 +4,14 @@ import vcasino.core.Player;
 
 public class GameEvent {
 
-	protected Player eventOwner;
-	
+	private Player targetPlayer;
 	private String action;
-	private int cardID;
-	private int betAmount;
-
+	private int priority;
+	
+	public GameEvent(String a, int p) {
+		action = a;
+		priority = p;
+	}
 	
 	public String getAction() {
 		return action;
@@ -18,30 +20,22 @@ public class GameEvent {
 	public void setAction(String action) {
 		this.action = action;
 	}
-
-	public int getCardID() {
-		return cardID;
+	
+	public int getPriority() {
+		return priority;
 	}
-
-	public void setCardID(int cardID) {
-		this.cardID = cardID;
+	
+	public void to(Player t) {
+		targetPlayer = t;
 	}
-
-	public GameEvent(Player by) {
-		eventOwner = by;
-	}
-
-	public int getBetAmount() {
-		return betAmount;
-	}
-
-	public void setBetAmount(int betAmount) {
-		this.betAmount = betAmount;
+	
+	public Player getTarget() {
+		return targetPlayer;
 	}
 	
 	@Override
 	public String toString() {
-		return "GameEvent [eventOwner=" + eventOwner + ", action=" + action + ", cardID=" + cardID + "]";
+		return "GameEvent [action=" + action + ", priority=" + priority + "]";
 	}
 	
 }

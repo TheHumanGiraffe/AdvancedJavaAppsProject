@@ -16,7 +16,7 @@ public interface Ruleset {
 	int getInitialHandCount();
 	
 	//Player-level actions
-	GameEvent passCard(Player from, Player to) throws RulesException;
+	GameEvent passCard(Player from, Player to, int handIndex) throws RulesException;
 	void drawCard(GameState state, Player forPlayer) throws RulesException;
 	void dealHand(GameState state, Player forPlayer) throws RulesException;
 	GameEvent playCard(GameState state, Player player, int handIndex) throws RulesException;

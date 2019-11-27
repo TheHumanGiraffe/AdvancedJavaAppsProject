@@ -74,7 +74,7 @@ public class Match {
 		update(gameState);
 	}
 	
-	//Needs to be GameAction because they will be addtional info tied to it other than the action. IE card ID and bet amount
+	//Needs to be GameAction because they will be additional info tied to it other than the action. IE card ID and bet amount
 	public void doAction(GameAction action, Player player) throws RulesException {
 		lastAction = action;
 		if(player.isTurn()) {
@@ -85,10 +85,10 @@ public class Match {
 					break;
 				case "play":
 					gameRules.setArg1(action.arg1);
-					gameRules.playCard(gameState, player, Integer.parseInt(action.arg0));
+					sendEvent(gameRules.playCard(gameState, player, Integer.parseInt(action.arg0)));
 					break;
 				case "chat":
-					sendEvent(new ChatEvent(player, action.arg0));
+					sendEvent(new ChatEvent(action.arg0));
 					break;
 		        case "fold":
 		        	gameRules.fold(gameState, player);
@@ -127,6 +127,7 @@ public class Match {
 		gameRules.beginMatch(gameState);
 		state = MatchState.MSTATE_PLAYING;
 		update(gameState);
+		sendEvent(new GameEvent("Begin Match!", 1));
 	}
 	
 	void checkDoTurn() {
@@ -182,9 +183,12 @@ public class Match {
 	}
 	
 	private void sendEvent(GameEvent event) {
+		if(event == null)
+			return;
 		for(Session userSession : sessions) {
 			try {
-				userSession.getBasicRemote().sendObject(event);
+				if(event.getTarget() == null || event.getTarget() == userSession.getUserProperties().get("player"))//lazy
+					userSession.getBasicRemote().sendObject(event);
 			} catch (IOException e) {
 				e.printStackTrace();
 				((Player)userSession.getUserProperties().get("player")).deactivate();

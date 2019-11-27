@@ -21,9 +21,8 @@ public class GameEventEncoder implements Encoder.Text<GameEvent> {
 	}
 
 	@Override
-	public String encode(GameEvent object) throws EncodeException {
-		// TODO Auto-generated method stub
-		return null;
+	public String encode(GameEvent event) throws EncodeException {
+		return "{\"event\": {\"action\": \""+event.getAction()+"\", \"priority\": "+event.getPriority()+"} }";
 	}
 
 }

@@ -2,6 +2,7 @@ package vcasino.core.games;
 
 import java.util.List;
 
+import vcasino.core.Card;
 import vcasino.core.Deck;
 import vcasino.core.GameState;
 import vcasino.core.Player;
@@ -11,10 +12,12 @@ import vcasino.core.exceptions.RulesException;
 
 public class GoFishRuleset implements Ruleset {
 
+	private static int handSize=5;
+	private String arg1;
+
 	@Override
 	public String getDescription() {
-		// TODO Auto-generated method stub
-		return null;
+		return "Simple 5 card stud ruleset";
 	}
 
 	@Override
@@ -24,67 +27,137 @@ public class GoFishRuleset implements Ruleset {
 
 	@Override
 	public Deck newDeck() {
-		// TODO Auto-generated method stub
-		return null;
+		return new Deck();
 	}
 
 	@Override
 	public int getInitialHandCount() {
-		// TODO Auto-generated method stub
-		return 0;
+		return handSize;
 	}
 
 	@Override
-	public GameEvent passCard(Player from, Player to) throws RulesException {
-		// TODO Auto-generated method stub
+	public GameEvent passCard(Player from, Player to, int handIndex) throws RulesException {
+		to.addCard(from.getHand().remove(handIndex));
 		return null;
 	}
 
 	@Override
 	public void drawCard(GameState state, Player forPlayer) throws RulesException {
-		// TODO Auto-generated method stub
-
+		forPlayer.addCard(state.getDeck().drawCard());
 	}
 
 	@Override
 	public void dealHand(GameState state, Player forPlayer) throws RulesException {
-		// TODO Auto-generated method stub
-
+		forPlayer.addCard(state.getDeck().drawCard());
 	}
 
 	@Override
 	public GameEvent playCard(GameState state, Player player, int handIndex) throws RulesException {
-		// TODO Auto-generated method stub
-		return null;
+		GameEvent event=null;
+		try {
+			Player target = state.getPlayer(arg1);
+			Card card = player.getHand().get(handIndex);
+			boolean found=false;
+			
+			if(!target.isActive())
+				throw new RulesException("Player", "The player you chose has left!", player);
+
+			for(int i=0;i<target.getHand().size();i++) {
+				Card c = target.getHand().get(i);
+				if(c.getRank() == card.getRank()) {
+					passCard(target, player, i);
+					i=0; //safeguard the loop
+					found=true;
+				}
+			}
+			
+			if(!found)
+				drawCard(state, player);
+			
+			//check for match 4
+			int count;
+			for(int i=0;i<player.getHand().size();i++) {
+				Card comp = player.getHand().get(i);
+				count=0;
+				for(int j=i;j<player.getHand().size();j++) {
+					Card c = player.getHand().get(j);
+					if(comp.matchRank(c)) {
+						count++;
+					}
+				}
+				
+				if(count == 4) {
+					for(int j=0;j<player.getHand().size();j++) {
+						if(player.getHand().get(j).matchRank(comp)) {
+							state.getDeck().discard(player.getHand().remove(j));
+							j--;
+						}
+					}
+					//TODO: no way to notify the player from here...
+				}
+			}
+			
+			if(!found) {
+				event = new GameEvent("Go Fish!", 0);
+				event.to(player);
+			}
+		}catch (Exception e) {
+			
+		} finally {
+			
+		}
+		return event;
 	}
 
 	@Override
 	public GameEvent fold(GameState state, Player player) throws RulesException {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
 	@Override
 	public GameEvent beginMatch(GameState state) throws RulesException {
-		// TODO Auto-generated method stub
-		return null;
+		shuffleDeck(state);
+		
+		for(int i=0;i<handSize;i++) {
+			for(Player p : state.getPlayers()) {
+				drawCard(state, p);
+			}
+		}
+		
+		state.getPlayers().get(0).setTurn(true);
+		return new GameEvent("Begin Match!", 1);
 	}
 
 	@Override
 	public Player advanceTurn(Player current, List<Player> players) {
-		// TODO Auto-generated method stub
-		return null;
+		Player nextPlayer;
+		int i = players.indexOf(current)+1;
+		
+		current.setTurn(false);
+		while(!players.get(i >= players.size() ? 0 : i).isActive()) {
+			i = (i>= players.size() ? 0 : i+1);
+		}
+		nextPlayer = players.get(i >= players.size() ? 0 : i);
+		nextPlayer.setTurn(true);
+		return nextPlayer;
 	}
 
 	@Override
 	public boolean gameOver(GameState state) {
-		// TODO Auto-generated method stub
+		for(Player p : state.getPlayers()) {
+			if(p.getHand().size() == 0)
+				return true;
+		}
 		return false;
 	}
 
 	@Override
 	public Player declareWinner(GameState gameState) {
-		// TODO Auto-generated method stub
+		for(Player p : gameState.getPlayers()) {
+			if(p.getHand().size() == 0)
+				return p;
+		}
 		return null;
 	}
 
@@ -102,8 +175,7 @@ public class GoFishRuleset implements Ruleset {
 
 	@Override
 	public void shuffleDeck(GameState state) {
-		// TODO Auto-generated method stub
-
+		state.getDeck().shuffle();
 	}
 
 	@Override
@@ -114,7 +186,6 @@ public class GoFishRuleset implements Ruleset {
 
 	@Override
 	public void setArg1(String arg1) {
-		//this.arg1 = arg1;
+		this.arg1 = arg1;
 	}
-	
 }
