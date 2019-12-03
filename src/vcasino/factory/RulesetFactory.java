@@ -1,5 +1,5 @@
 package vcasino.factory;
-
+ 
 import vcasino.core.Ruleset;
 import vcasino.core.games.GoFishRuleset;
 import vcasino.core.games.PokerRuleset;

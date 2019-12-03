@@ -18,7 +18,7 @@ import vcasino.core.events.GameEvent;
 import vcasino.core.events.RulesViolationEvent;
 import vcasino.core.exceptions.RulesException;
 import vcasino.core.games.*;
-
+ 
 
 @ServerEndpoint(
 		value = "/vcasino/{userId}/{game}/{roomNumber}",
