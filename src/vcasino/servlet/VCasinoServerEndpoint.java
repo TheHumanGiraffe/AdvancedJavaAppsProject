@@ -8,10 +8,12 @@ import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 
 import vcasino.encoder.*;
+import vcasino.factory.RulesetFactory;
 import vcasino.decoder.*;
 import vcasino.core.Match;
 import vcasino.core.Match.MatchState;
 import vcasino.core.Player;
+import vcasino.core.Ruleset;
 import vcasino.core.events.GameEvent;
 import vcasino.core.events.RulesViolationEvent;
 import vcasino.core.exceptions.RulesException;
@@ -45,9 +47,9 @@ public class VCasinoServerEndpoint {
 		userSession.getUserProperties().put("roomNumber", roomNumber);
 		userSession.getUserProperties().put("game", game);
 		userSession.getUserProperties().put("id", myUniqueId);
-		userSession.getUserProperties().put("player", new Player(this.myUniqueId,100, this.myUniqueId));
+		userSession.getUserProperties().put("player", new Player(userId,100, this.myUniqueId));
 		
-		VCasinoServerEndpoint.openSessions.put(myUniqueId, this);
+		VCasinoServerEndpoint.openSessions.put(userId, this);
 		
 		try {
 			System.out.println(game);
@@ -65,7 +67,8 @@ public class VCasinoServerEndpoint {
 					//Pass the Match Constructor game to set the correct ruleset
 					setupMatch = VCasinoServerEndpoint.matches.get(game+roomNumber);
 					if(setupMatch == null) {
-						VCasinoServerEndpoint.matches.putIfAbsent(game+roomNumber, new Match(game+roomNumber, new GoFishRuleset()));
+						Ruleset gameRules = RulesetFactory.getRuleset(game);
+						VCasinoServerEndpoint.matches.putIfAbsent(game+roomNumber, new Match(game+roomNumber, gameRules));
 						setupMatch = VCasinoServerEndpoint.matches.get(game+roomNumber);
 					}
 				}
