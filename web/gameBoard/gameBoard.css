@@ -1,6 +1,8 @@
 html {
 	/* background-image: url("felt.jpg"); */
-	background-color: #004f27;
+	background: rgb(0,133,14);
+	background: radial-gradient(circle, rgba(0,133,14,1) 0%, rgba(9,121,23,1) 35%, rgba(19,98,29,1) 100%);
+	font-family: 'Carter One', cursive;
 }
 
 #player2info, #player4info {vertical-align: middle; width: 150px;}
@@ -8,13 +10,19 @@ html {
 textarea {
 	resize:none;
 	border-radius: 25px;
+	border-style: solid;
+	border-width: 5px;
+	border-color: black;
 	padding: 20px;
-	background-color: #e3dcc2;
-	border: 0;
+	background: rgb(227,220,194);
+	background: linear-gradient(325deg, rgba(227,220,194,1) 0%, rgba(227,220,194,1) 50%, rgba(255,255,255,1) 100%);
+	font-family: 'Josefin Sans', sans-serif;
+	font-size: small;
 }
 
 h2, h3 {
 	color:white;
+	text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
 	}
 
 p{color:white:}
@@ -22,6 +30,7 @@ p{color:white:}
 img{
 	height: 90px;
 	width: 60px;
+	border-radius: 15%;
 }
 
 div.board{
@@ -78,7 +87,7 @@ div#player4Div {
 }
 
 img.p1, img.p3 {
-	padding-left:5px;
+	margin-left:5px;
 }
 
 img.p2, img.04 {
@@ -155,5 +164,6 @@ div.table {
 	top: 75%;
 	left: 50%;
 	display: none;
+	font-family: 'Josefin Sans', sans-serif;
 }
 
