@@ -11,13 +11,11 @@ public class RulesetFactory {
 
 	public static Ruleset getRuleset(String gameName) {
 		switch (gameName) {
-		case "poker":
-			return new PokerRuleset();
-		case "texasHoldem":
+		case "holdem":
 			return new TexasHoldemRuleSet();
 		case "uno":
 			return new UnoRuleset();
-		case "goFish":
+		case "gofish":
 			return new GoFishRuleset();
 		default:
 			return new PokerRuleset();

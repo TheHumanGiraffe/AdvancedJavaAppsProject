@@ -56,8 +56,14 @@ public class VCasinoServerEndpoint {
 			if(game.equals("login")) {
 				return;
 			}
-					
-			if(roomNumber.equals("browse")) {
+			
+			if(game.equals("browse")) {
+				//Someone asked for browse knowing nothing, do we have matches to browse?
+				buildFreeMatches();
+				sendBrowseList(userSession, "");
+			} else if(roomNumber.equals("browse")) {
+				//Someone asked for browse within game mode, do we have matches to browse?
+				buildFreeMatches();
 				sendBrowseList(userSession, game);
 			} else { 
 				if(roomNumber.equals("0")) {
@@ -212,11 +218,18 @@ public class VCasinoServerEndpoint {
     
     private void sendBrowseList(Session session, String name) throws IOException {
     	String array="[";
-    	for(Match match : VCasinoServerEndpoint.matches.values()) {
+    	boolean afterFirst=false;
+    	for(String key : VCasinoServerEndpoint.matches.keySet()) {
     		String str="";
     		
-    		if(match.getGameState().getRules().getName().equals(name)) {
-    			str = "{\"room\": "+match.getMatchId()+", \"players\": "+match.countPlayers()+", \"type\": \""+match.getGameState().getRules().getName()+"\"}, ";
+    		if(key.startsWith(name)) {
+    			Match match = VCasinoServerEndpoint.matches.get(key);
+    			if(!afterFirst)
+    				afterFirst = true;
+    			else
+    				str = ", ";
+    			
+    			str += "{\"room\": \""+match.getMatchId()+"\", \"players\": "+match.countPlayers()+", \"type\": \""+name+"\"}";
     		}
     		
     		array += str;
@@ -224,6 +237,38 @@ public class VCasinoServerEndpoint {
     	
     	array += "]";
     	
+    	System.out.println("sending browse "+array);
 		session.getBasicRemote().sendText(array);
+    }
+    
+    private int countFreeMatches() {
+    	int count = 0;
+    	for(Match match : VCasinoServerEndpoint.matches.values()) {
+    		if(match.countPlayers() < 4)
+    			count++;
+    	}
+    	
+    	return count;
+    }
+    
+    /**
+     * Generates up to 12 new matches as necessary. The randomness is probably not helpful.
+     *  
+     * @author Adam Turk
+     * 
+     */
+    private void buildFreeMatches() {
+    	String [] games = {"poker", "holdem", "uno", "gofish"};
+    	int gen = 12 - countFreeMatches();
+    	
+    	System.out.println("generating matches:" + gen);
+    	
+    	for(int i=0;i<gen;i++) {
+    		String roomNumber = Match.generateMatchId();
+    		String game = games[(int)(Math.random()*4)];
+    		Ruleset gameRules = RulesetFactory.getRuleset(game);
+    		
+    		VCasinoServerEndpoint.matches.putIfAbsent(game+roomNumber, new Match(game+roomNumber, gameRules));
+    	}
     }
 }

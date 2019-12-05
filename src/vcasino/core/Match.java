@@ -161,7 +161,7 @@ public class Match {
 	public static final String generateMatchId() {
 		String ret="";
 		for(int i=0;i<16;i++) {
-			ret += (Math.random() * 64 + 'a');
+			ret += (char)((int)(Math.random() * 26) + 65);
 		}
 		return ret;
 	}

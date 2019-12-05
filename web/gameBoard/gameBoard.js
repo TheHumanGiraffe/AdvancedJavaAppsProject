@@ -12,12 +12,12 @@ $(document).ready(function() {
 if(urlParams.has('roomNumber')){
 	var roomNumber = urlParams.get('roomNumber')
 }else{
-	var roomNumber = "TheWrongRoom"
+	var roomNumber = 'browse'
 }
 if(urlParams.has('game')){
-	var game = urlParams.get('game');
+	var game = urlParams.get('game')
 }else{
-	var game = 'loser'
+	var game = 'browse'
 }
 
 if (getCookie("Username") == ""){id="test"}

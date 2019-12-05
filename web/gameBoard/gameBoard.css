@@ -15,6 +15,7 @@ p{color:white:}
 img{
 	height: 90px;
 	width: 60px;
+	border-radius: 10%;
 }
 
 div.board{
@@ -63,7 +64,7 @@ div#player4Div {
 }
 
 img.p1, img.p3 {
-	padding-left:5px;
+	margin-left:5px;
 }
 
 img.p2, img.04 {
