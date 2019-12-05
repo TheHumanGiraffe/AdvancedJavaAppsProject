@@ -15,7 +15,7 @@ textarea {
 	border-color: black;
 	padding: 20px;
 	background: rgb(227,220,194);
-	background: linear-gradient(325deg, rgba(227,220,194,1) 0%, rgba(227,220,194,1) 50%, rgba(255,255,255,1) 100%);
+	background: linear-gradient(340deg, rgba(227,220,194,1) 0%, rgba(227,220,194,1) 50%, rgba(255,255,255,1) 100%);
 	font-family: 'Josefin Sans', sans-serif;
 	font-size: small;
 }
@@ -132,6 +132,7 @@ img.chip {
 div.chatarea {
 	float: left;
 	vertical-align: middle;
+	text-align: center;
 }
 
 div.cardh {
