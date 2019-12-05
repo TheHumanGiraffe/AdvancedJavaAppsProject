@@ -1,13 +1,28 @@
 html {
-	background-image: url("felt.jpg");
+	/* background-image: url("felt.jpg"); */
+	background: rgb(0,133,14);
+	background: radial-gradient(circle, rgba(0,133,14,1) 0%, rgba(9,121,23,1) 35%, rgba(19,98,29,1) 100%);
+	font-family: 'Carter One', cursive;
 }
 
-#player2info, #player4info {width: 150px;}
+#player2info, #player4info {vertical-align: middle; width: 150px;}
 
-textarea{resize:none;}
+textarea {
+	resize:none;
+	border-radius: 25px;
+	border-style: solid;
+	border-width: 5px;
+	border-color: black;
+	padding: 20px;
+	background: rgb(227,220,194);
+	background: linear-gradient(340deg, rgba(227,220,194,1) 0%, rgba(227,220,194,1) 50%, rgba(255,255,255,1) 100%);
+	font-family: 'Josefin Sans', sans-serif;
+	font-size: small;
+}
 
 h2, h3 {
 	color:white;
+	text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
 	}
 
 p{color:white:}
@@ -15,7 +30,7 @@ p{color:white:}
 img{
 	height: 90px;
 	width: 60px;
-	border-radius: 10%;
+	border-radius: 15%;
 }
 
 div.board{
@@ -24,6 +39,14 @@ div.board{
 
 div#player2Div, div#player4Div {
 	width:90px;
+	height: 400px;
+	vertical-align: middle;
+}
+
+div#player3Div {
+	text-align: center;
+	transform: translate(40%, 0%);
+	width: 100%;
 }
 
 tr, td {
@@ -106,6 +129,36 @@ img.chip {
 .p3Stats {margin-bottom:0em;}
 .p1Stats, .p3Stats{text-align: center;}
 
+<<<<<<< HEAD
+=======
+div.chatarea {
+	float: left;
+	vertical-align: middle;
+	text-align: center;
+}
+
+div.cardh {
+	position: relative;
+	float: left;
+}
+
+div.cardv {
+	position: relative;
+	float: top;
+}
+
+div.hand {
+}
+
+div.table {
+	float: left;
+}
+
+.deck {
+	align: center;
+}
+
+>>>>>>> refs/heads/ux
 .chooser {
 	border-radius: 25px;
 	padding: 20px;
@@ -115,4 +168,9 @@ img.chip {
 	top: 75%;
 	left: 50%;
 	display: none;
+<<<<<<< HEAD
+=======
+	font-family: 'Josefin Sans', sans-serif;
+>>>>>>> refs/heads/ux
 }
+

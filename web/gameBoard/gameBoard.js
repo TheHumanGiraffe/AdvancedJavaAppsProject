@@ -6,7 +6,6 @@ var handCard = -1;
 
 $(document).ready(function() {
 	$("#echoText").val('');
-	$('.colorchoose').dialog({ autoOpen: false });
 });
 
 if(urlParams.has('roomNumber')){
@@ -152,6 +151,7 @@ function renderGamestate(gamestate) {
 	var players = gamestate.players;
 	console.log("<img src='" + cardURL + gamestate.cards + '/' + gamestate.deck.discards[0].cardID + ".jpg' />")
 	document.getElementById("discard").innerHTML = "<img src='" + cardURL + gamestate.cards + '/' + gamestate.deck.discards[0].cardID + ".jpg' />";
+	document.getElementById("deck").innerHTML = "<img src='" + cardURL + gamestate.cards + '/' + "0.jpg' />";
 	document.getElementById("pot").innerHTML="<h2>Pot Size: " + gamestate.potSize + "</h2>";
 	
 	players.forEach(function(player){
@@ -159,11 +159,18 @@ function renderGamestate(gamestate) {
 			document.getElementById("currentPlayer").innerHTML = "<h2>Current Player: " + player.name + "</h2>";
 		}
 	});
+	
+	var offset=0;
  	var img_id=0;
 	currentPlayer.hand.forEach(function(card) {
 		var imgContainer = document.createElement("span");
 		imgContainer.className = "imgWrap";
 		
+		var div = document.createElement("cardh");
+		div.classList.add('cardh');
+		div.style.left = "-"+offset+"px";
+		div.id = ""+img_id+"Div";
+			
 		var img = document.createElement("img");
 		img.src = cardURL + gamestate.cards + '/' + card.cardID + ".jpg";
 		img.className = "p1";
@@ -173,10 +180,15 @@ function renderGamestate(gamestate) {
 		else if(game == "gofish")
 			img.addEventListener('click', function() {handCard = img.id; $('#playerchooser').toggle();});
 		else img.addEventListener('click', function() {playCard(img.id, "");});
+		
+		if(img_id < currentPlayer.hand.length-1) {
+			img.addEventListener("mouseover", function(){document.getElementById(""+(img_id+1)+"Div").style.left=0;});
+			img.addEventListener("mouseout", function(){document.getElementById(""+(img_id+1)+"Div").style.left=-(img_id+1)*80;});
+		}
 		img_id++;
 		imgContainer.appendChild(img);
 		
-		
+		offset += 80;
 		
 		var span = document.createElement("span");
 		span.innerHTML = card.name + " of " + card.suit;
@@ -200,11 +212,23 @@ function renderGamestate(gamestate) {
 		var workingDiv = document.getElementById('player' + iterator + 'Div');
 		var workingInfo = document.getElementById('player' + iterator + 'info');
 		
+		var top=0;
+		
 		player.hand.forEach(function(card){
+			var div = document.createElement("div");
+			if(iterator%2==0) {
+				div.classList.add('cardv');
+				div.style.top = "-"+top+"px";
+			} else {
+				div.classList.add('cardh');
+				div.style.left = "-"+top+"px";
+			}
 			var img = document.createElement("img");
 			img.src = cardURL + gamestate.cards + '/' + card.cardID + ".jpg";
 			img.className = "p" + iterator;
-			workingDiv.appendChild(img);
+			div.appendChild(img);
+			workingDiv.appendChild(div);
+			top = top + 80;
 		});
 		
 		if(iterator == 3){
