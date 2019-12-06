@@ -12,6 +12,7 @@ public interface Ruleset {
 	//general actions
 	String getDescription();
 	String getName();
+	String getHumanName();
 	Deck newDeck();
 	int getInitialHandCount();
 	

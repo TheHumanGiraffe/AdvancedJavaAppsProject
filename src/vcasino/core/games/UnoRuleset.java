@@ -28,6 +28,11 @@ public class UnoRuleset implements Ruleset {
 	}
 	
 	@Override
+	public String getHumanName() {
+		return "uno";
+	}
+	
+	@Override
 	public Deck newDeck() {
 		Deck deck = new UnoDeck();
 		return deck;

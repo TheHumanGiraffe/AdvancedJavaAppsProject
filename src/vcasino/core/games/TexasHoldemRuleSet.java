@@ -29,6 +29,11 @@ public class TexasHoldemRuleSet implements Ruleset {
 	public String getName() {
 		return "poker";
 	}
+	
+	@Override
+	public String getHumanName() {
+		return "holdem";
+	}
 
 	@Override
 	public Deck newDeck() {

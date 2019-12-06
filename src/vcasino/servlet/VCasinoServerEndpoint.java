@@ -74,7 +74,7 @@ public class VCasinoServerEndpoint {
 					setupMatch = VCasinoServerEndpoint.matches.get(game+roomNumber);
 					if(setupMatch == null) {
 						Ruleset gameRules = RulesetFactory.getRuleset(game);
-						VCasinoServerEndpoint.matches.putIfAbsent(game+roomNumber, new Match(game+roomNumber, gameRules));
+						VCasinoServerEndpoint.matches.putIfAbsent(game+roomNumber, new Match(roomNumber, gameRules));
 						setupMatch = VCasinoServerEndpoint.matches.get(game+roomNumber);
 					}
 				}
@@ -217,25 +217,27 @@ public class VCasinoServerEndpoint {
     }
     
     private void sendBrowseList(Session session, String name) throws IOException {
-    	String array="[";
+    	String array="{\"games\": [";
     	boolean afterFirst=false;
     	for(String key : VCasinoServerEndpoint.matches.keySet()) {
     		String str="";
     		
     		if(key.startsWith(name)) {
     			Match match = VCasinoServerEndpoint.matches.get(key);
+    			if(match.countPlayers() >= 4)
+    				continue;
     			if(!afterFirst)
     				afterFirst = true;
     			else
     				str = ", ";
     			
-    			str += "{\"room\": \""+match.getMatchId()+"\", \"players\": "+match.countPlayers()+", \"type\": \""+name+"\"}";
+    			str += "{\"room\": \""+match.getMatchId()+"\", \"players\": "+match.countPlayers()+", \"type\": \""+match.getRuleset().getHumanName()+"\"}";
     		}
     		
     		array += str;
     	}
     	
-    	array += "]";
+    	array += "]}";
     	
     	System.out.println("sending browse "+array);
 		session.getBasicRemote().sendText(array);
@@ -268,7 +270,7 @@ public class VCasinoServerEndpoint {
     		String game = games[(int)(Math.random()*4)];
     		Ruleset gameRules = RulesetFactory.getRuleset(game);
     		
-    		VCasinoServerEndpoint.matches.putIfAbsent(game+roomNumber, new Match(game+roomNumber, gameRules));
+    		VCasinoServerEndpoint.matches.putIfAbsent(game+roomNumber, new Match(roomNumber, gameRules));
     	}
     }
 }

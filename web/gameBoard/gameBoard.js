@@ -150,8 +150,8 @@ function renderGamestate(gamestate) {
 	var playerCount = gamestate.players.length;
 	var players = gamestate.players;
 	console.log("<img src='" + cardURL + gamestate.cards + '/' + gamestate.deck.discards[0].cardID + ".jpg' />")
-	document.getElementById("discard").innerHTML = "<img src='" + cardURL + gamestate.cards + '/' + gamestate.deck.discards[0].cardID + ".jpg' />";
-	document.getElementById("deck").innerHTML = "<img src='" + cardURL + gamestate.cards + '/' + "0.jpg' />";
+	document.getElementById("discard").innerHTML = "<img class='deck' src='" + cardURL + gamestate.cards + '/' + gamestate.deck.discards[0].cardID + ".jpg' />";
+	document.getElementById("deck").innerHTML = "<img class='deck' src='" + cardURL + gamestate.cards + '/' + "0.jpg' />";
 	document.getElementById("pot").innerHTML="<h2>Pot Size: " + gamestate.potSize + "</h2>";
 	
 	players.forEach(function(player){
@@ -176,15 +176,15 @@ function renderGamestate(gamestate) {
 		img.className = "p1";
 		img.id = img_id;
 		if(card.suit == "any")
-			img.addEventListener('click', function() {handCard = img.id; $('.colorchoose').dialog("open");});
+			img.addEventListener('click', function() {handCard = img.id; $('#colorchooser').toggle();});
 		else if(game == "gofish")
 			img.addEventListener('click', function() {handCard = img.id; $('#playerchooser').toggle();});
 		else img.addEventListener('click', function() {playCard(img.id, "");});
 		
-		if(img_id < currentPlayer.hand.length-1) {
+		/*if(img_id < currentPlayer.hand.length-1) {
 			img.addEventListener("mouseover", function(){document.getElementById(""+(img_id+1)+"Div").style.left=0;});
 			img.addEventListener("mouseout", function(){document.getElementById(""+(img_id+1)+"Div").style.left=-(img_id+1)*80;});
-		}
+		}*/
 		img_id++;
 		imgContainer.appendChild(img);
 		
@@ -252,24 +252,26 @@ function renderGamestate(gamestate) {
 }
 
 function renderGameList(gameList) {
-	var parentDiv = document.createElement("div");
-	var title = document.createElement("h3");
-	
-	title.innerHTML = "Games List:";
-	parentDiv.appendChild(title);
-	
+	var html='<h1>Games Select</h1>\n<table>';
+	var count=0;
 	gameList.forEach(function(game) {
-		var link = document.createElement("a");
-		link.href = "../gameBoard.html?game=" + game.type + "&roomNumber=" + game.room;
 		
-		var element = document.createElement("h3");
-		element.innerHTML = "Game: " + game.type + " Players: " + game.players + "/4";
+		if(count%4==0)
+			html += "<tr>";
 		
-		link.appendChild(element);
-		parentDiv.appendChild(link);
+		html += '<td class="browser"><a href="gameBoard.html?game=' + game.type + '&roomNumber=' + game.room+'"><h3>'+game.type[0].toUpperCase() + game.type.slice(1).toLowerCase()+'</h3></a><img class="browse" src="ui/'+game.players+'players.png"/></td>'
+		
+		count++;
+		
+		if(count%4==0)
+			html += "</tr>";
 	});
 	
-	document.getElementById('discard').appendChild(parentDiv);
+	document.getElementById('browser').innerHTML = html+"</table>";
+	
+	//document.getElementById('discard').appendChild(parentDiv);
+	if (!$('#browser').is(':visible'))
+		$('#browser').toggle();
 }
 
 function handleEvent(event) {

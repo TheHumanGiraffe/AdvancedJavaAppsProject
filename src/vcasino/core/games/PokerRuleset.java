@@ -27,6 +27,11 @@ public class PokerRuleset implements Ruleset {
 	}
 
 	@Override
+	public String getHumanName() {
+		return "poker";
+	}
+	
+	@Override
 	public Deck newDeck() {
 		return new Deck();
 	}

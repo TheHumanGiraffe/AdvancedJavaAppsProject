@@ -25,6 +25,11 @@ public class GoFishRuleset implements Ruleset {
 	public String getName() {
 		return "poker";
 	}
+	
+	@Override
+	public String getHumanName() {
+		return "gofish";
+	}
 
 	@Override
 	public Deck newDeck() {
