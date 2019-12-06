@@ -4,9 +4,11 @@ import vcasino.blind.BlindGameState;
 import vcasino.core.events.ChatEvent;
 import vcasino.core.events.GameEvent;
 import vcasino.core.exceptions.RulesException;
+import vcasino.db.DatabaseConnection;
 import vcasino.servlet.GameAction;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Deque;
 
@@ -106,6 +108,7 @@ public class Match {
 			}
 			if(gameRules.gameOver(gameState)) {
 				Player winner = gameRules.declareWinner(gameState);
+				updateDB(gameState, winner);
 				sendMessage(winner.getName() + " has won the round!");
 				complete=true;
 			}
@@ -214,5 +217,37 @@ public class Match {
 		} catch(EncodeException ee) {
 			ee.printStackTrace();
 		}
+	}
+	
+	private void updateDB(GameState state, Player winner) {
+		ArrayList<Player> players = state.getPlayers();
+		DatabaseConnection connection = new DatabaseConnection();
+		int pot = 0;
+		for(int i=0;i<players.size();i++) {
+			Player player = players.get(i);
+			if (!(player.getName() == winner.getName())){
+				System.out.println(player.getActiveBet());
+				System.out.println(pot);
+				String update = "UPDATE player SET losses=losses+1, chips=chips-"+player.getActiveBet()+" where player.name='"+player.getName()+"';";
+				pot += player.getActiveBet();
+				try {
+					connection.executeQuery(update);
+				} catch (SQLException | RulesException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			else {
+				
+			}			
+		}
+		String update = "UPDATE player SET wins=wins+1, chips=chips+"+pot+" where player.name='"+winner.getName()+"';";
+		try {
+			connection.executeQuery(update);
+		} catch (SQLException | RulesException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 }

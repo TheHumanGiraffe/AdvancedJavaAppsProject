@@ -58,18 +58,24 @@ function wsGetMessage(message){
 //	console.log(json.message.text)
 	if (json.message.text == "loginError"){
 		alert("fix your login");
-		document.cookie="username=";
+		document.cookie = "Username=;path=/";
 	}
 	else{
-		document.cookie = "username="+json.message.text;
+		document.cookie = "Username="+json.message.text+"\;path=/";
 	}
 	redirect()
 }
 
 function redirect(){
-	if (getCookie("username") != ""){
+	if (getCookie("Username") != ""){
 		window.location.href = document.location.href.split("/login/")[0]+"/gameBoard/gameBoard.html?game=browse"
 	}
+}
+
+function guest(){
+	x = Math.floor(Math.random() *1000000).toString()
+	document.cookie = "Username=guest"+x+"\;path=/";
+	redirect()
 }
 
 function getCookie(cname) {
