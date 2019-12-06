@@ -140,6 +140,17 @@ public class VCasinoServerEndpoint {
     			sendMessage(action.arg0);
     		}
     		return;
+    	} else if (action.action.equals("browse")) {
+    		buildFreeMatches();
+			try {
+				if(action.arg0.equals("browse"))
+					sendBrowseList(userSession, "");
+				else
+					sendBrowseList(userSession, action.arg0);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return;
     	}
     	
     	String roomNumber = (String) userSession.getUserProperties().get("roomNumber");

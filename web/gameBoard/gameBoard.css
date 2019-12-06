@@ -33,6 +33,9 @@ h1 {
 	background-repeat: no-repeat;
 	background-position: center;
 	text-align: center;
+	line-height: 90px;
+	position: relative;
+	top: -100px;
 }
 
 a {
@@ -57,8 +60,10 @@ div#player3Div {
 	width: 100%;
 }
 
-table {
+table.browser {
 	width: 100%;
+	position: relative;
+	top: -50px;
 }
 tr, td {
 	padding: 0px; 
@@ -198,10 +203,12 @@ div.table {
 }
 
 div.browser {
-	background: rgb(227,220,194);
-	background: linear-gradient(340deg, rgba(227,220,194,1) 0%, rgba(227,220,194,1) 50%, rgba(255,255,255,1) 100%);
+	/*background: rgb(227,220,194);
+	background: linear-gradient(340deg, rgba(227,220,194,1) 0%, rgba(227,220,194,1) 50%, rgba(255,255,255,1) 100%);*/
+	background: rgb(53,52,56);
+	background: radial-gradient(circle, rgba(53,52,56,1) 0%, rgba(36,35,35,1) 96%);
 	border-radius: 25px;
-	border: 10px solid white;
+	border: 2px solid grey;
 	width: 600px;
 	float: center;
 	position: absolute;

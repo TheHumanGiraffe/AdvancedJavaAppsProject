@@ -6,6 +6,8 @@ var handCard = -1;
 
 $(document).ready(function() {
 	$("#echoText").val('');
+	
+	setInterval(checkBrowse, 5000);
 });
 
 if(urlParams.has('roomNumber')){
@@ -252,7 +254,7 @@ function renderGamestate(gamestate) {
 }
 
 function renderGameList(gameList) {
-	var html='<h1>Games Select</h1>\n<table>';
+	var html='<h1>Games Select</h1>\n<table class="browser">';
 	var count=0;
 	gameList.forEach(function(game) {
 		
@@ -277,6 +279,8 @@ function renderGameList(gameList) {
 function handleEvent(event) {
 	if(event.priority==0)
 		echoText.value += "EVENT: "+event.action+"\n";
+	if(event.priority==1)
+		echoText.value += "BIG EVENT: "+event.action+"\n";
 }
 
 function wsOpen(message){
@@ -317,13 +321,21 @@ function wsGetMessage(message){
 	}
 }
 function wsClose(message){
-	// echoText.value += "Disconnect ... \n";
+	echoText.value += "Disconnect ... \n";
+	console.dir(message);
 }
 
 function wsError(message){
-	//echoText.value += "Error ... \n";
+	echoText.value += "Error from server\n";
+	console.dir(message);
 }
 
+function checkBrowse() {
+	if(roomNumber == 'browse') {
+		var jsonText ='{ "action":"browse", "arg0": "'+game+'"}'
+		wsSendMessage(jsonText);
+	}
+}
 
 function getCookie(cname) {
 	  var name = cname + "=";

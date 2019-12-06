@@ -3,6 +3,11 @@ var urlParams = new URLSearchParams(window.location.search);
 var gameState = null;
 var cardURL = 'https://raw.githubusercontent.com/TheHumanGiraffe/AdvancedJavaAppsProject/master/web/gameBoard/cards/';
 var newUser = false;
+var method=0;
+
+$(document).ready(function() {
+	$('#method0').toggle();
+});
 
 if(urlParams.has('roomNumber')){
 	var roomNumber = urlParams.get('roomNumber')
@@ -79,16 +84,32 @@ function guest(){
 }
 
 function getCookie(cname) {
-	  var name = cname + "=";
-	  var ca = document.cookie.split(';');
-	  for(var i = 0; i < ca.length; i++) {
-	    var c = ca[i];
-	    while (c.charAt(0) == ' ') {
-	      c = c.substring(1);
-	    }
-	    if (c.indexOf(name) == 0) {
-	      return c.substring(name.length, c.length);
-	    }
-	  }
-	  return "";
-	}
+  var name = cname + "=";
+  var ca = document.cookie.split(';');
+  for(var i = 0; i < ca.length; i++) {
+    var c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+}
+
+function prev() {
+	$('#method'+method).toggle();
+	method--;
+	if(method<0)
+		method=2;
+	$('#method'+method).toggle();
+}
+
+function next() {
+	$('#method'+method).toggle();
+	method++;
+	if(method>=3)
+		method=0;
+	$('#method'+method).toggle();
+}
