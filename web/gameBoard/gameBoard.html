@@ -2,12 +2,11 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Game 123456789</title>
+<title>VCasino</title>
 
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script type="text/javascript" src="gameBoard.js"></script>
-
 <link rel="stylesheet" href="gameBoard.css">
 
 <link href="https://fonts.googleapis.com/css?family=Carter+One|Josefin+Sans&display=swap" rel="stylesheet">
@@ -31,6 +30,7 @@
 			<tr>
 				<td><div id="player2info"></div></td>
 				<td><div id="player2Div"></div></td>
+				<td><div id="tableCardsDiv"></div></td>
 				<td><div id="centertable"><table style="width: 100%;"><tr><td class="deck"><div id="discard"></div></td><td>&nbsp;</td><td class="deck"><div id="deck" onclick="drawCard()"></div></td></tr></table></div></td>
 				<td><div id="player4Div"></div></td>
 				<td><div id="player4info"></div></td>
@@ -52,15 +52,14 @@
 			<div>
 				<h3 class="header">Bet</h3>
 				<div>
-					<span class="imgWrap"><img class="chip" src="chips/blueChip.png" onClick="add10()"><span class="tooltip">Add Ten Chips</span></span>
-					<span class="imgWrap"><img class="chip" src="chips/greenChip.png" onClick="add20()"><span class="tooltip">Add Twenty Chips</span></span>
-					<span class="imgWrap"><img class="chip" src="chips/redChip.png" onClick="add50()"><span class="tooltip">Add Fifty Chips</span></span>
-					<span class="imgWrap"><img class="chip" src="chips/blackChip.png" onClick="add100()"><span class="tooltip">Add One Hundred Chips</span></span>
-				</div>
-				<div>
-					<input type="number" id="betValue" value="0" readonly style="width: 20px;"/> 
-					<input class="bet" onclick="placeBet();" type="button" value="Place Bet" />
-					<input class="bet" onClick="resetBet();" type="button" value="Reset" />
+					<span class="imgWrap"><img class="chip" src="chips/blueChip.png" onClick="addToBet(10)"><span class="tooltip">Add Ten Chips</span></span>
+					<span class="imgWrap"><img class="chip" src="chips/greenChip.png" onClick="addToBet(20)"><span class="tooltip">Add Twenty Chips</span></span>
+					<span class="imgWrap"><img class="chip" src="chips/redChip.png" onClick="addToBet(50)"><span class="tooltip">Add Fifty Chips</span></span>
+					<span class="imgWrap"><img class="chip" src="chips/blackChip.png" onClick="addToBet(100)"><span class="tooltip">Add One Hundred Chips</span></span>
+					<h2>Bet Amount: </h2><h2  id="betValue">0</h2> <span class="tooltip">Total You are about to be</span>
+					<button onclick="placeBet();"  class="btn btn-default">Place Bet</button><span class="tooltip">Place Bet</span>
+					<button onClick="resetBet();" class="btn btn-default">Reset</button><span class="tooltip">Return Bet to 0</span>
+					<button onClick="fold();"  class="btn btn-default">Fold</button><span class="tooltip">Fold Hand</span>
 				</div>
 			</div>
 		</div>

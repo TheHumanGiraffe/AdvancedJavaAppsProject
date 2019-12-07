@@ -5,6 +5,172 @@ html {
 	font-family: 'Carter One', cursive;
 }
 
+
+
+#player2info, #player4info {vertical-align: middle; width: 150px;}
+
+textarea {
+	resize:none;
+	border-radius: 25px;
+	border-style: solid;
+	border-width: 5px;
+	border-color: black;
+	padding: 20px;
+	background: rgb(227,220,194);
+	background: linear-gradient(340deg, rgba(227,220,194,1) 0%, rgba(227,220,194,1) 50%, rgba(255,255,255,1) 100%);
+	font-family: 'Josefin Sans', sans-serif;
+	font-size: small;
+}
+
+h2, h3 {
+	color:white;
+	text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+	}
+
+h1 {
+	height: 130px;
+	color:white;
+	text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black;
+	background-image: url("ui/banner.png");
+	background-repeat: no-repeat;
+	background-position: center;
+	text-align: center;
+	line-height: 90px;
+	position: relative;
+	top: -100px;
+}
+
+a {
+	text-decoration: none;
+}
+
+p{color:white:}
+
+div.board{
+	width: 100%;
+}
+
+div#player2Div, div#player4Div {
+	width:90px;
+	height: 400px;
+	vertical-align: middle;
+}
+
+div#player3Div {
+	text-align: center;
+	transform: translate(40%, 0%);
+	width: 100%;
+}
+
+div#player1Div {
+	width:300px;
+	text-align: center;
+	vertical-align: middle;
+}
+
+table.browser {
+	width: 100%;
+	position: relative;
+	top: -50px;
+}
+tr, td {
+	padding: 0px; 
+}
+
+span.corner {
+	display: block;
+	width: 100px;
+}
+
+img.p4 {
+	height: 90px;
+	width: 60px;
+	border-radius: 15%;
+	-webkit-transform:rotate(270deg);
+	-moz-transform: rotate(270deg);
+	-ms-transform: rotate(270deg);
+	-o-transform: rotate(270deg);
+	transform: rotate(270deg);
+}
+
+img.p3 {
+	height: 90px;
+	width: 60px;
+	border-radius: 15%;
+	-webkit-transform:rotate(180deg);
+	-moz-transform: rotate(180deg);
+	-ms-transform: rotate(180deg);
+	-o-transform: rotate(180deg);
+	transform: rotate(180deg);
+}
+
+img.p2 {
+	height: 90px;
+	width: 60px;
+	border-radius: 15%;
+	-webkit-transform:rotate(90deg);
+	-moz-transform: rotate(90deg);
+	-ms-transform: rotate(90deg);
+	-o-transform: rotate(90deg);
+	transform: rotate(90deg);
+}
+
+div#player4Div {
+	padding-left:40px
+}
+
+img.p1, img.p3 {
+	height: 90px;
+	width: 60px;
+	border-radius: 15%;
+	margin-left:5px;
+}
+
+img.p2, img.p4 {
+	clear:left;
+}
+
+img.chip {
+	height: 50px;
+	width: 50px;
+	padding-left: 5px;
+	padding-top: 5px;
+}
+
+img.deck {
+	height: 90px;
+	width: 60px;
+	border-radius: 15%;
+}
+
+#footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+.tooltip {
+  visibility: hidden;
+  max-width: 200px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+  
+  position: absolute;
+  z-index: 1;
+}
+
+.imgWrap:hover .tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+
+.p1Stats {margin-top:0em;}
+.p3Stats {margin-bottom:0em;}
+.p1Stats, .p3Stats{text-align: center;}
+
 #player2info, #player4info {vertical-align: middle; width: 150px;}
 
 textarea {
@@ -240,12 +406,12 @@ td.browser {
 	background-position: center;
 	padding: 5px;
 }
-
-input.bet {
+button {
 	font-family: 'Carter One', cursive;
 	background: rgb(237,123,0);
-	background: linear-gradient(-10deg, rgba(237,123,0,1) 75%, rgba(240,164,82,1) 100%);
+  	background: linear-gradient(-10deg, rgba(237,123,0,1) 75%, rgba(240,164,82,1) 100%);
 	border-radius: 5px;
 	border: 2px solid black;
 	margin: 10px;
+	display: inline-block;
 }

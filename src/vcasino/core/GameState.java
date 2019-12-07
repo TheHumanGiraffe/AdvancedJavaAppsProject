@@ -2,6 +2,9 @@ package vcasino.core;
 
 import java.util.ArrayList;
 
+import vcasino.core.games.PokerRuleset;
+import vcasino.core.games.TexasHoldemRuleSet;
+
 public class GameState {
 	protected Ruleset rules;
 	protected Deck deck;
@@ -34,6 +37,9 @@ public class GameState {
 	}
 	
 	public Card getTopDiscard() {
+		if(rules instanceof TexasHoldemRuleSet || rules instanceof PokerRuleset) {
+			return new Card(0,"");
+		}
 		return deck.getDiscard(0);
 	}
 	
