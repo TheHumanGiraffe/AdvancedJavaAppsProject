@@ -101,6 +101,9 @@ public class TexasHoldemRuleSet implements Ruleset {
 		return null;
 	}
 
+	/**
+	 * Moves the Turn to the next player.
+	 */
 	@Override
 	public Player advanceTurn(Player current, List<Player> players) {
 		Player nextPlayer;
@@ -110,6 +113,7 @@ public class TexasHoldemRuleSet implements Ruleset {
 		while(!players.get(i >= players.size() ? 0 : i).isActive()) {
 			i = (i>= players.size() ? 0 : i+1);
 		}
+		//sets the next player in the player list as the active player
 		nextPlayer = players.get(i >= players.size() ? 0 : i);
 		nextPlayer.setTurn(true);
 		return nextPlayer;
@@ -128,6 +132,9 @@ public class TexasHoldemRuleSet implements Ruleset {
 		return (playingSet.size()==1);
 	}
 
+	/*
+	 * Calculates who has the best hand and returns the winner
+	 */
 	@Override
 	public Player declareWinner(GameState gameState) {
 		ArrayList<Player> players = gameState.getPlayers();

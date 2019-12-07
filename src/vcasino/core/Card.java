@@ -45,6 +45,7 @@ public class Card {
 		return "Card "+cardID+" suit "+suit+" rank "+rank;
 	}
 	
+	//Overrides the default equals to check to see if the rank and the suit of a card matches
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

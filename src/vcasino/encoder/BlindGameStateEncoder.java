@@ -8,7 +8,9 @@ import com.google.gson.Gson;
 
 import vcasino.blind.BlindGameState;
 
-
+/*
+ * Encodes opponents into json format for front end
+ */
 public class BlindGameStateEncoder implements Encoder.Text<BlindGameState>{
 
 	private EndpointConfig config;

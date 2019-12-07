@@ -47,11 +47,17 @@ public class PokerRuleset implements Ruleset {
 		return null;
 	}
 
+	/*
+	 * Adds a card to the chosen player's hand
+	 */
 	@Override
 	public void drawCard(GameState state, Player forPlayer) throws RulesException {
 			forPlayer.addCard(state.getDeck().drawCard());
 	}
 
+	/*
+	 * gives a hand to each player
+	 */
 	@Override
 	public void dealHand(GameState state, Player forPlayer) throws RulesException {
 		for(int i=0;i<handSize;i++) {
@@ -67,12 +73,18 @@ public class PokerRuleset implements Ruleset {
 		return null;
 	}
 
+	/*
+	 * Deactivates the player who chooses to fold
+	 */
 	@Override
 	public GameEvent fold(GameState state, Player player) {
 		player.deactivate();		
 		return null;
 	}
 
+	/*
+	 * Start the match and set the initial turn for the first player
+	 */
 	@Override
 	public GameEvent beginMatch(GameState state) throws RulesException {
 		Deck deck;
@@ -93,6 +105,9 @@ public class PokerRuleset implements Ruleset {
 		return null;
 	}
 
+	/*
+	 * Advances turn rotation
+	 */
 	@Override
 	public Player advanceTurn(Player current, List<Player> players) {
 		Player nextPlayer;
@@ -107,6 +122,9 @@ public class PokerRuleset implements Ruleset {
 		return nextPlayer;
 	}
 
+	/*
+	 * Determines if all but one folds, and end the round
+	 */
 	@Override
 	public boolean gameOver(GameState state) {
 		ArrayList<Player> playingSet = new ArrayList<>();
@@ -120,6 +138,9 @@ public class PokerRuleset implements Ruleset {
 		return (playingSet.size()==1);
 	}
 
+	/*
+	 * Checks to see who has the best hand
+	 */
 	@Override
 	public Player declareWinner(GameState gameState) {
 		ArrayList<Player> players = gameState.getPlayers();
@@ -152,6 +173,9 @@ public class PokerRuleset implements Ruleset {
 		return winner;
 	}
 
+	/*
+	 * Sets a bet value for a given player, removes the chips from their owner
+	 */
 	@Override
 	public void placeBet(GameState state, Player player, int betSize) throws RulesException {
 				Integer activeBet = player.getActiveBet();
@@ -184,6 +208,9 @@ public class PokerRuleset implements Ruleset {
 				}
 	}
 	
+	/*
+	 * Checks if no one has raised a bet for a whole rotation, if declared over then determines winner of round
+	 */
 	public boolean isBettingOver(Player player, GameState state) {
 		//Check if current player has placed a bet
 		Integer activeBet = player.getActiveBet();
@@ -224,6 +251,9 @@ public class PokerRuleset implements Ruleset {
 		state.getDeck().shuffle();
 	}
 
+	/*
+	 * Calculates best hand for player
+	 */
 	private int makeBestHand(ArrayList<Card> handAsList) {
 		PokerHand hand = new PokerHand(handAsList);
 		hand.makeBestHand();
@@ -258,6 +288,7 @@ public class PokerRuleset implements Ruleset {
 		//this.arg1 = arg1;
 	}
 	
+	//configuration for different hand rankings
 	public enum HandNameAndRank {
 	    HIGH_CARD("High Card", 0), PAIR("Pair", 1), TWO_PAIR("Two Pair", 2),
 	    THREE_OF_A_KIND("Three of a kind", 3), STRIGHT("Stright", 4), FLUSH("Flush", 5),

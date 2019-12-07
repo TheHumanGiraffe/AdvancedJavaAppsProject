@@ -8,6 +8,9 @@ import com.google.gson.Gson;
 
 import vcasino.core.GameState;
 
+/*
+ * Encodes entire GameState into json format
+ */
 public class GameStateEncoder implements Encoder.Text<GameState>{
 
 	@Override
