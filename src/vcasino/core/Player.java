@@ -9,7 +9,7 @@ public class Player {
 	private boolean isTurn, isActive;
 	private ArrayList<Card> hand;
 	private String id;
-	private Integer activeBet;
+	private int activeBet=-1;
 	
 	public Player(String name, int chips, String id) {
 		this.name = name;
@@ -18,7 +18,7 @@ public class Player {
 		isTurn = false;
 		isActive = true;
 		hand = new ArrayList<>();
-		this.activeBet = null;
+		this.activeBet = -1;
 		
 	}
 
@@ -66,14 +66,14 @@ public class Player {
 		this.hand = hand;
 	}
 
-	public Integer getActiveBet() {
+	public int getActiveBet() {
 		return activeBet;
 	}
 
-	public void setActiveBet(Integer activeBet) {
+	public void setActiveBet(int activeBet) {
 		this.activeBet = activeBet;
 	}
-
+	
 	public String getId() {
 		return this.id;
 	}

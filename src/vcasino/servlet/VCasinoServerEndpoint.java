@@ -54,6 +54,7 @@ public class VCasinoServerEndpoint {
 		try {
 			System.out.println(game);
 			if(game.equals("login")) {
+				
 				return;
 			}
 			
@@ -106,6 +107,15 @@ public class VCasinoServerEndpoint {
             // remove connection
 			VCasinoServerEndpoint.openSessions.remove(this.myUniqueId);
 
+			String game = (String) userSession.getUserProperties().get("game");
+			String roomNumber = (String) userSession.getUserProperties().get("roomNumber");
+			
+			Match match = VCasinoServerEndpoint.matches.get(game+roomNumber);
+			
+			if(match != null) {
+				match.dropPlayer(userSession);
+			}
+			
             // broadcast this lost connection to all other connected clients
             for (VCasinoServerEndpoint dstSocket : VCasinoServerEndpoint.openSessions.values()) {
                 if (dstSocket == this) {

@@ -32,6 +32,7 @@ public class Match {
 	private GameState gameState;
 	private GameAction lastAction;
 	private boolean complete=false;
+	private Session deadSession=null; //this is so we don't mess with the session array while we iterate over it
 	
 	public Match(String id, Ruleset rules/* , Deque<GameEvent> q */) {
 		matchId = id;
@@ -67,9 +68,14 @@ public class Match {
 		update(gameState);
 	}
 	
-	public void dropPlayer(Session deadSession) {
-		Player player = (Player)deadSession.getUserProperties().get("player");
-		player.deactivate();
+	public void dropPlayer(Session dropSession) {
+		try {
+			Player player = (Player)dropSession.getUserProperties().get("player");
+			player.deactivate();
+		} catch(IllegalStateException ise) {
+			//it's possible we're dealing with a truly dead session...
+			deadSession = dropSession;
+		}
 		
 		//keep going without them or just pause?
 		
@@ -79,6 +85,12 @@ public class Match {
 	//Needs to be GameAction because they will be additional info tied to it other than the action. IE card ID and bet amount
 	public void doAction(GameAction action, Player player) throws RulesException {
 		lastAction = action;
+		
+		if(deadSession != null) {
+			sessions.remove(deadSession);
+			deadSession = null;
+		}
+		
 		if(player.isTurn()) {
 			switch(action.action) {
 				case "draw":
@@ -205,13 +217,16 @@ public class Match {
 		try {
 			System.out.println("updating gamestate");
 			for(Session userSession : sessions) {
-				Player player = ((Player)userSession.getUserProperties().get("player"));
+				Player player=null;
 				try {
+					player = ((Player)userSession.getUserProperties().get("player"));
 					BlindGameState blindState = new BlindGameState(state, player);
 					userSession.getBasicRemote().sendObject(blindState);
 				} catch (IOException e) {
 					e.printStackTrace();
 					player.deactivate();
+				} catch (IllegalStateException ise) {
+					dropPlayer(userSession);
 				}
 			}
 		} catch(EncodeException ee) {
