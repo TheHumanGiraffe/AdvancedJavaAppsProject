@@ -60,13 +60,15 @@ function wsCloseConnection(){
 }
 function wsGetMessage(message){
 	var json = JSON.parse(message.data);
-//	console.log(json.message.text)
-	if (json.message.text == "loginError"){
+	
+	console.dir(message);
+//	console.log(json.isValid)
+	if (json.isValid == false){
 		alert("fix your login");
 		document.cookie = "Username=;path=/";
 	}
 	else{
-		document.cookie = "Username="+json.message.text+"\;path=/";
+		document.cookie = "Username="+json.username+"\;path=/";
 	}
 	redirect()
 }
@@ -78,7 +80,7 @@ function redirect(){
 }
 
 function guest(){
-	x = Math.floor(Math.random() *1000000).toString()
+	x = ('000000'+Math.floor(Math.random() * 1000000)).slice(-7)
 	document.cookie = "Username=guest"+x+"\;path=/";
 	redirect()
 }

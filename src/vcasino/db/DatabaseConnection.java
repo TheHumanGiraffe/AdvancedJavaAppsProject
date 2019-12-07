@@ -49,7 +49,6 @@ public class DatabaseConnection {
         	}
             System.out.println("Error: " + e);
             e.printStackTrace();
-            //FIXME: in case this was a connection error, RECONNECT!
         }
         
         return rs;

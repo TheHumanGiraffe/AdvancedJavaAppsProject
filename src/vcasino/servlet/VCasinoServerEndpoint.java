@@ -7,6 +7,8 @@ import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 
+import com.google.gson.Gson;
+
 import vcasino.encoder.*;
 import vcasino.factory.RulesetFactory;
 import vcasino.decoder.*;
@@ -31,7 +33,7 @@ public class VCasinoServerEndpoint {
 	private final static ConcurrentHashMap<String, VCasinoServerEndpoint> openSessions = new ConcurrentHashMap<>();
 	private final static ConcurrentHashMap<String, Match> matches = new ConcurrentHashMap<>();
 	private String myUniqueId;
-    
+    private Login myLogin;
   
     @OnOpen
     public void onOpen(Session userSession,@PathParam("userId") final String userId, @PathParam("game") final String game, @PathParam("roomNumber") final String roomNumber) {
@@ -43,6 +45,9 @@ public class VCasinoServerEndpoint {
         userSession.setMaxIdleTimeout(0); //never time them out
         this.userSession = userSession;
 		this.myUniqueId = this.getMyUniqueId();
+		this.myLogin = new Login();
+
+		myLogin.setSessionId(myUniqueId);
 		
 		userSession.getUserProperties().put("roomNumber", roomNumber);
 		userSession.getUserProperties().put("game", game);
@@ -131,37 +136,33 @@ public class VCasinoServerEndpoint {
     @OnMessage
     public void onMessage(GameAction action, Session userSession) {
     	System.out.println(action);
-    	if (action.action.equals("login")) {
-    		String result = Login.login(action);
-    		if (!result.equals("Success")) {
-    			sendMessage("loginError");
-    		}
-    		else {
-    			sendMessage(action.arg0);
-    		}
-    		return;
-    	}
-    	else if (action.action.equals("newUser")) {
-    		String result = Login.newLogin(action);
-    		if (!result.equals("Success")) {
-    			sendMessage("loginError");
-    		}
-    		else {
-    			sendMessage(action.arg0);
-    		}
-    		return;
-    	} else if (action.action.equals("browse")) {
-    		buildFreeMatches();
-			try {
-				if(action.arg0.equals("browse"))
-					sendBrowseList(userSession, "");
-				else
-					sendBrowseList(userSession, action.arg0);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			return;
-    	}
+    	try {
+	    	if (action.action.equals("login")) {
+	    		myLogin.login(action, userSession);
+	    		Gson gson = new Gson();
+				String str = gson.toJson(myLogin);
+				this.userSession.getBasicRemote().sendText(str);
+	    		return;
+	    	}
+	    	else if (action.action.equals("newUser")) {
+	    		myLogin.newLogin(action);
+	    		Gson gson = new Gson();
+				String str = gson.toJson(myLogin);
+				this.userSession.getBasicRemote().sendText(str);
+	    		return;
+	    	} else if (action.action.equals("browse")) {
+	    		buildFreeMatches();
+				try {
+					if(action.arg0.equals("browse"))
+						sendBrowseList(userSession, "");
+					else
+						sendBrowseList(userSession, action.arg0);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				return;
+	    	}
+    	} catch (IOException e) {return;}
     	
     	String roomNumber = (String) userSession.getUserProperties().get("roomNumber");
     	String game = (String) userSession.getUserProperties().get("game");
@@ -203,7 +204,12 @@ public class VCasinoServerEndpoint {
     
     public void broadcastGameEvent(GameEvent event) {
     	System.out.println("BROADCAST EVENT: "+event.toString());
-    	
+    	String game = (String) userSession.getUserProperties().get("game");
+		String roomNumber = (String) userSession.getUserProperties().get("roomNumber");
+		Match usersMatch = VCasinoServerEndpoint.matches.get(game+roomNumber);
+		Gson gson = new Gson();
+		String str = gson.toJson(event);
+		usersMatch.sendMessage(str);
     	
     }
 

@@ -240,11 +240,13 @@ public class Match {
 		int pot = 0;
 		for(int i=0;i<players.size();i++) {
 			Player player = players.get(i);
-			if (!(player.getName() == winner.getName())){
+			if (player != winner){
 				System.out.println(player.getActiveBet());
 				System.out.println(pot);
 				String update = "UPDATE player SET losses=losses+1, chips=chips-"+player.getActiveBet()+" where player.name='"+player.getName()+"';";
 				pot += player.getActiveBet();
+				player.setChips(player.getChips()-player.getActiveBet());
+				player.setActiveBet(-1);
 				try {
 					connection.executeQuery(update);
 				} catch (SQLException | RulesException e) {
@@ -257,6 +259,7 @@ public class Match {
 			}			
 		}
 		String update = "UPDATE player SET wins=wins+1, chips=chips+"+pot+" where player.name='"+winner.getName()+"';";
+		winner.setChips(winner.getChips()+pot);
 		try {
 			connection.executeQuery(update);
 		} catch (SQLException | RulesException e) {
