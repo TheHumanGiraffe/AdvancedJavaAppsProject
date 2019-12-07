@@ -3,6 +3,7 @@ var urlParams = new URLSearchParams(window.location.search);
 var gameState = null;
 var cardURL = 'https://raw.githubusercontent.com/TheHumanGiraffe/AdvancedJavaAppsProject/master/web/gameBoard/cards/';
 var handCard = -1;
+var reconInteval;
 
 $(document).ready(function() {
 	$("#echoText").val('');
@@ -323,6 +324,8 @@ function wsGetMessage(message){
 function wsClose(message){
 	echoText.value += "Disconnect ... \n";
 	console.dir(message);
+	
+	reconInteval = setInterval(reconnect, 5000);
 }
 
 function wsError(message){
@@ -335,6 +338,23 @@ function checkBrowse() {
 		var jsonText ='{ "action":"browse", "arg0": "'+game+'"}'
 		wsSendMessage(jsonText);
 	}
+}
+
+function reconnect() {
+	echoText.value += "Reconnecting ... \n";
+	webSocket = new WebSocket("ws://localhost:8080/AdvancedJavaAppsProject/vcasino/"+id+"/"+game+"/"+roomNumber);
+	//var webSocket = new WebSocket("ws://ec2-3-89-73-209.compute-1.amazonaws.com:8080/webSocketTest4/websocketendpoint");
+
+	// var echoText = document.getElementById("echoText");
+	// echoText.value = "";
+
+	// var message = document.getElementById("message");
+	webSocket.onopen = function(message){ wsOpen(message);};
+	webSocket.onmessage = function(message){ wsGetMessage(message);};
+	webSocket.onclose = function(message){ wsClose(message);};
+	webSocket.onerror = function(message){ wsError(message);};
+	
+	clearInterval(reconInteval);
 }
 
 function getCookie(cname) {
