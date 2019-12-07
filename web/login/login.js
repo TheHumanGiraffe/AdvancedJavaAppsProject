@@ -64,7 +64,7 @@ function wsGetMessage(message){
 	console.dir(message);
 //	console.log(json.isValid)
 	if (json.isValid == false){
-		alert("fix your login");
+		alert("Authentication Failed. Please check your login and try again.");
 		document.cookie = "Username=;path=/";
 	}
 	else{
