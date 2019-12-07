@@ -228,7 +228,7 @@ public class PokerRuleset implements Ruleset {
 				continue;
 			}
 			//Check if opponent has placed a bet
-			if(opponent.getActiveBet() == null) {
+			if(opponent.getActiveBet() == -1) {
 				return false;
 			}
 			//Check if all the bets are equal across the table;
@@ -274,7 +274,7 @@ public class PokerRuleset implements Ruleset {
 		
 		for(Player p : state.getPlayers()) {
 			//Reset player betting and give new hand
-			p.setActiveBet(null);
+			p.setActiveBet(-1);
 			p.emptyHand();
 			try {
 				this.dealHand(state, p);

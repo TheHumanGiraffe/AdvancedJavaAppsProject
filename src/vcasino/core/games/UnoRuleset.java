@@ -152,6 +152,12 @@ public class UnoRuleset implements Ruleset {
 		while(deck.getDiscard(0).getRank() == 400 || deck.getDiscard(0).getRank() == 300)
 			deck.discardTop();
 		
+		for(Player p : state.getPlayers()) {
+			p.setActiveBet(10);
+		}
+		
+		state.setPotSize(40);
+		
 		return null;
 	}
 	
