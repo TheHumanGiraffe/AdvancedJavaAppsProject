@@ -42,35 +42,25 @@ function placeBet(){
 	}
 
 	wsSendMessage(jsonText);
+	resetBet();
 }
 
 function resetBet(){
 	document.getElementById("betValue").value = 0;
+	document.getElementById('betValue').innerHTML = 0;
 }
 
-function add10(){
-	var oldBetValue = parseInt(document.getElementById('betValue').value, 10);
-	var newBetValue = oldBetValue + 10; 
+function addToBet(betValue){
+	var oldBetValue = parseInt(document.getElementById('betValue').value);
+	if(isNaN(oldBetValue)){
+		oldBetValue = 0;
+	}
+
+	var newBetValue = oldBetValue + betValue; 
 	document.getElementById('betValue').value = newBetValue;
+	document.getElementById('betValue').innerHTML = newBetValue;
 }
 
-function add20(){
-	var oldBetValue = parseInt(document.getElementById('betValue').value, 10);
-	var newBetValue = oldBetValue + 20; 
-	document.getElementById('betValue').value = newBetValue;
-}
-
-function add50(){
-	var oldBetValue = parseInt(document.getElementById('betValue').value, 10);
-	var newBetValue = oldBetValue + 50;
-	document.getElementById('betValue').value = newBetValue;
-}
-
-function add100(){
-	var oldBetValue = parseInt(document.getElementById('betValue').value, 10);
-	var newBetValue = oldBetValue + 100;
-	document.getElementById('betValue').value = newBetValue;
-}
 
 function fold(){
 	var jsonText = '{"action":"fold"}';
@@ -115,11 +105,13 @@ function renderGamestate(gamestate) {
 	var player2div = document.getElementById('player2Div');
 	var player3div = document.getElementById('player3Div');
 	var player4div = document.getElementById('player4Div');
+	var centerTablediv= document.getElementById('tableCardsDiv');
 
 	var player1info = document.getElementById('player1info');
 	var player2info = document.getElementById('player2info');
 	var player3info = document.getElementById('player3info');
 	var player4info = document.getElementById('player4info');
+	
 	
 	if(gamestate==null)
 		return;
@@ -128,6 +120,7 @@ function renderGamestate(gamestate) {
 	player2div.innerHTML = "";
 	player3div.innerHTML = "";
 	player4div.innerHTML = "";
+	centerTablediv.innerHTML = "";
 	
 	player1info.innerHTML = "";
 	player2info.innerHTML = "";
@@ -151,10 +144,43 @@ function renderGamestate(gamestate) {
 
 	var playerCount = gamestate.players.length;
 	var players = gamestate.players;
-	console.log("<img src='" + cardURL + gamestate.cards + '/' + gamestate.deck.discards[0].cardID + ".jpg' />")
-	document.getElementById("discard").innerHTML = "<img class='deck' src='" + cardURL + gamestate.cards + '/' + gamestate.deck.discards[0].cardID + ".jpg' />";
-	document.getElementById("deck").innerHTML = "<img class='deck' src='" + cardURL + gamestate.cards + '/' + "0.jpg' />";
-	document.getElementById("pot").innerHTML="<h2>Pot Size: " + gamestate.potSize + "</h2>";
+	console.log("<img src='" + cardURL + gamestate.cards + '/' + gamestate.deck.discards[0].cardID + ".jpg' />");
+	document.getElementById('discard').innerHTML = "<img class='deck' src='" + cardURL + gamestate.cards + '/' + gamestate.deck.discards[0].cardID + ".jpg' />";
+	document.getElementById('deck').innerHTML = "<img class='deck' src='" + cardURL + gamestate.cards + '/' + "0.jpg' />";
+	document.getElementById('pot').innerHTML="<h2>Pot Size: " + gamestate.potSize + "</h2>";
+	
+	var table = gamestate.table;
+	table.forEach(function(card){
+		var imgContainer = document.createElement("span");
+		imgContainer.className = "imgWrap";
+		
+		var div = document.createElement("cardh");
+		div.classList.add('cardh');
+		div.style.left = "-"+offset+"px";
+		div.id = ""+img_id+"Div";
+			
+		var img = document.createElement("img");
+		img.src = cardURL + gamestate.cards + '/' + card.cardID + ".jpg";
+		img.className = "p1";
+		img.id = img_id;
+		if(card.suit == "any")
+			img.addEventListener('click', function() {handCard = img.id; $('#colorchooser').toggle();});
+		else if(game == "gofish")
+			img.addEventListener('click', function() {handCard = img.id; $('#playerchooser').toggle();});
+		else img.addEventListener('click', function() {playCard(img.id, "");});
+		
+		img_id++;
+		imgContainer.appendChild(img);
+		
+		offset += 80;
+		
+		var span = document.createElement("span");
+		span.innerHTML = card.name + " of " + card.suit;
+		span.className = "tooltip";
+		imgContainer.appendChild(span);
+		centerTablediv.appendChild(imgContainer);
+		
+	});
 	
 	players.forEach(function(player){
 		if(player.isTurn){

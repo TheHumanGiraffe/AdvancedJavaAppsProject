@@ -5,6 +5,8 @@ html {
 	font-family: 'Carter One', cursive;
 }
 
+
+
 #player2info, #player4info {vertical-align: middle; width: 150px;}
 
 textarea {
@@ -239,4 +241,13 @@ td.browser {
 	/*background-attachment: fixed;*/
 	background-position: center;
 	padding: 5px;
+}
+button {
+	font-family: 'Carter One', cursive;
+	background: rgb(237,123,0);
+  	background: linear-gradient(-10deg, rgba(237,123,0,1) 75%, rgba(240,164,82,1) 100%);
+	border-radius: 5px;
+	border: 2px solid black;
+	margin: 10px;
+	display: inline-block;
 }
