@@ -51,13 +51,17 @@
 			</div>
 			<div>
 				<h3 class="header">Bet</h3>
-				<!-- Bet: <input type="number" id="betValue" value="0" readonly /> 
-				<input onclick="placeBet();" type="button" value="Place Bet" />
-				<input onClick="resetBet();" type="button" value="Reset" />  -->
-				<span class="imgWrap"><img class="chip" src="chips/blueChip.png" onClick="add10()"><span class="tooltip">Add Ten Chips</span></span>
-				<span class="imgWrap"><img class="chip" src="chips/greenChip.png" onClick="add20()"><span class="tooltip">Add Twenty Chips</span></span>
-				<span class="imgWrap"><img class="chip" src="chips/redChip.png" onClick="add50()"><span class="tooltip">Add Fifty Chips</span></span>
-				<span class="imgWrap"><img class="chip" src="chips/blackChip.png" onClick="add100()"><span class="tooltip">Add One Hundred Chips</span></span>
+				<div>
+					<span class="imgWrap"><img class="chip" src="chips/blueChip.png" onClick="add10()"><span class="tooltip">Add Ten Chips</span></span>
+					<span class="imgWrap"><img class="chip" src="chips/greenChip.png" onClick="add20()"><span class="tooltip">Add Twenty Chips</span></span>
+					<span class="imgWrap"><img class="chip" src="chips/redChip.png" onClick="add50()"><span class="tooltip">Add Fifty Chips</span></span>
+					<span class="imgWrap"><img class="chip" src="chips/blackChip.png" onClick="add100()"><span class="tooltip">Add One Hundred Chips</span></span>
+				</div>
+				<div>
+					<input type="number" id="betValue" value="0" readonly style="width: 20px;"/> 
+					<input onclick="placeBet();" type="button" value="Place Bet" />
+					<input onClick="resetBet();" type="button" value="Reset" />
+				</div>
 			</div>
 		</div>
 	</div>
