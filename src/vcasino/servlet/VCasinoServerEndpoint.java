@@ -27,6 +27,10 @@ import vcasino.core.games.*;
 		encoders = {BlindGameStateEncoder.class, GameEventEncoder.class},
 		decoders = {GameActionDecoder.class}
 )
+
+/*
+ * Server endpoint core
+ */
 public class VCasinoServerEndpoint {
 
 	Session userSession = null;
@@ -35,6 +39,9 @@ public class VCasinoServerEndpoint {
 	private String myUniqueId;
     private Login myLogin;
   
+	/*
+	 * Opens a session for the chosen url path (i.e. game type and room number)
+	 */
     @OnOpen
     public void onOpen(Session userSession,@PathParam("userId") final String userId, @PathParam("game") final String game, @PathParam("roomNumber") final String roomNumber) {
 
@@ -106,6 +113,9 @@ public class VCasinoServerEndpoint {
 		}
     }
     
+    /*
+     * Closes a session
+     */
     @OnClose
     public void onClose(Session userSession, CloseReason reason) {
     	if (VCasinoServerEndpoint.openSessions.containsKey(this.myUniqueId)) {
@@ -133,6 +143,9 @@ public class VCasinoServerEndpoint {
 		System.out.println("Close Connection ...");
     }
 
+    /*
+     * Triggered when a message gets sent to the backend to be processed
+     */
     @OnMessage
     public void onMessage(GameAction action, Session userSession) {
     	System.out.println(action);
@@ -195,6 +208,9 @@ public class VCasinoServerEndpoint {
 			}
     }
     
+    /*
+     * Broadcasts message
+     */
     public void broadcastMessage(String message) {
     	String game = (String) userSession.getUserProperties().get("game");
 		String roomNumber = (String) userSession.getUserProperties().get("roomNumber");
@@ -217,6 +233,9 @@ public class VCasinoServerEndpoint {
 		return Integer.toHexString(this.hashCode());
 	}
     
+    /*
+     * Finds an existing match if the chosen match has less than four players, or creates a new on otherwise
+     */
     private Match findOrCreateMatch(String game) throws Exception {
     	for(Match match : VCasinoServerEndpoint.matches.values()) {
     		if(match.countPlayers() < 4)
@@ -243,6 +262,9 @@ public class VCasinoServerEndpoint {
     	throw new Exception("Invalid game type");
     }
     
+    /*
+     * Returns a browser list of games if no URL params were given, gets returned as a json
+     */
     private void sendBrowseList(Session session, String name) throws IOException {
     	String array="{\"games\": [";
     	boolean afterFirst=false;

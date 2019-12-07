@@ -6,6 +6,9 @@ import vcasino.core.games.PokerRuleset;
 import vcasino.core.games.TexasHoldemRuleSet;
 import vcasino.core.games.UnoRuleset;
 
+/*
+ * Factory to determine which ruleset to use for the game
+ */
 public class RulesetFactory {
 	
 

@@ -2,11 +2,12 @@ package vcasino.core.exceptions;
 
 import vcasino.core.Player;
 
+/**
+ * Gets thrown whenever a rule of gameplay gets broken
+ */
 public class RulesException extends Exception {
 	
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 
 	private String rule, description;

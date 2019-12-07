@@ -8,6 +8,9 @@ import com.google.gson.Gson;
 
 import vcasino.core.events.ChatEvent;
 
+/*
+ * Encodes chat functions into a json format.
+ */
 public class ChatEncoder implements Encoder.Text<ChatEvent> {
 
 	@Override

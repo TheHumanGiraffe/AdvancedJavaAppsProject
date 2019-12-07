@@ -66,13 +66,14 @@ public class UnoRuleset implements Ruleset {
 	@Override
 	public GameEvent playCard(GameState state, Player player, int handIndex) throws RulesException {
 		
-		Card discard = state.getTopDiscard();
+		Card discard = state.getTopDiscard(); //checks the card at the top of the discard
 		
-		Card play = player.getHand().get(handIndex);
+		Card play = player.getHand().get(handIndex); //checks selected card
 		
 		if(play == null)
 			throw new RulesException("Card", "Please choose a valid card", player);
 		
+		//checks if an invalid card is played or not
 		if(!discard.matchSuit(play) && !discard.matchRank(play) && !play.getSuit().equals("any")) {
 			throw new RulesException("Card", "You must play a card that matches the color or the value of the top card", player);
 		}
@@ -80,17 +81,18 @@ public class UnoRuleset implements Ruleset {
 		player.getHand().remove(handIndex);
 		
 		//now, was it something fun?
+		//handles special cards, such as skipping, drawing multiple cards, etc.
 		switch(play.getRank()) {
 			case 100: //skip turn!
 				state.getDeck().discard(play);
 				skip = true;
 				break;
-			case 110:
+			case 110: //reverse card
 				state.getDeck().discard(play);
 				state.reverseOrder();
 				clockwise = !clockwise;
 				break;
-			case 120:
+			case 120: //draw two cards
 				state.getDeck().discard(play);
 				//ha-ha!
 				Player p = advanceTurn(player, state.getPlayers());
@@ -98,29 +100,27 @@ public class UnoRuleset implements Ruleset {
 				p.addCard(state.getDeck().drawCard());
 				skip=true;
 				break;
-			case 300:
-				//FIXME: welp.
+			case 300: //wild card
 				System.out.println("played color choose: "+arg1);
 				Card c = new Card(UnoDeck.getColoredCardId(play.getCardID(), arg1), arg1);
 				c.setRank(UnoDeck.rankMap[play.getCardID()]);
 				System.out.println("new card: "+c);
 				state.getDeck().discard(c);
 				break;
-			case 400:
+			case 400: //wild draw +4
 				System.out.println("played +4: "+arg1);
 				p = advanceTurn(player, state.getPlayers());
-				p.addCard(state.getDeck().drawCard()); //four mathias
+				p.addCard(state.getDeck().drawCard()); 
 				p.addCard(state.getDeck().drawCard());
 				p.addCard(state.getDeck().drawCard());
 				p.addCard(state.getDeck().drawCard());
 				skip=true;
-				//FIXME: umm...
 				Card cd = new Card(UnoDeck.getColoredCardId(play.getCardID(), arg1), arg1);
 				cd.setRank(UnoDeck.rankMap[play.getCardID()]);
 				System.out.println("new card: "+cd);
 				state.getDeck().discard(cd);
 				break;
-			default:
+			default: //default play
 				state.getDeck().discard(play);
 				break;
 		}
@@ -165,7 +165,10 @@ public class UnoRuleset implements Ruleset {
 	public GameEvent showHand(Player player) {
 		return null;
 	}
-
+	
+	/*
+	 * Moves the turn depending on the current set rotation of play. 
+	 */
 	@Override
 	public Player advanceTurn(Player current, List<Player> players) {
 		Player nextPlayer=current;
@@ -174,13 +177,13 @@ public class UnoRuleset implements Ruleset {
 		
 		do {
 			nextPlayer.setTurn(false);
-			if(clockwise) {
-				int i = players.indexOf(nextPlayer)+1;
+			if(clockwise) { //determines the current rotation of play
+				int i = players.indexOf(nextPlayer)+1; 
 				System.out.println("next: "+i);
 				while(!players.get(i >= players.size() ? 0 : i).isActive()) {
 					i = (i>= players.size() ? 0 : i+1);
 				}
-				nextPlayer = players.get(i >= players.size() ? 0 : i);
+				nextPlayer = players.get(i >= players.size() ? 0 : i); //sets the next player
 				nextPlayer.setTurn(true);
 			} else {
 				int i = players.indexOf(nextPlayer)-1;
@@ -191,7 +194,7 @@ public class UnoRuleset implements Ruleset {
 				while(!players.get(i).isActive()) {
 					i = (i>0  ? i-1 : players.size()-1);
 				}
-				nextPlayer = players.get(i);
+				nextPlayer = players.get(i); //sets the next player if counterclockwise
 				nextPlayer.setTurn(true);
 			}
 		} while(skip && !(skip = !skip)); //this is evil.

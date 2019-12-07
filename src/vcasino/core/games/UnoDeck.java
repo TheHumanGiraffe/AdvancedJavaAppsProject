@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import vcasino.core.Card;
 import vcasino.core.Deck;
 
+/***
+ * Code that replaces the standard deck of card with an UNO deck when the uno game type is selected.
+ */
 public class UnoDeck extends Deck {
 
 	private static final String suitMap[] = {"none", 
@@ -45,6 +48,10 @@ public class UnoDeck extends Deck {
 		return 108;
 	}
 	
+	/*
+	 * Used for when a wild is selected so that the color the player selected is set 
+	 * for the game to properly use.
+	 */
 	public static int getColoredCardId(int oldId, String color) {
 		if(oldId == 14 || oldId == 28 || oldId == 42 || oldId == 56) {
 			switch(color) {

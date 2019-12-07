@@ -57,6 +57,9 @@ public class GoFishRuleset implements Ruleset {
 		forPlayer.addCard(state.getDeck().drawCard());
 	}
 
+	/*
+	 * Checks for matches in cards and returns whether a selected card matches one in the selected player's hand
+	 */
 	@Override
 	public GameEvent playCard(GameState state, Player player, int handIndex) throws RulesException {
 		GameEvent event=null;
@@ -126,6 +129,9 @@ public class GoFishRuleset implements Ruleset {
 		return null;
 	}
 
+	/**
+	 * Starts the game, and sets the initial turn on the first player
+	 */
 	@Override
 	public GameEvent beginMatch(GameState state) throws RulesException {
 		shuffleDeck(state);
@@ -140,6 +146,9 @@ public class GoFishRuleset implements Ruleset {
 		return new GameEvent("Begin Match!", 1);
 	}
 
+	/**
+	 * Standard turn rotation
+	 */
 	@Override
 	public Player advanceTurn(Player current, List<Player> players) {
 		Player nextPlayer=current;
@@ -159,6 +168,9 @@ public class GoFishRuleset implements Ruleset {
 		return nextPlayer;
 	}
 
+	/**
+	 * Ends the game when a player has an empty hand
+	 */
 	@Override
 	public boolean gameOver(GameState state) {
 		for(Player p : state.getPlayers()) {
@@ -197,7 +209,6 @@ public class GoFishRuleset implements Ruleset {
 	@Override
 	public void postHandReset(GameState state) {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override

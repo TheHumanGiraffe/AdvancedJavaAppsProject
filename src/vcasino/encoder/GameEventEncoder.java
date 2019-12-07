@@ -6,6 +6,9 @@ import javax.websocket.EndpointConfig;
 
 import vcasino.core.events.GameEvent;
 
+/*
+ * Encodes GameEvents into json format
+ */
 public class GameEventEncoder implements Encoder.Text<GameEvent> {
 
 	@Override

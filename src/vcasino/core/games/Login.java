@@ -14,6 +14,9 @@ public class Login {
 	private String sessionId="";
 	private boolean isValid=false;
 	
+	/*
+	 * Pushes new login information to the database
+	 */
 	public String newLogin(GameAction action) {
 		DatabaseConnection db = new DatabaseConnection();
 		System.out.println(action.arg0);
@@ -45,6 +48,9 @@ public class Login {
 		return null;
 	}
 	
+	/***
+	 * Signs a user into the system
+	 */
 	public String login(GameAction action, Session s) {
 		DatabaseConnection db = new DatabaseConnection();
 		String mysqlQuery = "select password from player where name = \""+action.arg0+"\";";
